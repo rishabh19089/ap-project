@@ -1,17 +1,26 @@
 package sample;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
+import javafx.scene.paint.Color;
 
 public class Controller {
     private Game game;
+    public static Stage primaryStage;
 
     public void spaceTyped() {
 
@@ -103,5 +112,43 @@ public class Controller {
         FxmlLoader newGameScreen = new FxmlLoader();
         Pane view= newGameScreen.switchPage("sample");
         page4.getChildren().setAll(view);
+    }
+
+    @FXML
+    void enterGame(ActionEvent event1) throws FileNotFoundException {
+        int WIDTH =500, HEIGHT = 650;
+        Canvas canvas = new Canvas(WIDTH, HEIGHT);
+        int jump = 20;
+        int y = HEIGHT - 50;
+        Pane rootJeu = new Pane(canvas);
+        singleCircle circle = new singleCircle(80, 65, HEIGHT);
+        Scene sceneJeu = new Scene(rootJeu, WIDTH, HEIGHT);
+        GraphicsContext context = canvas.getGraphicsContext2D();
+
+//        Path triangle2 = new Path(new MoveTo(100, 100), new LineTo(100, 150), new LineTo(200, 200), new ClosePath());
+//        triangle2.setFill(Color.YELLOW);
+//        rootJeu.getChildren().addAll(triangle2);
+
+        Image earth = new Image("/star.png" );
+        Ball ball = new Ball();
+        ball.setY(600);
+
+        rootJeu.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
+
+        sceneJeu.setOnKeyPressed((event) -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                ball.setY(ball.getY()-10);
+            }});
+
+        final long startNanoTime = System.nanoTime();
+        circle.draw(rootJeu);
+        ball.draw(context);
+        new AnimationTimer() {
+            public void handle(long currentNanoTime) {
+                double t = (currentNanoTime - startNanoTime) / 1000000000.0;
+                context.drawImage( earth, 150 , 430 );
+                circle.rotate(t); }}.start();
+        primaryStage.setScene(sceneJeu);
+
     }
 }

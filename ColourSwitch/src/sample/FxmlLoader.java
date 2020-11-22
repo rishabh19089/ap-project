@@ -13,7 +13,6 @@ public class FxmlLoader {
             if(fileURL == null)
                 throw new java.io.FileNotFoundException("FXML file not found");
             view = new FXMLLoader().load(fileURL);
-            System.out.println("succeed");
         }
         catch (Exception e){
             System.out.println("No Page found");

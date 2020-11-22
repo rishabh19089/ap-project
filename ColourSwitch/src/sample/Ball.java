@@ -1,5 +1,9 @@
 package sample;
 
+import com.sun.prism.Graphics;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
 import java.io.Serializable;
 
 public class Ball extends obj implements Serializable, Cloneable {
@@ -40,7 +44,10 @@ public class Ball extends obj implements Serializable, Cloneable {
         this.colour = colour;
     }
 
-    public void jump(){
+
+    public void draw(GraphicsContext context){
+        context.setFill(Color.ORANGERED);
+        context.fillOval(250, y, 20, 20);
 
     }
 
