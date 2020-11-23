@@ -2,6 +2,7 @@ package sample;
 
 import javafx.fxml.FXML;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,76 +19,56 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class singleCircle extends Obstacles{
-    @FXML
-    private Arc qs1;
 
-    @FXML
-    private Arc qs2;
-
-    @FXML
-    private Arc qs3;
-
-    @FXML
-    private Arc qs4;
-
-    @FXML
     private Circle fs;
+    private Arc[] arcs;
+    private double speed; //Angle rotated per second
+    private double r1, r2;
 
-
-    public singleCircle(double radius1, double radius2, int height){
+    public singleCircle(double radius1, double radius2, int height, double speed){
         x = 250;
         y = height - 220;
-        qs1 = new Arc(250, height -220, radius1, radius1, 0, 90);
-        qs1.setStroke(Color.AQUAMARINE);
-        qs1.setFill(Color.AQUAMARINE);
-        qs1.setType(ArcType.ROUND);
-        qs2 = new Arc(250, height -220, radius1, radius1, 90 , 90);
-        qs2.setStroke(Color.ORANGERED);
-        qs2.setFill(Color.ORANGERED);
-        qs2.setType(ArcType.ROUND);
-        qs3 = new Arc(250, height -220, radius1, radius1, 180 , 90);
-        qs3.setStroke(Color.INDIGO);
-        qs3.setFill(Color.INDIGO);
-        qs3.setType(ArcType.ROUND);
-        qs4 = new Arc(250, height -220, radius1, radius1, 270 , 90);
-        qs4.setStroke(Color.YELLOW);
-        qs4.setFill(Color.YELLOW);
-        qs4.setType(ArcType.ROUND);
+        arcs = new Arc[4];
+        r1 = radius1; r2 = radius2;
+        this.speed = speed;
+        for (int i=0; i<4; i++){
+            arcs[i] = new Arc(x, y, radius1, radius1, 90*i, 90);
+            arcs[i].setStroke(colors[i]);
+            arcs[i].setFill(colors[i]);
+            arcs[i].setType(ArcType.ROUND); }
         fs = new Circle(250, height -220, radius2);
         fs.setFill(Color.BLACK);
-        elements = new ArrayList<>(Arrays.asList(qs1, qs2, qs3, qs4, fs));
         double[] points = computeStar(sr1, sr2);
         star = new Star(points);}
 
+    public double getSpeed() {
+        return speed; }
+
+    public void setSpeed(double speed) {
+        this.speed = speed; }
+
     public Star getStar() {
-        return star;
-    }
+        return star; }
 
     @Override
     public boolean rotation() {
-
-        return false;
-    }
+        return false; }
 
     @Override
     public double rotationSpeed() {
-        return 0;
-    }
+        return 0; }
 
     @Override
     public void hitObstacle() {
-
     }
 
     @Override
     public double time() {
-        return 0;
-    }
+        return 0; }
 
     @Override
     public double place() {
-        return 0;
-    }
+        return 0; }
 
     @Override
     public double[] computeStar(double radius1, double radius2) {
@@ -98,25 +79,35 @@ public class singleCircle extends Obstacles{
             points[i+1] = y - radius1*Math.sin(Math.toRadians(90+(72*t)));
             points[i+2] = x - radius2*Math.cos(Math.toRadians(126+(72*t)));
             points[i+3] = y - radius2*Math.sin(Math.toRadians(126+(72*t))); }
-        return points;
-    }
+        return points; }
 
     public void draw(Pane rootJeu)  {
-            rootJeu.getChildren().addAll(qs1, qs2, qs3, qs4, fs, star.get());}
+        rootJeu.getChildren().addAll(arcs);
+        rootJeu.getChildren().addAll(fs, star.get());}
 
 
     public void rotate(double timediff){
-        qs1.setStartAngle(qs1.getStartAngle()+timediff*100);
-        qs2.setStartAngle(qs2.getStartAngle()+timediff*100);
-        qs3.setStartAngle(qs3.getStartAngle()+timediff*100);
-        qs4.setStartAngle(qs4.getStartAngle()+timediff*100); }
+        for (int i=0; i<4; i++){
+            arcs[i].setStartAngle(arcs[i].getStartAngle()+speed*timediff); } }
 
     public void starCollision(double pos, Pane root){
         if ((star.present()) && (pos<=y+sr2) && (pos>=y-sr1)){
             star.eraseStar(root);
-            star.setPresent(false); }
+            star.setPresent(false); } }
 
-    }
+    public boolean collision(Ball ball, double timeSinceStart){
+        double yball = ball.getY();
+        int rotated = (int)(timeSinceStart*speed)%360;
+        int bottomColor = (6-(rotated/90))%4;
+        int topColor = (4-(rotated/90))%4;
+        if ((yball>=y+r2) && (yball<=y+r1)){
+            if (ball.getColour()!=bottomColor){
+                return true; } }
+        else if ((yball<=y-r2) && (yball>=y-r1)){
+            if (ball.getColour()!=topColor){
+                System.out.println("Game Over");
+                return true; } }
+        return false; }
 
 
 }

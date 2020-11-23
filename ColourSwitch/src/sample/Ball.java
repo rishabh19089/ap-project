@@ -9,9 +9,10 @@ import javafx.scene.shape.Circle;
 import java.io.Serializable;
 
 public class Ball extends obj implements Serializable, Cloneable {
-    private double upSpeed, downSpeed, colour;
+    private double upSpeed, downSpeed;
     private int HEIGHT;
     private Circle c;
+    private int color = 1;
 
     public Ball(double downSpeed, int HEIGHT) {
         this.downSpeed = downSpeed;
@@ -48,12 +49,14 @@ public class Ball extends obj implements Serializable, Cloneable {
         this.downSpeed = downSpeed;
     }
 
-    public double getColour() {
-        return colour;
+    public int getColour() {
+        return color;
     }
 
-    public void setColour(double colour) {
-        this.colour = colour;
+    public void setColour(int colour) {
+        this.color = colour;
+        c.setFill(colors[color]);
+
     }
 
 

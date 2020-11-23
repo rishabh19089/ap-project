@@ -31,7 +31,7 @@ public class obstacleArray implements Serializable {
     public Obstacles createObstacle(double y, double space, double level){
         typeObstacle();
         createColourBox( y,space);
-        return new singleCircle(10, 8, 650);
+        return new singleCircle(10, 8, 650, 1);
     }
 
 }

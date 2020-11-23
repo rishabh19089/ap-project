@@ -94,22 +94,16 @@ public class Controller {
         page4.getChildren().setAll(view); }
 
     @FXML
-    void enterGame(ActionEvent event1) throws FileNotFoundException {
+    void enterGame(ActionEvent event1){
         int WIDTH =500, HEIGHT = 650;
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         int jump = 20;
         int y = HEIGHT - 50;
         Pane rootJeu = new Pane(canvas);
-        singleCircle circle = new singleCircle(80, 65, HEIGHT);
-        singleCircle circle1 = new singleCircle(80, 65, 400);
+        singleCircle circle = new singleCircle(80, 65, HEIGHT, 90);
+        singleCircle circle1 = new singleCircle(80, 65, 350, 120);
         Scene sceneJeu = new Scene(rootJeu, WIDTH, HEIGHT);
         GraphicsContext context = canvas.getGraphicsContext2D();
-
-//        Path triangle2 = new Path(new MoveTo(100, 100), new LineTo(100, 150), new LineTo(200, 200), new ClosePath());
-//        triangle2.setFill(Color.YELLOW);
-//        rootJeu.getChildren().addAll(triangle2);
-
-        Image earth = new Image("/star.png" );
         Ball ball = new Ball(130, HEIGHT);
         ball.setY(600);
 
@@ -119,24 +113,23 @@ public class Controller {
             if (event.getCode() == KeyCode.SPACE) {
                 ball.jump(50);
             }});
-
         circle.draw(rootJeu);
         circle1.draw(rootJeu);
         ball.draw(context, rootJeu);
         AnimationTimer timer = new AnimationTimer() {
             private long lastTime = System.nanoTime();
+            private long startTime = System.nanoTime();
             @Override
             public void handle(long currentTime) {
                 double t = (currentTime - lastTime) / 1000000000.0;
-                context.setFill(Color.BLACK);
-                context.fillRect(0, 0, WIDTH, HEIGHT);
-                //context.drawImage( earth, 150 , 430 );
+                double timeSinceStart = (currentTime - startTime)/1e9;
                 ball.move(t);
                 circle.rotate(t);
                 circle1.rotate(t);
+                if ((circle.collision(ball, timeSinceStart))  || (circle1.collision(ball, timeSinceStart))){
+                    primaryStage.close(); }
                 circle.starCollision(ball.getY(), rootJeu);
                 circle1.starCollision(ball.getY(), rootJeu);
-                //rootJeu.getChildren().removeAll(circle.getElements());
                 lastTime = currentTime; }
         };
         timer.start();
