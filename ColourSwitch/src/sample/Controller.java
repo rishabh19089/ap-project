@@ -1,18 +1,17 @@
 package sample;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -87,6 +86,7 @@ public class Controller {
         FxmlLoader newGameScreen = new FxmlLoader();
         Pane view= newGameScreen.switchPage("help");
         page.getChildren().setAll(view); }
+
     @FXML
     void displayMainMenu3(ActionEvent event) {
         FxmlLoader newGameScreen = new FxmlLoader();
@@ -95,26 +95,35 @@ public class Controller {
 
     @FXML
     void enterGame(ActionEvent event1){
-        int WIDTH =500, HEIGHT = 650;
+        int WIDTH =500, HEIGHT = 650, jump = 140;
+        Game game = new Game("Rishabh", HEIGHT, jump);
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
-        int jump = 20;
         int y = HEIGHT - 50;
         Pane rootJeu = new Pane(canvas);
-        singleCircle circle = new singleCircle(80, 65, HEIGHT, 90);
-        singleCircle circle1 = new singleCircle(80, 65, 350, 120);
         Scene sceneJeu = new Scene(rootJeu, WIDTH, HEIGHT);
         GraphicsContext context = canvas.getGraphicsContext2D();
-        Ball ball = new Ball(130, HEIGHT);
-        ball.setY(600);
+
+        User user = game.getUser();
+        Ball ball = user.getBall();
+
+        singleCircle circle = new singleCircle(80, 65, HEIGHT, 90, true);
+        singleCircle circle1 = new singleCircle(80, 65, 390, 120, false);
+        singleCircle circle2 = new singleCircle(55, 40, 390, 120, true);
+        Square square = new Square(175 , 400, 150, 20, true, 90);
+
+        ArrayList<Obstacles> obstacles = new ArrayList<>();
+        obstacles.add(circle1); obstacles.add(circle2); obstacles.add(square);
 
         rootJeu.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
 
         sceneJeu.setOnKeyPressed((event) -> {
             if (event.getCode() == KeyCode.SPACE) {
-                ball.jump(50);
-            }});
-        circle.draw(rootJeu);
-        circle1.draw(rootJeu);
+                ball.jump(); }});
+
+        //circle.draw(rootJeu);
+        for (Obstacles o: obstacles){
+            o.draw(rootJeu); }
+
         ball.draw(context, rootJeu);
         AnimationTimer timer = new AnimationTimer() {
             private long lastTime = System.nanoTime();
@@ -124,12 +133,11 @@ public class Controller {
                 double t = (currentTime - lastTime) / 1000000000.0;
                 double timeSinceStart = (currentTime - startTime)/1e9;
                 ball.move(t);
-                circle.rotate(t);
-                circle1.rotate(t);
-                if ((circle.collision(ball, timeSinceStart))  || (circle1.collision(ball, timeSinceStart))){
-                    primaryStage.close(); }
-                circle.starCollision(ball.getY(), rootJeu);
-                circle1.starCollision(ball.getY(), rootJeu);
+                for (Obstacles o: obstacles){
+                    o.rotate(t);
+                    if (o.collision(ball, timeSinceStart)){
+                        primaryStage.close(); }
+                    o.starCollision(ball.getY(), rootJeu); }
                 lastTime = currentTime; }
         };
         timer.start();

@@ -1,6 +1,5 @@
 package sample;
 
-import com.sun.prism.Graphics;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -9,17 +8,27 @@ import javafx.scene.shape.Circle;
 import java.io.Serializable;
 
 public class Ball extends obj implements Serializable, Cloneable {
-    private double upSpeed, downSpeed;
-    private int HEIGHT;
+    private double acc, speed;
+    private int HEIGHT, boost;
     private Circle c;
     private int color = 1;
 
-    public Ball(double downSpeed, int HEIGHT) {
-        this.downSpeed = downSpeed;
+    public Ball(double acc, int HEIGHT, int boost) {
+        this.acc = acc;
+        this.speed = 0;
         this.HEIGHT = HEIGHT;
+        this.boost = boost;
         c = new Circle(10);
         c.setCenterX(250);
         c.setFill(Color.ORANGERED);
+    }
+
+    public Circle getCircle() {
+        return c;
+    }
+
+    public void setBoost(int dist) {
+        this.boost = dist;
     }
 
     public void setY(double y) {
@@ -33,45 +42,39 @@ public class Ball extends obj implements Serializable, Cloneable {
         return 0;
     }
 
-    public double getUpSpeed() {
-        return upSpeed;
+
+    public double getSpeed() {
+        return speed;
     }
 
-    public void setUpSpeed(double upSpeed) {
-        this.upSpeed = upSpeed;
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 
-    public double getDownSpeed() {
-        return downSpeed;
-    }
-
-    public void setDownSpeed(double downSpeed) {
-        this.downSpeed = downSpeed;
-    }
-
-    public int getColour() {
+    public int getColor() {
         return color;
     }
 
-    public void setColour(int colour) {
+    public void setColor(int colour) {
         this.color = colour;
-        c.setFill(colors[color]);
-
-    }
+        c.setFill(colors[color]); }
 
 
     public void draw(GraphicsContext context, Pane rootJeu){
         rootJeu.getChildren().add(c);
-//        context.setFill(Color.ORANGERED);
-//        context.fillOval(250, y, 20, 20);
     }
 
-    public void jump(int dist){
-        y-=dist; }
+    public void jump(){
+        speed = Math.min(speed, 0);
+        speed -= boost; }
 
     @Override
     public void move(double timediff) {
-        y = Math.min(y + timediff*downSpeed, HEIGHT-20);
+        speed = speed + acc*timediff;
+        y = y + speed*timediff;
+        y = Math.min(y, HEIGHT-20);
+        speed = Math.min(250, speed);
+        speed = Math.max(-250, speed);
         c.setCenterY(y); }
 
 

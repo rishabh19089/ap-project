@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.scene.layout.Pane;
+
 public class horizontalBar extends Obstacles{
     private double Ypos, colour;
 
@@ -36,9 +38,21 @@ public class horizontalBar extends Obstacles{
     }
 
     @Override
-    public double[] computeStar(double radius1, double radius2) {
-        return new double[0];
+    public void draw(Pane pane) {
+
     }
+
+
+    @Override
+    public void rotate(double t) {
+
+    }
+
+    @Override
+    public boolean collision(Ball ball, double t) {
+        return false;
+    }
+
 
     public void setColour(double colour) {
         this.colour = colour;

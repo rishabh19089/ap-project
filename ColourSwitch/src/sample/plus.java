@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.scene.layout.Pane;
+
 public class plus extends Obstacles{
     private double length, Ypos;
 
@@ -32,9 +34,22 @@ public class plus extends Obstacles{
     }
 
     @Override
-    public double[] computeStar(double radius1, double radius2) {
-        return new double[0];
+    public void draw(Pane pane) {
+
     }
+
+
+    @Override
+    public void rotate(double t) {
+
+    }
+
+    @Override
+    public boolean collision(Ball ball, double t) {
+        return false;
+    }
+
+
 
 
 }

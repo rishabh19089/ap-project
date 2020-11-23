@@ -3,11 +3,18 @@ package sample;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    private double score;
+    private int score;
     private String Name;
     private Ball ball;
 
-    public void setScore(double score) {
+    public User(String name, int HEIGHT, int dist) {
+        this.score = 0;
+        Name = name;
+        this.ball = new Ball(420, HEIGHT, dist);
+        ball.setY(HEIGHT-50);
+    }
+
+    public void setScore(int score) {
         this.score = score;
     }
 
