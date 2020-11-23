@@ -35,6 +35,11 @@ public class horizontalBar extends Obstacles{
         return colour;
     }
 
+    @Override
+    public double[] computeStar(double radius1, double radius2) {
+        return new double[0];
+    }
+
     public void setColour(double colour) {
         this.colour = colour;
     }

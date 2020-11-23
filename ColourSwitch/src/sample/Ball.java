@@ -2,12 +2,24 @@ package sample;
 
 import com.sun.prism.Graphics;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import java.io.Serializable;
 
 public class Ball extends obj implements Serializable, Cloneable {
     private double upSpeed, downSpeed, colour;
+    private int HEIGHT;
+    private Circle c;
+
+    public Ball(double downSpeed, int HEIGHT) {
+        this.downSpeed = downSpeed;
+        this.HEIGHT = HEIGHT;
+        c = new Circle(10);
+        c.setCenterX(250);
+        c.setFill(Color.ORANGERED);
+    }
 
     public void setY(double y) {
         this.y = y;
@@ -45,14 +57,19 @@ public class Ball extends obj implements Serializable, Cloneable {
     }
 
 
-    public void draw(GraphicsContext context){
-        context.setFill(Color.ORANGERED);
-        context.fillOval(250, y, 20, 20);
-
+    public void draw(GraphicsContext context, Pane rootJeu){
+        rootJeu.getChildren().add(c);
+//        context.setFill(Color.ORANGERED);
+//        context.fillOval(250, y, 20, 20);
     }
+
+    public void jump(int dist){
+        y-=dist; }
 
     @Override
-    public void move(double t) {
+    public void move(double timediff) {
+        y = Math.min(y + timediff*downSpeed, HEIGHT-20);
+        c.setCenterY(y); }
 
-    }
+
 }

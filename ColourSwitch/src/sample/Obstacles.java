@@ -1,12 +1,24 @@
 package sample;
 
+import javafx.scene.Node;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public abstract class Obstacles extends element implements Serializable, Cloneable{
     protected double  colour, dificulty;
     protected double lastTime;
     protected Star star;
     public abstract boolean rotation();
+    protected ArrayList<javafx.scene.Node> elements;
+    protected double sr1 = 20, sr2 = 10;
+
+//    public Obstacles() {
+//        this.elements = new ArrayList<>(); }
+
+    public ArrayList<Node> getElements() {
+        return elements;
+    }
 
     public abstract double rotationSpeed();
 
@@ -35,4 +47,6 @@ public abstract class Obstacles extends element implements Serializable, Cloneab
     public void handleCollision(User user) {
 
     }
+
+    public abstract double[] computeStar(double radius1, double radius2);
 }
