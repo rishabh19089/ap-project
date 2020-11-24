@@ -16,8 +16,8 @@ public abstract class Obstacles extends element implements Serializable, Cloneab
     protected double sr1 = 20, sr2 = 10;
     protected boolean hasStar;
 
-//    public Obstacles() {
-//        this.elements = new ArrayList<>(); }
+    public Obstacles() {
+        this.elements = new ArrayList<>(); }
 
     public ArrayList<Node> getElements() {
         return elements;

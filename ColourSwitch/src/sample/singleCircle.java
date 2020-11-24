@@ -26,9 +26,8 @@ public class singleCircle extends Obstacles{
             arcs[i].setType(ArcType.ROUND); }
         fs = new Circle(250, height -220, radius2);
         fs.setFill(Color.BLACK);
-        this.hasStar = hasStar;
-        double[] points = computeStar();
-        star = new Star(points);}
+        star = new Star(computeStar());
+        this.hasStar = hasStar; }
 
     public double getSpeed() {
         return speed; }

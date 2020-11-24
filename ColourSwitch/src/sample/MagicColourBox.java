@@ -45,7 +45,7 @@ public class MagicColourBox extends element{
     @Override
     public boolean intersects(User user) {
         double yBall = user.getBall().getY();
-        if ((present) && (yBall>=y-radius) && (yBall<=y+radius)){
+        if ((present) && (yBall>=y-radius) && (yBall-10<=y+radius)){
             present = false;
             return true; }
         return false; }

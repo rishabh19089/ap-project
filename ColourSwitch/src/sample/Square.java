@@ -6,16 +6,12 @@ import javafx.scene.shape.*;
 
 public class Square extends Obstacles{
 
-    private int length, Ypos;
-    private Rectangle s1;
-    private Rectangle s2;
-    private Rectangle s3;
-    private Rectangle s4;
+    private int length;
     private Rectangle[] rects;
     private Group g;
 
     public Square(int xpos, int ypos, int side, int thick, boolean hasStar, double speed){
-        rects = new Rectangle[4];
+        rects = new Rectangle[4]; length = side;
         x = xpos + (double)side/2; y = ypos + (double) side/2;
         this.hasStar = hasStar;
         this.speed = speed;
@@ -54,7 +50,7 @@ public class Square extends Obstacles{
     @Override
     public void draw(Pane pane) {
         pane.getChildren().add(g);
-        if (hasStar) pane.getChildren().add(star.get()); }
+        if (hasStar) star.draw(pane); }
 
 
     @Override

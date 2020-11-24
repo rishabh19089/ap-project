@@ -1,11 +1,16 @@
 package sample;
 
+import javafx.scene.Group;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 
 public class plus extends Obstacles{
-    private double length, Ypos;
+    private double length;
+    private Rectangle[] rects;
+    Group g;
 
     public plus(){
+        rects = new Rectangle[4];
 
     }
 

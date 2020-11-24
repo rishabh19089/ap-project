@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,8 +17,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 public class Controller {
     private Game game;
@@ -109,14 +112,15 @@ public class Controller {
         Ball ball = user.getBall();
 
         singleCircle circle = new singleCircle(80, 65, HEIGHT, 90, true);
-        singleCircle circle1 = new singleCircle(80, 65, 390, 120, false);
-        singleCircle circle2 = new singleCircle(55, 40, 390, 120, true);
-        Square square = new Square(175 , 400, 150, 20, true, 90);
+        singleCircle circle1 = new singleCircle(130, 105, 390, 120, false);
+        singleCircle circle2 = new singleCircle(90, 70, 390, 120, true);
+        Square square = new Square(175 , 420, 150, 20, true, 90);
+        horizontalBar bar = new horizontalBar(540, WIDTH, 15, 200, 50);
 
-        MagicColourBox mcb = new MagicColourBox(250, 320, 20);
+        MagicColourBox mcb = new MagicColourBox(250, 350, 20);
 
         ArrayList<Obstacles> obstacles = new ArrayList<>();
-        obstacles.add(circle1); obstacles.add(circle2); obstacles.add(square);
+        obstacles.add(circle1); obstacles.add(circle2);obstacles.add(bar);
         ArrayList<MagicColourBox> boxes = new ArrayList<>();
         boxes.add(mcb);
 
