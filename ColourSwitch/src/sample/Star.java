@@ -40,6 +40,11 @@ public class Star extends element{
 
     }
 
+    @Override
+    public void draw(Pane pane) {
+        pane.getChildren().addAll(star);
+    }
+
     public boolean present(){
         return present;
 
@@ -52,7 +57,7 @@ public class Star extends element{
     }
 
     @Override
-    public void handleCollision(User user) {
+    public void handleCollision(User user, Pane pane) {
 
     }
 }

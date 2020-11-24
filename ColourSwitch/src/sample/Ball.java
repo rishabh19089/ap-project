@@ -59,10 +59,9 @@ public class Ball extends obj implements Serializable, Cloneable {
         this.color = colour;
         c.setFill(colors[color]); }
 
-
-    public void draw(GraphicsContext context, Pane rootJeu){
-        rootJeu.getChildren().add(c);
-    }
+    @Override
+    public void draw(Pane rootJeu){
+        rootJeu.getChildren().add(c); }
 
     public void jump(){
         speed = Math.min(speed, 0);

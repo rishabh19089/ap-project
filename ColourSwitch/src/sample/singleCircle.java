@@ -65,7 +65,7 @@ public class singleCircle extends Obstacles{
     public void draw(Pane rootJeu)  {
         rootJeu.getChildren().addAll(arcs);
         rootJeu.getChildren().add(fs);
-        if (hasStar) rootJeu.getChildren().add(star.get());}
+        if (hasStar) star.draw(rootJeu);}
 
 
     public void rotate(double timediff){
@@ -79,12 +79,9 @@ public class singleCircle extends Obstacles{
         int bottomColor = (6-(rotated/90))%4;
         int topColor = (4-(rotated/90))%4;
         if ((yball>=y+r2) && (yball<=y+r1)){
-            if (ball.getColor()!=bottomColor){
-                return true; } }
+            return ball.getColor() != bottomColor; }
         else if ((yball<=y-r2) && (yball>=y-r1)){
-            if (ball.getColor()!=topColor){
-                System.out.println("Game Over");
-                return true; } }
+            return ball.getColor() != topColor; }
         return false; }
 
 

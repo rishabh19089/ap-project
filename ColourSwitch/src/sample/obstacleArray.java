@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class obstacleArray implements Serializable {
-    private ArrayList<Obstacles> obstArray = new ArrayList<Obstacles>();
+    private ArrayList<Obstacles> obstArray = new ArrayList<>();
     private int[] dificultyArr, Xarr;
     private MagicColourBox magicColourBox;
     private double space;
@@ -26,7 +26,7 @@ public class obstacleArray implements Serializable {
     }
     public MagicColourBox createColourBox(double y, double space){
 
-        return new MagicColourBox();
+        return new MagicColourBox(1,2,3);
     }
     public Obstacles createObstacle(double y, double space, double level){
         typeObstacle();

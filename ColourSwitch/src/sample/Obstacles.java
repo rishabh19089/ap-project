@@ -47,7 +47,7 @@ public abstract class Obstacles extends element implements Serializable, Cloneab
     }
 
     @Override
-    public void handleCollision(User user) {
+    public void handleCollision(User user, Pane pane) {
 
     }
 

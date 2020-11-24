@@ -1,11 +1,13 @@
 package sample;
 
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public abstract class obj{
     protected Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
     protected double x, y;
     public abstract void move(double t);
+    public abstract void draw(Pane pane);
 
     public double getX() {
         return x;

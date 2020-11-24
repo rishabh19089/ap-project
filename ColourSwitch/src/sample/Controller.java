@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -111,8 +113,12 @@ public class Controller {
         singleCircle circle2 = new singleCircle(55, 40, 390, 120, true);
         Square square = new Square(175 , 400, 150, 20, true, 90);
 
+        MagicColourBox mcb = new MagicColourBox(250, 320, 20);
+
         ArrayList<Obstacles> obstacles = new ArrayList<>();
         obstacles.add(circle1); obstacles.add(circle2); obstacles.add(square);
+        ArrayList<MagicColourBox> boxes = new ArrayList<>();
+        boxes.add(mcb);
 
         rootJeu.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
 
@@ -124,7 +130,10 @@ public class Controller {
         for (Obstacles o: obstacles){
             o.draw(rootJeu); }
 
-        ball.draw(context, rootJeu);
+        for (MagicColourBox box : boxes){
+            box.draw(rootJeu); }
+
+        ball.draw(rootJeu);
         AnimationTimer timer = new AnimationTimer() {
             private long lastTime = System.nanoTime();
             private long startTime = System.nanoTime();
@@ -133,11 +142,20 @@ public class Controller {
                 double t = (currentTime - lastTime) / 1000000000.0;
                 double timeSinceStart = (currentTime - startTime)/1e9;
                 ball.move(t);
+
                 for (Obstacles o: obstacles){
                     o.rotate(t);
                     if (o.collision(ball, timeSinceStart)){
-                        primaryStage.close(); }
+                        try {
+                            Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+                            primaryStage.setScene(new Scene(root)); }
+                        catch (IOException e) {
+                            System.out.println("FXML not found!"); } }
                     o.starCollision(ball.getY(), rootJeu); }
+
+                for (MagicColourBox box: boxes){
+                    box.handleCollision(user, rootJeu); }
+
                 lastTime = currentTime; }
         };
         timer.start();
