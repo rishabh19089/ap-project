@@ -15,6 +15,7 @@ public abstract class Obstacles extends element implements Serializable, Cloneab
     protected ArrayList<javafx.scene.Node> elements;
     protected double sr1 = 20, sr2 = 10;
     protected boolean hasStar;
+    protected boolean clockwiseRotation;
 
     public Obstacles() {
         this.elements = new ArrayList<>(); }
@@ -53,8 +54,10 @@ public abstract class Obstacles extends element implements Serializable, Cloneab
 
     public abstract void draw(Pane pane);
 
-    public void starCollision(double pos, Pane root){
+    public void starCollision(User user, Pane root){
+        double pos = user.getBall().getY();
         if ((hasStar) && (star.present()) && (pos<=y+sr1+10) && (pos>=y-sr1)){
+            user.incrementScore();
             star.eraseStar(root);
             star.setPresent(false); } }
 

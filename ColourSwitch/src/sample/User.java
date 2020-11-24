@@ -14,11 +14,11 @@ public class User implements Serializable {
         ball.setY(HEIGHT-50);
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void incrementScore() {
+        score++;
     }
 
-    public double getScore() {
+    public int getScore() {
         return score;
     }
 

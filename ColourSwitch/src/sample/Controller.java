@@ -116,11 +116,13 @@ public class Controller {
         singleCircle circle2 = new singleCircle(90, 70, 390, 120, true);
         Square square = new Square(175 , 420, 150, 20, true, 90);
         horizontalBar bar = new horizontalBar(540, WIDTH, 15, 200, 50);
+        Plus plus = new Plus(120, 470, 110, 15, 255, 90, true, true);
+        Plus plus1 = new Plus(390, 470, 110, 15, 255, 90, false, false);
 
         MagicColourBox mcb = new MagicColourBox(250, 350, 20);
 
         ArrayList<Obstacles> obstacles = new ArrayList<>();
-        obstacles.add(circle1); obstacles.add(circle2);obstacles.add(bar);
+        obstacles.add(circle1); obstacles.add(circle2); obstacles.add(plus); obstacles.add(plus1);
         ArrayList<MagicColourBox> boxes = new ArrayList<>();
         boxes.add(mcb);
 
@@ -155,7 +157,7 @@ public class Controller {
                             primaryStage.setScene(new Scene(root)); }
                         catch (IOException e) {
                             System.out.println("FXML not found!"); } }
-                    o.starCollision(ball.getY(), rootJeu); }
+                    o.starCollision(user, rootJeu); }
 
                 for (MagicColourBox box: boxes){
                     box.handleCollision(user, rootJeu); }
