@@ -8,7 +8,6 @@ import javafx.scene.shape.Shape;
 
 public class horizontalBar extends Obstacles{
     private Rectangle[] rects;
-    private Group g;
     private double dist, WIDTH;
 
     public horizontalBar(double y, double WIDTH, double thick, double speed, double starDist){

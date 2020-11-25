@@ -69,11 +69,12 @@ public class Ball extends obj implements Serializable, Cloneable {
 
     @Override
     public void move(double timediff) {
+        double scroll = 0;
+        if (y<=HEIGHT/2) y = HEIGHT/2;
         speed = speed + acc*timediff;
         y = y + speed*timediff;
         y = Math.min(y, HEIGHT-20);
-        speed = Math.min(250, speed);
-        speed = Math.max(-250, speed);
+        speed = Math.min(250, speed); speed = Math.max(-250, speed);
         c.setCenterY(y); }
 
 

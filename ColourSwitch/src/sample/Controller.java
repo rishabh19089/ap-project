@@ -101,7 +101,7 @@ public class Controller {
     @FXML
     void enterGame(ActionEvent event1){
         int WIDTH =500, HEIGHT = 650, jump = 140;
-        Game game = new Game("Rishabh", HEIGHT, jump);
+        Game game = new Game("Rishabh", HEIGHT, WIDTH, jump);
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         int y = HEIGHT - 50;
         Pane rootJeu = new Pane(canvas);
@@ -111,20 +111,24 @@ public class Controller {
         User user = game.getUser();
         Ball ball = user.getBall();
 
-        singleCircle circle = new singleCircle(80, 65, HEIGHT, 90, true);
-        singleCircle circle1 = new singleCircle(130, 105, 390, 120, false);
-        singleCircle circle2 = new singleCircle(90, 70, 390, 120, true);
-        Square square = new Square(175 , 420, 150, 20, true, 90);
-        horizontalBar bar = new horizontalBar(540, WIDTH, 15, 200, 50);
-        Plus plus = new Plus(120, 470, 110, 15, 255, 90, true, true);
-        Plus plus1 = new Plus(390, 470, 110, 15, 255, 90, false, false);
+        singleCircle circle = new singleCircle(80, 65, -750, 90, true);
+        singleCircle circle1 = new singleCircle(130, 105, 320, 120, false);
+        singleCircle circle2 = new singleCircle(90, 70, 320, 120, true);
+        Square square = new Square(175 , 380, 150, 20, true, 90);
+        horizontalBar bar = new horizontalBar(-200, WIDTH, 15, 200, 50);
+        Plus plus = new Plus(120, -600, 110, 15, 255, 90, true, true);
+        Plus plus1 = new Plus(390, -600, 110, 15, 255, 90, false, false);
 
-        MagicColourBox mcb = new MagicColourBox(250, 350, 20);
+        MagicColourBox mcb = new MagicColourBox(250, 300);
+        MagicColourBox mcb1 = new MagicColourBox(250, -90);
+        MagicColourBox mcb2 = new MagicColourBox(250, -400);
+        MagicColourBox mcb3 = new MagicColourBox(250, -780);
 
         ArrayList<Obstacles> obstacles = new ArrayList<>();
-        obstacles.add(circle1); obstacles.add(circle2); obstacles.add(plus); obstacles.add(plus1);
+        obstacles.add(circle1); obstacles.add(circle2); obstacles.add(square);
+        obstacles.add(plus); obstacles.add(plus1); obstacles.add(bar); obstacles.add(circle);
         ArrayList<MagicColourBox> boxes = new ArrayList<>();
-        boxes.add(mcb);
+        boxes.add(mcb); boxes.add(mcb1); boxes.add(mcb2); boxes.add(mcb3);
 
         rootJeu.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
 
@@ -139,15 +143,27 @@ public class Controller {
         for (MagicColourBox box : boxes){
             box.draw(rootJeu); }
 
+        ArrayList<obj> objects = new ArrayList<>();
+        objects.addAll(obstacles); objects.addAll(boxes);
+
         ball.draw(rootJeu);
         AnimationTimer timer = new AnimationTimer() {
             private long lastTime = System.nanoTime();
             private long startTime = System.nanoTime();
+            private double scroll = 0;
             @Override
             public void handle(long currentTime) {
                 double t = (currentTime - lastTime) / 1000000000.0;
                 double timeSinceStart = (currentTime - startTime)/1e9;
                 ball.move(t);
+
+                if (ball.getY()<=HEIGHT/2){
+                    scroll = HEIGHT/2 - ball.getY(); }
+
+                for (obj objs: objects){
+                    objs.move(scroll); }
+
+                scroll = 0;
 
                 for (Obstacles o: obstacles){
                     o.rotate(t);

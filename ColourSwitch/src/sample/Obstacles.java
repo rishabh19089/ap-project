@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
@@ -16,6 +17,7 @@ public abstract class Obstacles extends element implements Serializable, Cloneab
     protected double sr1 = 20, sr2 = 10;
     protected boolean hasStar;
     protected boolean clockwiseRotation;
+    protected Group g;
 
     public Obstacles() {
         this.elements = new ArrayList<>(); }
@@ -36,12 +38,14 @@ public abstract class Obstacles extends element implements Serializable, Cloneab
 
 
     public double getColour() {
-        return colour;
-    }
+        return colour; }
+        
     @Override
-    public void move(double t) {
+    public void move(double scroll) {
+        y+=scroll;
+        g.setTranslateY(g.getTranslateY()+scroll);
+        if (hasStar) star.move(scroll);}
 
-    }
     @Override
     public boolean intersects(User user) {
         return false;
@@ -74,4 +78,5 @@ public abstract class Obstacles extends element implements Serializable, Cloneab
             points[i+2] = x -sr2*Math.cos(Math.toRadians(126+(72*t)));
             points[i+3] = y - sr2*Math.sin(Math.toRadians(126+(72*t))); }
         return points; }
+
 }

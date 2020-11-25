@@ -36,8 +36,8 @@ public class Star extends element{
 
 
     @Override
-    public void move(double t) {
-
+    public void move(double scroll) {
+        star.setTranslateY(star.getTranslateY()+scroll);
     }
 
     @Override

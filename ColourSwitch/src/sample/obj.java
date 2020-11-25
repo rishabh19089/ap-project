@@ -10,19 +10,16 @@ public abstract class obj{
     public abstract void draw(Pane pane);
 
     public double getX() {
-        return x;
-    }
+        return x; }
 
     public void setX(double x) {
         this.x = x;
     }
 
     public double getY() {
-        return y;
-    }
+        return y; }
 
     public void setY(double y) {
-        this.y = y;
-    }
+        this.y = y; }
 
 }

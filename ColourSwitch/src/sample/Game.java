@@ -7,17 +7,19 @@ import java.util.List;
 
 public class Game implements Serializable {
     private User user;
+    private int HEIGHT, WIDTH;
+    private double currentScroll, totalScroll;
     private obstacleArray obstArray;
     private boolean gameOver = false;
     private MagicColourBox magicColourBox;
 
-    public Game(String name, int HEIGHT, int dist){
-        user = new User(name, HEIGHT, dist);
-    }
+    public Game(String name, int HEIGHT, int WIDTH, int dist){
+        currentScroll = 0; totalScroll= 0;
+        this.HEIGHT = HEIGHT; this.WIDTH = WIDTH;
+        user = new User(name, HEIGHT, dist); }
 
     public User getUser() {
-        return user;
-    }
+        return user; }
 
     public void Loose(){
 

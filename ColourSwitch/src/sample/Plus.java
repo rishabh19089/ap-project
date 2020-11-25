@@ -9,7 +9,6 @@ import javafx.scene.shape.Shape;
 public class Plus extends Obstacles{
     private double length, center;
     private Rectangle[] rects;
-    Group g;
 
     public Plus(double xpos, double ypos, double side, double thick, double starCenter, double speed, boolean hasStar, boolean rotationClockwise){
         x = starCenter; y = ypos; this.length = side; center = xpos; this.speed = speed;

@@ -8,7 +8,6 @@ public class Square extends Obstacles{
 
     private int length;
     private Rectangle[] rects;
-    private Group g;
 
     public Square(int xpos, int ypos, int side, int thick, boolean hasStar, double speed){
         rects = new Rectangle[4]; length = side;

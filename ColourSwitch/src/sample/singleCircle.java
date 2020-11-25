@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -58,6 +59,13 @@ public class singleCircle extends Obstacles{
     public double place() {
         return 0; }
 
+    @Override
+    public void move(double scroll) {
+        y+=scroll;
+        if (hasStar) star.move(scroll);
+        for (Arc arc: arcs){
+            arc.setCenterY(arc.getCenterY()+scroll); }
+        fs.setCenterY(fs.getCenterY()+scroll);}
 
 
     @Override
@@ -69,7 +77,8 @@ public class singleCircle extends Obstacles{
 
     public void rotate(double timediff){
         for (int i=0; i<4; i++){
-            arcs[i].setStartAngle(arcs[i].getStartAngle()+speed*timediff); } }
+            arcs[i].setStartAngle(arcs[i].getStartAngle()+speed*timediff);
+        } }
 
 
     public boolean collision(Ball ball, double timeSinceStart){

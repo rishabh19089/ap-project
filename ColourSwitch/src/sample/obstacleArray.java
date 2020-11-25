@@ -26,7 +26,7 @@ public class obstacleArray implements Serializable {
     }
     public MagicColourBox createColourBox(double y, double space){
 
-        return new MagicColourBox(1,2,3);
+        return new MagicColourBox(1,2);
     }
     public Obstacles createObstacle(double y, double space, double level){
         typeObstacle();
