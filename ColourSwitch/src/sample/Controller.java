@@ -1,11 +1,15 @@
 package sample;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -16,8 +20,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -98,16 +107,29 @@ public class Controller {
         Pane view= newGameScreen.switchPage("sample");
         page4.getChildren().setAll(view); }
 
+    private double[] cord(double x, double y, double sr1, double sr2){
+        double[] points = new double[20];
+        for (int i=0; i<20; i+=4){
+            int t = i/4;
+            points[i] = x - sr1*Math.cos(Math.toRadians(90+(72*t)));
+            points[i+1] = y - sr1*Math.sin(Math.toRadians(90+(72*t)));
+            points[i+2] = x -sr2*Math.cos(Math.toRadians(126+(72*t)));
+            points[i+3] = y - sr2*Math.sin(Math.toRadians(126+(72*t))); }
+        return points; }
+
     @FXML
-    void enterGame(ActionEvent event1){
+    void enterGame(ActionEvent event1) throws FileNotFoundException {
         int WIDTH =500, HEIGHT = 650, jump = 140;
         Game game = new Game("Rishabh", HEIGHT, WIDTH, jump);
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         int y = HEIGHT - 50;
         Pane rootJeu = new Pane(canvas);
         Scene sceneJeu = new Scene(rootJeu, WIDTH, HEIGHT);
-        GraphicsContext context = canvas.getGraphicsContext2D();
-
+        final boolean[] started = {false};
+        final boolean[] gameOver = {false};
+        Text text = new Text(5, 40, "0"); Font font = Font.loadFont(new FileInputStream(new File("resources/fonts/stencil.ttf")), 40); text.setFont(font);
+        text.setFill(Color.WHITE);
+        Star st = new Star(cord(60, 28, 18, 9)); st.get().setFill(Color.WHITE);
         User user = game.getUser();
         Ball ball = user.getBall();
 
@@ -132,9 +154,12 @@ public class Controller {
 
         rootJeu.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
 
-        sceneJeu.setOnKeyPressed((event) -> {
-            if (event.getCode() == KeyCode.SPACE) {
-                ball.jump(); }});
+        sceneJeu.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.SPACE){
+                    ball.jump();
+                    started[0] = true; } }});
 
         //circle.draw(rootJeu);
         for (Obstacles o: obstacles){
@@ -145,20 +170,29 @@ public class Controller {
 
         ArrayList<obj> objects = new ArrayList<>();
         objects.addAll(obstacles); objects.addAll(boxes);
+        rootJeu.getChildren().add(text);
+        st.draw(rootJeu);
 
         ball.draw(rootJeu);
         AnimationTimer timer = new AnimationTimer() {
             private long lastTime = System.nanoTime();
             private long startTime = System.nanoTime();
-            private double scroll = 0;
+            private double scroll = 0; private double totalScroll = 0;
             @Override
             public void handle(long currentTime) {
                 double t = (currentTime - lastTime) / 1000000000.0;
                 double timeSinceStart = (currentTime - startTime)/1e9;
-                ball.move(t);
+                ball.move(t, started[0]);
 
-                if (ball.getY()<=HEIGHT/2){
-                    scroll = HEIGHT/2 - ball.getY(); }
+                double ballY = ball.getY();
+
+                if (ballY<=HEIGHT/2){
+                    scroll = HEIGHT/2 - ballY; }
+                else if (ballY>=HEIGHT){
+                    scroll = HEIGHT-ballY; }
+
+                totalScroll += scroll;
+
 
                 for (obj objs: objects){
                     objs.move(scroll); }
@@ -168,19 +202,25 @@ public class Controller {
                 for (Obstacles o: obstacles){
                     o.rotate(t);
                     if (o.collision(ball, timeSinceStart)){
+                        gameOver[0] = true;
                         try {
                             Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
                             primaryStage.setScene(new Scene(root)); }
                         catch (IOException e) {
-                            System.out.println("FXML not found!"); } }
+                            System.out.println("FXML not found!"); }
+                    }
                     o.starCollision(user, rootJeu); }
 
                 for (MagicColourBox box: boxes){
                     box.handleCollision(user, rootJeu); }
 
+                text.setText(""+ user.getScore());
+
+
                 lastTime = currentTime; }
         };
         timer.start();
+        if (gameOver[0]) timer.stop();
         primaryStage.setScene(sceneJeu);
 
     }

@@ -60,6 +60,10 @@ public class Ball extends obj implements Serializable, Cloneable {
         c.setFill(colors[color]); }
 
     @Override
+    public void move(double t) {
+        if (y<=HEIGHT/2) y = HEIGHT/2; }
+
+    @Override
     public void draw(Pane rootJeu){
         rootJeu.getChildren().add(c); }
 
@@ -67,13 +71,12 @@ public class Ball extends obj implements Serializable, Cloneable {
         speed = Math.min(speed, 0);
         speed -= boost; }
 
-    @Override
-    public void move(double timediff) {
+    public void move(double timediff, boolean started) {
         double scroll = 0;
-        if (y<=HEIGHT/2) y = HEIGHT/2;
+        move(timediff);
         speed = speed + acc*timediff;
         y = y + speed*timediff;
-        y = Math.min(y, HEIGHT-20);
+        if (!started)y = Math.min(y, HEIGHT-20);
         speed = Math.min(250, speed); speed = Math.max(-250, speed);
         c.setCenterY(y); }
 
