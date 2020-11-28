@@ -12,6 +12,7 @@ public class Square extends Obstacles{
     public Square(int xpos, int ypos, int side, int thick, boolean hasStar, double speed){
         rects = new Rectangle[4]; length = side;
         x = xpos + (double)side/2; y = ypos + (double) side/2;
+        yBottom = ypos+side; yTop = ypos;
         this.hasStar = hasStar;
         this.speed = speed;
         star = new Star(computeStar());

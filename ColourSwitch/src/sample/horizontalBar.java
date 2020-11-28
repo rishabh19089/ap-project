@@ -13,6 +13,7 @@ public class horizontalBar extends Obstacles{
     public horizontalBar(double y, double WIDTH, double thick, double speed, double starDist){
         x = WIDTH/2; this.y = y - starDist; this.WIDTH = WIDTH;
         hasStar = true;
+        yTop = y; yBottom = y + thick;
         this.speed = speed; //Distance travelled in a second
         rects = new Rectangle[8];
         for (int i=0; i<8; i++){

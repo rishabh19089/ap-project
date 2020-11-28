@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -19,6 +18,7 @@ public class singleCircle extends Obstacles{
         y = height - 220;
         arcs = new Arc[4];
         r1 = radius1; r2 = radius2;
+        yBottom = y + radius1; yTop = y-radius1;
         this.speed = speed;
         for (int i=0; i<4; i++){
             arcs[i] = new Arc(x, y, radius1, radius1, 90*i, 90);
@@ -61,7 +61,7 @@ public class singleCircle extends Obstacles{
 
     @Override
     public void move(double scroll) {
-        y+=scroll;
+        y+=scroll; yTop+=scroll; yBottom+=scroll;
         if (hasStar) star.move(scroll);
         for (Arc arc: arcs){
             arc.setCenterY(arc.getCenterY()+scroll); }

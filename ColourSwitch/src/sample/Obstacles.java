@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public abstract class Obstacles extends element implements Serializable, Cloneable{
     protected double  colour, dificulty;
-    protected double lastTime;
+    protected double yBottom, yTop;
     protected Star star;
     protected double speed; //Angle rotated per second
     public abstract boolean rotation();
@@ -42,7 +42,7 @@ public abstract class Obstacles extends element implements Serializable, Cloneab
         
     @Override
     public void move(double scroll) {
-        y+=scroll;
+        y+=scroll; yBottom+=scroll; yTop+=scroll;
         g.setTranslateY(g.getTranslateY()+scroll);
         if (hasStar) star.move(scroll);}
 

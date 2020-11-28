@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
@@ -42,8 +41,7 @@ public class MagicColourBox extends element{
     public void move(double scroll) {
         y+=scroll;
         for (Arc arc: arcs){
-            arc.setCenterY(arc.getCenterY()+scroll); }
-    }
+            arc.setCenterY(arc.getCenterY()+scroll); } }
 
     @Override
     public boolean intersects(User user) {

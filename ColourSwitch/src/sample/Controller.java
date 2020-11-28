@@ -7,29 +7,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
-import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 
 public class Controller {
     private Game game;
@@ -117,19 +110,26 @@ public class Controller {
             points[i+3] = y - sr2*Math.sin(Math.toRadians(126+(72*t))); }
         return points; }
 
+    void exit(){
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+            primaryStage.setScene(new Scene(root)); }
+        catch (IOException e) {
+            System.out.println("FXML not found!"); }
+    }
+
     @FXML
     void enterGame(ActionEvent event1) throws FileNotFoundException {
-        int WIDTH =500, HEIGHT = 650, jump = 140;
+        int WIDTH =500, HEIGHT = 650, jump = 160;
         Game game = new Game("Rishabh", HEIGHT, WIDTH, jump);
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
-        int y = HEIGHT - 50;
         Pane rootJeu = new Pane(canvas);
         Scene sceneJeu = new Scene(rootJeu, WIDTH, HEIGHT);
         final boolean[] started = {false};
         final boolean[] gameOver = {false};
         Text text = new Text(5, 40, "0"); Font font = Font.loadFont(new FileInputStream(new File("resources/fonts/stencil.ttf")), 40); text.setFont(font);
         text.setFill(Color.WHITE);
-        Star st = new Star(cord(60, 28, 18, 9)); st.get().setFill(Color.WHITE);
+        Star st = new Star(cord(52, 28, 18, 9)); st.get().setFill(Color.WHITE);
         User user = game.getUser();
         Ball ball = user.getBall();
 
@@ -161,7 +161,6 @@ public class Controller {
                     ball.jump();
                     started[0] = true; } }});
 
-        //circle.draw(rootJeu);
         for (Obstacles o: obstacles){
             o.draw(rootJeu); }
 
@@ -188,10 +187,13 @@ public class Controller {
 
                 if (ballY<=HEIGHT/2){
                     scroll = HEIGHT/2 - ballY; }
-                else if (ballY>=HEIGHT){
-                    scroll = HEIGHT-ballY; }
+                else if (ballY>=HEIGHT-10){
+                    scroll = HEIGHT-10-ballY; }
 
                 totalScroll += scroll;
+
+                if ((started[0]) && (ballY>=HEIGHT-10) && (totalScroll<=0)){
+                    exit(); stop(); }
 
 
                 for (obj objs: objects){
@@ -202,25 +204,18 @@ public class Controller {
                 for (Obstacles o: obstacles){
                     o.rotate(t);
                     if (o.collision(ball, timeSinceStart)){
-                        gameOver[0] = true;
-                        try {
-                            Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-                            primaryStage.setScene(new Scene(root)); }
-                        catch (IOException e) {
-                            System.out.println("FXML not found!"); }
-                    }
+                        exit(); stop();}
                     o.starCollision(user, rootJeu); }
 
                 for (MagicColourBox box: boxes){
                     box.handleCollision(user, rootJeu); }
 
+                if (user.getScore()>=10) st.get().setTranslateX(17);
                 text.setText(""+ user.getScore());
-
 
                 lastTime = currentTime; }
         };
         timer.start();
-        if (gameOver[0]) timer.stop();
         primaryStage.setScene(sceneJeu);
 
     }

@@ -72,7 +72,6 @@ public class Ball extends obj implements Serializable, Cloneable {
         speed -= boost; }
 
     public void move(double timediff, boolean started) {
-        double scroll = 0;
         move(timediff);
         speed = speed + acc*timediff;
         y = y + speed*timediff;
