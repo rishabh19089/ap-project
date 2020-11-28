@@ -10,14 +10,15 @@ public class horizontalBar extends Obstacles{
     private Rectangle[] rects;
     private double dist, WIDTH;
 
-    public horizontalBar(double y, double WIDTH, double thick, double speed, double starDist){
-        x = WIDTH/2; this.y = y - starDist; this.WIDTH = WIDTH;
+    public horizontalBar(double yTop, double WIDTH, double yBottom, double speed, double starDist){
+        this.yTop = yTop; this.yBottom = yBottom;
+        double thick = yBottom - starDist - 20 - yTop;
+        x = WIDTH/2; this.y = yTop + 20; this.WIDTH = WIDTH;
         hasStar = true;
-        yTop = y; yBottom = y + thick;
         this.speed = speed; //Distance travelled in a second
         rects = new Rectangle[8];
         for (int i=0; i<8; i++){
-            rects[i] = new Rectangle(-WIDTH+(WIDTH/4)*i, y, WIDTH/4, thick);
+            rects[i] = new Rectangle(-WIDTH+(WIDTH/4)*i, yTop + 20 + starDist, WIDTH/4, thick);
             rects[i].setFill(colors[i%4]); }
         g = new Group(rects);
         star = new Star(computeStar()); }

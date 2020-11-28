@@ -13,19 +13,17 @@ public class singleCircle extends Obstacles{
     private Arc[] arcs;
     private double r1, r2;
 
-    public singleCircle(double radius1, double radius2, int height, double speed, boolean hasStar){
-        x = 250;
-        y = height - 220;
+    public singleCircle(double xCenter, double yTop, double yBottom, double radius2, double speed, boolean hasStar){
+        this.yTop = yTop; this.yBottom = yBottom; x = xCenter; y = (yTop+yBottom)/2;
         arcs = new Arc[4];
-        r1 = radius1; r2 = radius2;
-        yBottom = y + radius1; yTop = y-radius1;
+        r1 = yBottom-y; r2 = radius2;
         this.speed = speed;
         for (int i=0; i<4; i++){
-            arcs[i] = new Arc(x, y, radius1, radius1, 90*i, 90);
+            arcs[i] = new Arc(x, y, r1, r1, 90*i, 90);
             arcs[i].setStroke(colors[i]);
             arcs[i].setFill(colors[i]);
             arcs[i].setType(ArcType.ROUND); }
-        fs = new Circle(250, height -220, radius2);
+        fs = new Circle(x, y, radius2);
         fs.setFill(Color.BLACK);
         star = new Star(computeStar());
         this.hasStar = hasStar; }

@@ -10,7 +10,7 @@ public class User implements Serializable {
     public User(String name, int HEIGHT, int dist) {
         this.score = 0;
         Name = name;
-        this.ball = new Ball(420, HEIGHT, dist);
+        this.ball = new Ball(600, HEIGHT, dist);
         ball.setY(HEIGHT-50);
     }
 

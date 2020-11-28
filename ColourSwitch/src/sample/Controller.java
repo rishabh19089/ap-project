@@ -1,8 +1,5 @@
 package sample;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -119,27 +116,25 @@ public class Controller {
     }
 
     @FXML
-    void enterGame(ActionEvent event1) throws FileNotFoundException {
-        int WIDTH =500, HEIGHT = 650, jump = 160;
+    void enterGame(ActionEvent event1){
+        int WIDTH =500, HEIGHT = 650, jump = 200;
         Game game = new Game("Rishabh", HEIGHT, WIDTH, jump);
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         Pane rootJeu = new Pane(canvas);
         Scene sceneJeu = new Scene(rootJeu, WIDTH, HEIGHT);
         final boolean[] started = {false};
-        final boolean[] gameOver = {false};
-        Text text = new Text(5, 40, "0"); Font font = Font.loadFont(new FileInputStream(new File("resources/fonts/stencil.ttf")), 40); text.setFont(font);
-        text.setFill(Color.WHITE);
+        Text text = new Text(5, 40, "0"); Font font = Font.loadFont("file:resources/fonts/stencil.ttf", 40); text.setFont(font); text.setFill(Color.WHITE);
         Star st = new Star(cord(52, 28, 18, 9)); st.get().setFill(Color.WHITE);
         User user = game.getUser();
         Ball ball = user.getBall();
 
-        singleCircle circle = new singleCircle(80, 65, -750, 90, true);
-        singleCircle circle1 = new singleCircle(130, 105, 320, 120, false);
-        singleCircle circle2 = new singleCircle(90, 70, 320, 120, true);
-        Square square = new Square(175 , 380, 150, 20, true, 90);
-        horizontalBar bar = new horizontalBar(-200, WIDTH, 15, 200, 50);
-        Plus plus = new Plus(120, -600, 110, 15, 255, 90, true, true);
-        Plus plus1 = new Plus(390, -600, 110, 15, 255, 90, false, false);
+        singleCircle circle = new singleCircle(250, -1050, -890, 65, 130, true);
+        singleCircle circle1 = new singleCircle(250,-30, 230, 105, 130, false);
+        singleCircle circle2 = new singleCircle(250,10, 190, 70, 130, true);
+        Square square = new Square(175 , 380, 530, 20, true, 130);
+        horizontalBar bar = new horizontalBar(-270, WIDTH, -185, 300, 50);
+        Plus plus = new Plus(120, -710, -475, 15, 255, 130, true, true);
+        Plus plus1 = new Plus(390, -710, -475, 15, 255, 130, false, false);
 
         MagicColourBox mcb = new MagicColourBox(250, 300);
         MagicColourBox mcb1 = new MagicColourBox(250, -90);
@@ -192,7 +187,7 @@ public class Controller {
 
                 totalScroll += scroll;
 
-                if ((started[0]) && (ballY>=HEIGHT-10) && (totalScroll<=0)){
+                if ((started[0]) && (ballY>=HEIGHT) && (totalScroll<=0)){
                     exit(); stop(); }
 
 

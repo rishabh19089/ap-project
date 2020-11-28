@@ -76,7 +76,7 @@ public class Ball extends obj implements Serializable, Cloneable {
         speed = speed + acc*timediff;
         y = y + speed*timediff;
         if (!started)y = Math.min(y, HEIGHT-20);
-        speed = Math.min(250, speed); speed = Math.max(-250, speed);
+        speed = Math.min(350, speed); speed = Math.max(-350, speed);
         c.setCenterY(y); }
 
 

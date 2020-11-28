@@ -5,19 +5,18 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.*;
 
 public class Square extends Obstacles{
-
-    private int length;
     private Rectangle[] rects;
 
-    public Square(int xpos, int ypos, int side, int thick, boolean hasStar, double speed){
-        rects = new Rectangle[4]; length = side;
-        x = xpos + (double)side/2; y = ypos + (double) side/2;
-        yBottom = ypos+side; yTop = ypos;
+    public Square(double xpos, double yTop, double yBottom, double thick, boolean hasStar, double speed){
+        rects = new Rectangle[4];
+        this.yBottom = yBottom; this.yTop = yTop;
+        double side = yBottom-yTop;
+        x = xpos + side/2; y = yTop + side/2;
         this.hasStar = hasStar;
         this.speed = speed;
         star = new Star(computeStar());
         g = new Group();
-        int[][] pos = new int[][] {{xpos, ypos, side-thick, thick}, {xpos+side-thick, ypos, thick, side - thick}, {xpos+thick, ypos+side-thick, side - thick, thick}, {xpos, ypos+thick, thick, side-thick}};
+        double[][] pos = new double[][] {{xpos, yTop, side-thick, thick}, {xpos+side-thick, yTop, thick, side - thick}, {xpos+thick, yTop+side-thick, side - thick, thick}, {xpos, yTop+thick, thick, side-thick}};
         for (int i=0; i<4; i++){
             rects[i] = new Rectangle(pos[i][0], pos[i][1], pos[i][2], pos[i][3]);
             rects[i].setFill(colors[i]);

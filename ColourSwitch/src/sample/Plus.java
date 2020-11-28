@@ -10,9 +10,10 @@ public class Plus extends Obstacles{
     private double length, center;
     private Rectangle[] rects;
 
-    public Plus(double xpos, double ypos, double side, double thick, double starCenter, double speed, boolean hasStar, boolean rotationClockwise){
+    public Plus(double xpos, double yTop, double yBottom, double thick, double starCenter, double speed, boolean hasStar, boolean rotationClockwise){
+        this.yTop = yTop; this.yBottom = yBottom;
+        double side = (yBottom - yTop - thick)/2; double ypos = yBottom - thick - side;
         x = starCenter; y = ypos; this.length = side; center = xpos; this.speed = speed;
-        yBottom = ypos+thick+side; yTop = ypos - side;
         clockwiseRotation = rotationClockwise;
         rects = new Rectangle[4];
         this.hasStar = hasStar;
