@@ -317,7 +317,7 @@ public class Controller {
         timer.start();
         primaryStage.setScene(scene);
 
-
+        //checking
     }
 
     
