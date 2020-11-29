@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.Circle?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="452.0" prefWidth="656.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<AnchorPane fx:id="page" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="452.0" prefWidth="656.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
-      <BorderPane prefHeight="452.0" prefWidth="656.0" />
-      <ImageView fitHeight="452.0" fitWidth="656.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@help.png" />
-         </image>
-      </ImageView>
+      <Arc fill="DODGERBLUE" layoutX="349.0" layoutY="209.0" length="90.0" radiusX="50.0" radiusY="50.0" rotate="45.0" startAngle="45.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" AnchorPane.bottomAnchor="243.0" AnchorPane.leftAnchor="313.64466094970703" AnchorPane.rightAnchor="271.64466094970703" AnchorPane.topAnchor="159.0" />
+      <Arc fill="#ff1f1f" layoutX="332.0" layoutY="202.0" length="90.0" radiusX="50.0" radiusY="50.0" startAngle="90.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" />
+      <Arc fill="#f91fff" layoutX="332.0" layoutY="201.0" length="90.0" radiusX="50.0" radiusY="50.0" startAngle="270.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" />
+      <Arc fill="#20ff1f" layoutX="332.0" layoutY="201.0" length="90.0" radiusX="50.0" radiusY="50.0" startAngle="180.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" />
+      <Circle layoutX="332.0" layoutY="201.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" />
    </children>
 </AnchorPane>

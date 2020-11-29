@@ -6,12 +6,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.io.Serializable;
+import java.util.Random;
 
 public class Ball extends obj implements Serializable, Cloneable {
     private double acc, speed;
     private int HEIGHT, boost;
     private Circle c;
-    private int color = 1;
+    private int color;
+    private Color colour;
 
     public Ball(double acc, int HEIGHT, int boost) {
         this.acc = acc;
@@ -20,11 +22,16 @@ public class Ball extends obj implements Serializable, Cloneable {
         this.boost = boost;
         c = new Circle(10);
         c.setCenterX(250);
-        c.setFill(Color.ORANGERED);
-    }
+        color= new Random().nextInt(4);
+        c.setFill(colors[color]);
+        colour = colors[color]; }
 
     public Circle getCircle() {
         return c;
+    }
+
+    public Color getColour() {
+        return colour;
     }
 
     public void setBoost(int dist) {
@@ -57,6 +64,7 @@ public class Ball extends obj implements Serializable, Cloneable {
 
     public void setColor(int colour) {
         this.color = colour;
+        this.colour = colors[color];
         c.setFill(colors[color]); }
 
     @Override

@@ -2,6 +2,8 @@ package sample;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
@@ -13,9 +15,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -37,65 +42,109 @@ public class Controller {
     public void deserialize() throws IOException, ClassNotFoundException {
 
     }
-    @FXML
-    private Button newG;
-    @FXML
-    private AnchorPane page;
-    @FXML
-    private AnchorPane page2;
-    @FXML
-    private AnchorPane page3;
-    @FXML
-    private AnchorPane page4;
-    @FXML
-    private Button back2;
-    @FXML
-    private Button ResGame;
-    @FXML
-    private Button exit;
-    @FXML
-    private Button help;
-    @FXML
-    private Button back1;
-    @FXML
-    private Button back3;
-    @FXML
-    public void displayNewGame(ActionEvent event) {
-        //System.out.println("clicked");
-        FxmlLoader newGameScreen = new FxmlLoader();
-        Pane view= newGameScreen.switchPage("newGame");
-        page.getChildren().setAll(view); }
-    @FXML
-    public void displayExitMenu(ActionEvent event) {
-        FxmlLoader newGameScreen = new FxmlLoader();
-        Pane view= newGameScreen.switchPage("Exit");
-        page.getChildren().setAll(view); }
-    @FXML
-    public void displayResumeGame(ActionEvent event) {
-        FxmlLoader newGameScreen = new FxmlLoader();
-        Pane view= newGameScreen.switchPage("ResumeGame");
-        page.getChildren().setAll(view); }
-    @FXML
-    void displayMainMenu(ActionEvent event) {
-        FxmlLoader newGameScreen = new FxmlLoader();
-        Pane view= newGameScreen.switchPage("sample");
-        page2.getChildren().setAll(view); }
-    @FXML
-    void displayMainMenu2(ActionEvent event) {
-        FxmlLoader newGameScreen = new FxmlLoader();
-        Pane view= newGameScreen.switchPage("sample");
-        page3.getChildren().setAll(view); }
-    @FXML
-    void displayHelpMenu(ActionEvent event) {
-        FxmlLoader newGameScreen = new FxmlLoader();
-        Pane view= newGameScreen.switchPage("help");
-        page.getChildren().setAll(view); }
+
+    private void load(String s){
+        try {
+            Parent root1 = FXMLLoader.load(getClass().getResource(s+".fxml"));
+            primaryStage.setScene(new Scene(root1)); }
+        catch (IOException e) {
+            System.out.println("FXML not found!"); } }
+
+    private void getText(Pane root){
+        Color[] colour = new Color[]{Color.RED, Color.YELLOWGREEN, Color.LIGHTSKYBLUE};
+        Font font = Font.loadFont("file:resources/fonts/stencil.ttf", 85);
+        int[] pos = new int[] {15, 137, 253, 165, 215, 295, 325, 375, 430};
+        String[] text = new String[] {"C", "L", "R", "S", "W", "I", "T", "C", "H"};
+        Text[] texts = new Text[9];
+        for (int i=0; i<9; i++){
+            if (i<3) {
+                texts[i] = new Text(pos[i], 90, text[i]); texts[i].setFont(font); texts[i].setFill(Color.WHITE); }
+            else{
+                texts[i] = new Text(pos[i], 185, text[i]); texts[i].setFont(font);
+                if (i%2!=0) texts[i].setFill(Color.WHITE);
+                else texts[i].setFill(colour[(i-4)/2]); } }
+        root.getChildren().addAll(texts); }
+
+    private void drawInfinity(Pane root){
+        SVGPath svg = new SVGPath();
+        svg.setFill(Color.TRANSPARENT);
+        svg.setContent("M 787.49,150 C 787.49,203.36 755.56,247.27 712.27,269.5 S 622.17,290.34 582.67,279.16 508.78,246.56 480,223.91 424.93,174.93 400,150 348.85,98.79 320,76.09 256.91,32.03 217.33,20.84 130.62,8.48 87.73,30.5 12.51,96.64 12.51,150 44.44,247.27 87.73,269.5 177.83,290.34 217.33,279.16 291.22,246.56 320,223.91 375.07,174.93 400,150 451.15,98.79 480,76.09 543.09,32.03 582.67,20.84 669.38,8.48 712.27,30.5 787.49,96.64 787.49,150 z");
+        double originalWidth = svg.prefWidth(-1);
+        double originalHeight = svg.prefHeight(originalWidth);
+        double scaleX = 110 / originalWidth;
+        double scaleY = 60 / originalHeight;
+        svg.setScaleX(scaleX); svg.setScaleY(scaleY);
+        svg.setStrokeWidth(80.0); svg.setStroke(Color.WHITE);
+        svg.setLayoutX(-150); svg.setLayoutY(255);
+        root.getChildren().add(svg); }
+
+    private void addButtons(Pane root){
+        String[] bt = new String[]{"newGame", "ResumeGame", "help", "Exit"};
+        Button button1= new Button(); button1.setMinSize(120,85);
+        Button button2= new Button(); button2.setMinSize(120,65);
+        Button button3= new Button(); button3.setMinSize(120,70);
+        Button button4= new Button(); button4.setMinSize(100,60);
+        Button[] buttons = new Button[] {button1, button2, button3, button4};
+        for (int i=0; i<4; i++){
+            buttons[i].setOpacity(0);
+            int finalI = i;
+            buttons[i].setOnAction((event) -> load(bt[finalI]));}
+        button1.setLayoutX(190);button1.setLayoutY(360);
+        button2.setLayoutX(190);button2.setLayoutY(615);
+        button3.setLayoutX(20); button3.setLayoutY(615);
+        button4.setLayoutX(400);button4.setLayoutY(615);
+        root.getChildren().addAll(buttons); }
+
+    private void addImage(Pane root, String name, int x, int y, int width, int height){
+        Image image = new Image("file:resources/images/"+name);
+        ImageView im = new ImageView(image);
+        im.setX(x); im.setY(y); im.setFitWidth(width);im.setFitHeight(height);
+        root.getChildren().add(im); }
+
+      public void mainmenu(){
+          Pane root = new Pane();
+          primaryStage.setTitle("Colour Switch Game");
+          getText(root);
+          singleCircle c = new singleCircle(250, 255, 555, 130, 170, false, false);
+          singleCircle c0 = new singleCircle(250, 275,535, 110, 150, false, true);
+          singleCircle c1= new singleCircle(250, 295,515, 90, 130, false, false);
+          singleCircle c2= new singleCircle(103, 30,95, 20, 240, false, false);
+          singleCircle c3= new singleCircle(222, 30,95, 22, 240, false, false);
+          horizontalBar bar= new horizontalBar(125,82, 170,120,10); bar.star.get().setOpacity(0);
+          ArrayList<Obstacles> arr = new ArrayList<>(List.of(c, c0, c1, c2, c3, bar));
+          arr.forEach(el -> el.draw(root));
+          drawInfinity(root);
+          addImage(root, "qn.jpg", 10, 595, 140, 90); addImage(root, "res1.png", 190, 585, 130, 130); addImage(root,"back3.png", 380, 590, 110, 110);
+          addButtons(root);
+          AnimationTimer timer = new AnimationTimer() {
+              private long lastTime = System.nanoTime();
+              private long startTime = System.nanoTime();
+              @Override
+              public void handle(long currentTime) {
+                  double t = (currentTime - lastTime) / 1000000000.0;
+                  arr.forEach(el -> el.rotate(t));
+                  lastTime = currentTime; }};
+          timer.start();
+
+          root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
+          Scene sc = new Scene(root, 500,700);
+          primaryStage.setScene(sc);
+          primaryStage.show(); }
 
     @FXML
-    void displayMainMenu3(ActionEvent event) {
-        FxmlLoader newGameScreen = new FxmlLoader();
-        Pane view= newGameScreen.switchPage("sample");
-        page4.getChildren().setAll(view); }
+    public void displayExitMenu(ActionEvent event) {
+        load("Exit");}
+
+    @FXML
+    public void displayResumeGame(ActionEvent event) {
+        load("ResumeGame"); }
+    @FXML
+    void displayMainMenu(ActionEvent event) {
+        mainmenu(); }
+
+    @FXML
+    void displayHelpMenu(ActionEvent event) {
+        load("help"); }
 
     private double[] cord(double x, double y, double sr1, double sr2){
         double[] points = new double[20];
@@ -108,33 +157,28 @@ public class Controller {
         return points; }
 
     void exit(){
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-            primaryStage.setScene(new Scene(root)); }
-        catch (IOException e) {
-            System.out.println("FXML not found!"); }
-    }
+        mainmenu(); }
 
     @FXML
     void enterGame(ActionEvent event1){
         int WIDTH =500, HEIGHT = 650, jump = 200;
         Game game = new Game("Rishabh", HEIGHT, WIDTH, jump);
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
-        Pane rootJeu = new Pane(canvas);
-        Scene sceneJeu = new Scene(rootJeu, WIDTH, HEIGHT);
+        Pane root = new Pane(canvas);
+        Scene sceneJeu = new Scene(root, WIDTH, HEIGHT);
         final boolean[] started = {false};
         Text text = new Text(5, 40, "0"); Font font = Font.loadFont("file:resources/fonts/stencil.ttf", 40); text.setFont(font); text.setFill(Color.WHITE);
         Star st = new Star(cord(52, 28, 18, 9)); st.get().setFill(Color.WHITE);
         User user = game.getUser();
         Ball ball = user.getBall();
 
-        singleCircle circle = new singleCircle(250, -1050, -890, 65, 130, true);
-        singleCircle circle1 = new singleCircle(250,-30, 230, 105, 130, false);
-        singleCircle circle2 = new singleCircle(250,10, 190, 70, 130, true);
-        Square square = new Square(175 , 380, 530, 20, true, 130);
-        horizontalBar bar = new horizontalBar(-270, WIDTH, -185, 300, 50);
-        Plus plus = new Plus(120, -710, -475, 15, 255, 130, true, true);
-        Plus plus1 = new Plus(390, -710, -475, 15, 255, 130, false, false);
+        singleCircle circle = new singleCircle(250, -1050, -890, 65, 90, true, true);
+        singleCircle circle1 = new singleCircle(250,-30, 230, 105, 90, false, false);
+        singleCircle circle2 = new singleCircle(250,10, 190, 70, 90, true, false);
+        Square square = new Square(175 , 380, 530, 20, true, 90);
+        horizontalBar bar = new horizontalBar(-270, WIDTH, -185, 200, 50);
+        Plus plus = new Plus(120, -710, -475, 15, 255, 90, true, true);
+        Plus plus1 = new Plus(390, -710, -475, 15, 255, 90, false, false);
 
         MagicColourBox mcb = new MagicColourBox(250, 300);
         MagicColourBox mcb1 = new MagicColourBox(250, -90);
@@ -147,27 +191,31 @@ public class Controller {
         ArrayList<MagicColourBox> boxes = new ArrayList<>();
         boxes.add(mcb); boxes.add(mcb1); boxes.add(mcb2); boxes.add(mcb3);
 
-        rootJeu.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
+        root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
 
         sceneJeu.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.SPACE){
                     ball.jump();
-                    started[0] = true; } }});
+                    started[0] = true; }
+                else if(event.getCode() == KeyCode.ESCAPE){
+                    try {
+                        Parent root = FXMLLoader.load(getClass().getResource("pauseMenu.fxml"));
+                        primaryStage.setScene(new Scene(root)); }
+                    catch (IOException e) {
+                        System.out.println("FXML not found!"); } }}});
 
         for (Obstacles o: obstacles){
-            o.draw(rootJeu); }
-
+            o.draw(root); }
         for (MagicColourBox box : boxes){
-            box.draw(rootJeu); }
-
+            box.draw(root); }
         ArrayList<obj> objects = new ArrayList<>();
         objects.addAll(obstacles); objects.addAll(boxes);
-        rootJeu.getChildren().add(text);
-        st.draw(rootJeu);
+        root.getChildren().add(text);
+        st.draw(root);
 
-        ball.draw(rootJeu);
+        ball.draw(root);
         AnimationTimer timer = new AnimationTimer() {
             private long lastTime = System.nanoTime();
             private long startTime = System.nanoTime();
@@ -197,13 +245,13 @@ public class Controller {
                 scroll = 0;
 
                 for (Obstacles o: obstacles){
-                    o.rotate(t);
                     if (o.collision(ball, timeSinceStart)){
                         exit(); stop();}
-                    o.starCollision(user, rootJeu); }
+                    o.rotate(t);
+                    o.starCollision(user, root); }
 
                 for (MagicColourBox box: boxes){
-                    box.handleCollision(user, rootJeu); }
+                    box.handleCollision(user, root); }
 
                 if (user.getScore()>=10) st.get().setTranslateX(17);
                 text.setText(""+ user.getScore());
@@ -214,4 +262,62 @@ public class Controller {
         primaryStage.setScene(sceneJeu);
 
     }
+
+    public void resumeGame(ArrayList<Obstacles> obstacles, ArrayList<MagicColourBox> boxes, User user, int WIDTH, int HEIGHT, int jump){
+        Ball ball = user.getBall();
+        ArrayList<obj> objects = new ArrayList<>();
+        objects.addAll(obstacles); objects.addAll(boxes);
+        Game game = new Game("Rishabh", HEIGHT, WIDTH, jump);
+        Canvas canvas = new Canvas(WIDTH, HEIGHT);
+        Pane root = new Pane(canvas);
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
+        AnimationTimer timer = new AnimationTimer() {
+            private long lastTime = System.nanoTime();
+            private long startTime = System.nanoTime();
+            private double scroll = 0; private double totalScroll = 0;
+            @Override
+            public void handle(long currentTime) {
+                double t = (currentTime - lastTime) / 1000000000.0;
+                double timeSinceStart = (currentTime - startTime)/1e9;
+                ball.move(t, true);
+
+                double ballY = ball.getY();
+
+                if (ballY<=HEIGHT/2){
+                    scroll = HEIGHT/2 - ballY; }
+                else if (ballY>=HEIGHT-10){
+                    scroll = HEIGHT-10-ballY; }
+
+                totalScroll += scroll;
+
+                if ((ballY>=HEIGHT) && (totalScroll<=0)){
+                    exit(); stop(); }
+
+
+                for (obj objs: objects){
+                    objs.move(scroll); }
+
+                scroll = 0;
+
+                for (Obstacles o: obstacles){
+                    if (o.collision(ball, timeSinceStart)){
+                        exit(); stop();}
+                    o.rotate(t);
+                    o.starCollision(user, root); }
+
+                for (MagicColourBox box: boxes){
+                    box.handleCollision(user, root); }
+
+//                if (user.getScore()>=10) st.get().setTranslateX(17);
+//                text.setText(""+ user.getScore());
+
+                lastTime = currentTime; }
+        };
+        timer.start();
+        primaryStage.setScene(scene);
+
+
+    }
+
+    
 }

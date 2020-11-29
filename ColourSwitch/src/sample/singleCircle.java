@@ -5,6 +5,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
+
+import java.util.HashMap;
 
 
 public class singleCircle extends Obstacles{
@@ -12,12 +15,16 @@ public class singleCircle extends Obstacles{
     private Circle fs;
     private Arc[] arcs;
     private double r1, r2;
+    private HashMap<Integer, Integer> hm;
 
-    public singleCircle(double xCenter, double yTop, double yBottom, double radius2, double speed, boolean hasStar){
+    public singleCircle(double xCenter, double yTop, double yBottom, double radius2, double speed, boolean hasStar, boolean rotationClockwise){
         this.yTop = yTop; this.yBottom = yBottom; x = xCenter; y = (yTop+yBottom)/2;
         arcs = new Arc[4];
         r1 = yBottom-y; r2 = radius2;
         this.speed = speed;
+        clockwiseRotation = rotationClockwise;
+        hm = new HashMap<>();
+        hm.put(0,1); hm.put(1, 0); hm.put(2, 3); hm.put(3, 2);
         for (int i=0; i<4; i++){
             arcs[i] = new Arc(x, y, r1, r1, 90*i, 90);
             arcs[i].setStroke(colors[i]);
@@ -75,7 +82,8 @@ public class singleCircle extends Obstacles{
 
     public void rotate(double timediff){
         for (int i=0; i<4; i++){
-            arcs[i].setStartAngle(arcs[i].getStartAngle()+speed*timediff);
+            if (clockwiseRotation) arcs[i].setStartAngle(arcs[i].getStartAngle()+speed*timediff);
+            else arcs[i].setStartAngle(arcs[i].getStartAngle()-speed*timediff);
         } }
 
 
@@ -84,11 +92,12 @@ public class singleCircle extends Obstacles{
         int rotated = (int)(timeSinceStart*speed)%360;
         int bottomColor = (6-(rotated/90))%4;
         int topColor = (4-(rotated/90))%4;
+        if (!clockwiseRotation) {bottomColor = hm.get(bottomColor); topColor = hm.get(topColor);}
         if ((yball>=y+r2) && (yball<=y+r1)){
             return ball.getColor() != bottomColor; }
         else if ((yball<=y-r2) && (yball>=y-r1)){
             return ball.getColor() != topColor; }
-        return false; }
+        return false;}
 
 
 }
