@@ -10,8 +10,8 @@ public class horizontalBar extends Obstacles{
     private Rectangle[] rects;
     private double dist, WIDTH;
 
-    public horizontalBar(double yTop, double WIDTH, double yBottom, double speed, double starDist){
-        this.yTop = yTop; this.yBottom = yBottom;
+    public horizontalBar(double yTop, double WIDTH, double yBottom, double speed, double starDist, boolean hasStar){
+        this.yTop = yTop; this.yBottom = yBottom; this.hasStar = hasStar;
         double thick = yBottom - starDist - 20 - yTop;
         x = WIDTH/2; this.y = yTop + 20; this.WIDTH = WIDTH;
         hasStar = true;
@@ -54,7 +54,7 @@ public class horizontalBar extends Obstacles{
     @Override
     public void draw(Pane pane) {
         pane.getChildren().add(g);
-        star.draw(pane);}
+        if (hasStar) star.draw(pane);}
 
 
     @Override

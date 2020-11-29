@@ -3,7 +3,6 @@ package sample;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
@@ -50,9 +49,13 @@ public class Controller {
         catch (IOException e) {
             System.out.println("FXML not found!"); } }
 
+    private Font loadFont(int size){
+        Font font = Font.loadFont("file:resources/fonts/stencil.ttf", size);
+        return font; }
+
     private void getText(Pane root){
         Color[] colour = new Color[]{Color.RED, Color.YELLOWGREEN, Color.LIGHTSKYBLUE};
-        Font font = Font.loadFont("file:resources/fonts/stencil.ttf", 85);
+        Font font = loadFont(85);
         int[] pos = new int[] {15, 137, 253, 165, 215, 295, 325, 375, 430};
         String[] text = new String[] {"C", "L", "R", "S", "W", "I", "T", "C", "H"};
         Text[] texts = new Text[9];
@@ -78,6 +81,7 @@ public class Controller {
         svg.setLayoutX(-150); svg.setLayoutY(255);
         root.getChildren().add(svg); }
 
+
     private void addButtons(Pane root){
         String[] bt = new String[]{"newGame", "ResumeGame", "help", "Exit"};
         Button button1= new Button(); button1.setMinSize(120,85);
@@ -88,7 +92,8 @@ public class Controller {
         for (int i=0; i<4; i++){
             buttons[i].setOpacity(0);
             int finalI = i;
-            if (i!=3) buttons[i].setOnAction((event) -> load(bt[finalI]));
+            if (i==0) buttons[i].setOnAction((event) -> newGameScreen());
+            else if (i!=3) buttons[i].setOnAction((event) -> load(bt[finalI]));
             else buttons[i].setOnAction((event) -> primaryStage.close()) ;}
         button1.setLayoutX(190);button1.setLayoutY(360);
         button2.setLayoutX(190);button2.setLayoutY(615);
@@ -106,16 +111,19 @@ public class Controller {
           Pane root = new Pane();
           primaryStage.setTitle("Colour Switch Game");
           getText(root);
-          singleCircle c = new singleCircle(250, 255, 555, 130, 170, false, false);
-          singleCircle c0 = new singleCircle(250, 275,535, 110, 150, false, true);
-          singleCircle c1= new singleCircle(250, 295,515, 90, 130, false, false);
-          singleCircle c2= new singleCircle(103, 30,95, 20, 240, false, false);
-          singleCircle c3= new singleCircle(222, 30,95, 22, 240, false, false);
-          horizontalBar bar= new horizontalBar(125,82, 170,120,10); bar.star.get().setOpacity(0);
-          ArrayList<Obstacles> arr = new ArrayList<>(List.of(c, c0, c1, c2, c3, bar));
+          singleCircle c = new singleCircle(250, 255, 555, 130, 120, false, false);
+          singleCircle c0 = new singleCircle(250, 275,535, 110, 100, false, true);
+          singleCircle c1= new singleCircle(250, 295,515, 90, 80, false, false);
+          singleCircle c2= new singleCircle(103, 30,95, 20, 150, false, false);
+          singleCircle c3= new singleCircle(222, 30,95, 22, 150, false, true);
+          Plus plus = new Plus(90, 120, 220, 10, 0, 120, false, true);
+          Square sq = new Square(380, 30, 100, 7, false, 120);
+          ArrayList<Obstacles> arr = new ArrayList<>(List.of(c, c0, c1, c2, c3, plus, sq));
           arr.forEach(el -> el.draw(root));
           drawInfinity(root);
-          addImage(root, "qn.jpg", 10, 595, 140, 90); addImage(root, "res1.png", 190, 585, 130, 130); addImage(root,"back3.png", 380, 590, 110, 110);
+          addImage(root, "qn.jpg", 10, 595, 140, 90);
+          addImage(root, "res1.png", 190, 585, 130, 130);
+          addImage(root,"back3.png", 380, 590, 110, 110);
           addButtons(root);
           AnimationTimer timer = new AnimationTimer() {
               private long lastTime = System.nanoTime();
@@ -132,18 +140,42 @@ public class Controller {
           primaryStage.setScene(sc);
           primaryStage.show(); }
 
-    @FXML
+    private void newGameScreen(){
+        Pane root = new Pane();
+        root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
+        Font font = loadFont(80);
+        Text text = new Text(40, 130, "NEW GAME"); text.setFont(font); text.setFill(Color.RED);
+        horizontalBar bar = new horizontalBar(155, 500, 195, 250, 10, false);
+        bar.draw(root);
+        new AnimationTimer() {private long lastTime = System.nanoTime();
+            @Override
+            public void handle(long currentTime) { bar.rotate((currentTime-lastTime)/1e9); lastTime=currentTime;}}.start();
+        addImage(root, "play1.jpg", 155, 275, 170, 180);
+        addImage(root,"back3.png", 175, 485, 180, 190);
+        Button b = new Button(); b.setLayoutX(155); b.setLayoutY(275); b.setMinWidth(170); b.setMinHeight(180);
+        b.setOnAction(this::enterGame); b.setOpacity(0);
+        Button b1 = new Button(); b1.setLayoutX(175); b1.setLayoutY(485); b1.setMinWidth(180); b1.setMinHeight(1890);
+        b1.setOnAction(event -> mainmenu()); b1.setOpacity(0);
+        root.getChildren().addAll(text, b, b1);
+        Scene sc = new Scene(root, 500,700);
+        primaryStage.setScene(sc);
+        primaryStage.show(); }
+
     public void displayExitMenu(ActionEvent event) {
         load("Exit");}
 
-    @FXML
     public void displayResumeGame(ActionEvent event) {
         load("ResumeGame"); }
-    @FXML
-    void displayMainMenu(ActionEvent event) {
+
+    public void saveGame(ActionEvent event){
+        //save
+        mainmenu();
+    }
+
+
+    public void displayMainMenu(ActionEvent event) {
         mainmenu(); }
 
-    @FXML
     void displayHelpMenu(ActionEvent event) {
         load("help"); }
 
@@ -162,13 +194,13 @@ public class Controller {
 
     @FXML
     void enterGame(ActionEvent event1){
-        int WIDTH =500, HEIGHT = 650, jump = 200;
+        int WIDTH =500, HEIGHT = 700, jump = 200;
         Game game = new Game("Rishabh", HEIGHT, WIDTH, jump);
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         Pane root = new Pane(canvas);
-        Scene sceneJeu = new Scene(root, WIDTH, HEIGHT);
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
         final boolean[] started = {false};
-        Text text = new Text(5, 40, "0"); Font font = Font.loadFont("file:resources/fonts/stencil.ttf", 40); text.setFont(font); text.setFill(Color.WHITE);
+        Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
         Star st = new Star(cord(52, 28, 18, 9)); st.get().setFill(Color.WHITE);
         User user = game.getUser();
         Ball ball = user.getBall();
@@ -177,7 +209,7 @@ public class Controller {
         singleCircle circle1 = new singleCircle(250,-30, 230, 105, 90, false, false);
         singleCircle circle2 = new singleCircle(250,10, 190, 70, 90, true, false);
         Square square = new Square(175 , 380, 530, 20, true, 90);
-        horizontalBar bar = new horizontalBar(-270, WIDTH, -185, 200, 50);
+        horizontalBar bar = new horizontalBar(-270, WIDTH, -185, 200, 50, true);
         Plus plus = new Plus(120, -710, -475, 15, 255, 90, true, true);
         Plus plus1 = new Plus(390, -710, -475, 15, 255, 90, false, false);
 
@@ -193,19 +225,6 @@ public class Controller {
         boxes.add(mcb); boxes.add(mcb1); boxes.add(mcb2); boxes.add(mcb3);
 
         root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
-
-        sceneJeu.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.SPACE){
-                    ball.jump();
-                    started[0] = true; }
-                else if(event.getCode() == KeyCode.ESCAPE){
-                    try {
-                        Parent root = FXMLLoader.load(getClass().getResource("pauseMenu.fxml"));
-                        primaryStage.setScene(new Scene(root)); }
-                    catch (IOException e) {
-                        System.out.println("FXML not found!"); } }}});
 
         for (Obstacles o: obstacles){
             o.draw(root); }
@@ -239,7 +258,6 @@ public class Controller {
                 if ((started[0]) && (ballY>=HEIGHT) && (totalScroll<=0)){
                     exit(); stop(); }
 
-
                 for (obj objs: objects){
                     objs.move(scroll); }
 
@@ -257,10 +275,19 @@ public class Controller {
                 if (user.getScore()>=10) st.get().setTranslateX(17);
                 text.setText(""+ user.getScore());
 
-                lastTime = currentTime; }
-        };
+                lastTime = currentTime; }};
         timer.start();
-        primaryStage.setScene(sceneJeu);
+
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.SPACE){
+                    ball.jump();
+                    started[0] = true; }
+                else if(event.getCode() == KeyCode.ESCAPE){
+                    load("pauseMenu");
+                    timer.stop(); }}});
+        primaryStage.setScene(scene);
 
     }
 
