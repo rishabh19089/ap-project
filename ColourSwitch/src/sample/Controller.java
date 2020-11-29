@@ -88,7 +88,8 @@ public class Controller {
         for (int i=0; i<4; i++){
             buttons[i].setOpacity(0);
             int finalI = i;
-            buttons[i].setOnAction((event) -> load(bt[finalI]));}
+            if (i!=3) buttons[i].setOnAction((event) -> load(bt[finalI]));
+            else buttons[i].setOnAction((event) -> primaryStage.close()) ;}
         button1.setLayoutX(190);button1.setLayoutY(360);
         button2.setLayoutX(190);button2.setLayoutY(615);
         button3.setLayoutX(20); button3.setLayoutY(615);
