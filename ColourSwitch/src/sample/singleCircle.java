@@ -12,8 +12,8 @@ import java.util.HashMap;
 
 public class singleCircle extends Obstacles{
 
-    private Circle fs;
-    private Arc[] arcs;
+    private transient Circle fs;
+    private transient Arc[] arcs;
     private double r1, r2;
     private HashMap<Integer, Integer> hm;
 

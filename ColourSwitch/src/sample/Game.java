@@ -16,8 +16,8 @@ public class Game implements Serializable {
     private obstacleArray obstArray;
     private boolean gameOver = false;
     private ArrayList<MagicColourBox> boxes = new ArrayList<>();
-    private Pane root;
-    private Scene scene;
+    private transient Pane root;
+    private transient Scene scene;
 
     public Game(String name, int HEIGHT, int WIDTH, int dist, Pane root, Scene scene){
         this.HEIGHT = HEIGHT; this.WIDTH = WIDTH;

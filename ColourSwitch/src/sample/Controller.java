@@ -1,6 +1,6 @@
 package sample;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +34,17 @@ public class Controller {
     public void serialize() throws IOException {
         //object of Game
         //after save call this method
+        File f = new File("obj.txt");
+        FileOutputStream fos = new FileOutputStream(f);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(game);
+
     }
 
     public void deserialize() throws IOException, ClassNotFoundException {
-
+        FileInputStream fis= new FileInputStream("obj.txt");
+        ObjectInputStream ois= new ObjectInputStream(fis);
+        game= (Game) ois.readObject();
     }
 
     private void load(String s){
@@ -154,7 +161,13 @@ public class Controller {
         addImage(root, "save1.png", 175, 255, 140, 140);
         addImage(root,"cancel.png", 160, 485, 170, 170);
         Button b = new Button(); b.setLayoutX(175); b.setLayoutY(255); b.setMinWidth(140); b.setMinHeight(140);
-        b.setOnAction(event -> saveGame()); b.setOpacity(0);
+        b.setOnAction(event -> {
+            try {
+                saveGame(false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }); b.setOpacity(0);
         Button b1 = new Button(); b1.setLayoutX(160); b1.setLayoutY(485); b1.setMinWidth(170); b1.setMinHeight(170);
         b1.setOnAction(event -> mainmenu()); b1.setOpacity(0);
         root.getChildren().addAll(text, b, b1);
@@ -163,9 +176,10 @@ public class Controller {
     public void displayResumeGame(ActionEvent event) {
         load("ResumeGame"); }
 
-    public void saveGame(){
+    public void saveGame(boolean contin) throws IOException {
         //save
-        mainmenu();
+        serialize();
+        if(!contin) mainmenu();
     }
 
 
@@ -285,7 +299,12 @@ public class Controller {
                     timer.stop();
                     displayPauseMenu(scene, timer); }
                 else if (event.getCode() == KeyCode.S){
-                    saveGame();}
+                    try {
+                        saveGame(true);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }});
         primaryStage.setScene(scene);
 

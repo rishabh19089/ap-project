@@ -11,9 +11,8 @@ import java.util.Random;
 public class Ball extends obj implements Serializable, Cloneable {
     private double acc, speed;
     private int HEIGHT, boost;
-    private Circle c;
+    private transient Circle c;
     private int color;
-    private Color colour;
 
     public Ball(double acc, int HEIGHT, int boost) {
         this.acc = acc;
@@ -24,15 +23,12 @@ public class Ball extends obj implements Serializable, Cloneable {
         c.setCenterX(250);
         color= new Random().nextInt(4);
         c.setFill(colors[color]);
-        colour = colors[color]; }
+         }
 
     public Circle getCircle() {
         return c;
     }
 
-    public Color getColour() {
-        return colour;
-    }
 
     public void setBoost(int dist) {
         this.boost = dist;
@@ -64,7 +60,6 @@ public class Ball extends obj implements Serializable, Cloneable {
 
     public void setColor(int colour) {
         this.color = colour;
-        this.colour = colors[color];
         c.setFill(colors[color]); }
 
     @Override
