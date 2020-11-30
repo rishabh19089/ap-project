@@ -10,9 +10,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -147,27 +145,6 @@ public class Controller {
           timer.start();
           display(root);}
 
-/*    private void newGameScreen(){
-        Pane root = new Pane();
-        root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
-        Font font = loadFont(80);
-        Text text = new Text(40, 130, "NEW GAME"); text.setFont(font); text.setFill(Color.RED);
-        horizontalBar bar = new horizontalBar(155, 500, 195, 250, 10, false);
-        bar.draw(root);
-        new AnimationTimer() {private long lastTime = System.nanoTime();
-            @Override
-            public void handle(long currentTime) { bar.rotate((currentTime-lastTime)/1e9); lastTime=currentTime;}}.start();
-        addImage(root, "play1.jpg", 155, 275, 170, 180);
-        addImage(root,"back3.png", 175, 485, 180, 190);
-        Button b = new Button(); b.setLayoutX(155); b.setLayoutY(275); b.setMinWidth(170); b.setMinHeight(180);
-        b.setOnAction(this::enterGame); b.setOpacity(0);
-        Button b1 = new Button(); b1.setLayoutX(175); b1.setLayoutY(485); b1.setMinWidth(180); b1.setMinHeight(1890);
-        b1.setOnAction(event -> mainmenu()); b1.setOpacity(0);
-        root.getChildren().addAll(text, b, b1);
-        Scene sc = new Scene(root, 500,700);
-        primaryStage.setScene(sc);
-        primaryStage.show(); }  */
-
 
     public void displayExitMenu() {
         Pane root = loadPane();
@@ -226,49 +203,30 @@ public class Controller {
     void exit(){
         mainmenu(); }
 
+
+
     @FXML
     void enterGame(ActionEvent event1){
         int WIDTH =500, HEIGHT = 700, jump = 200;
-        game = new Game("Rishabh", HEIGHT, WIDTH, jump);
         Pane root = new Pane();
         Scene scene = new Scene(root, WIDTH, HEIGHT);
+        game = new Game("Rishabh", HEIGHT, WIDTH, jump, root, scene);
         final boolean[] started = {false};
         Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
         Star st = new Star(cord(52, 28, 18, 9)); st.get().setFill(Color.WHITE);
         User user = game.getUser(); Ball ball = user.getBall();
-        
-        singleCircle circle = new singleCircle(250, -1050, -890, 65, 90, true, true);
-        singleCircle circle1 = new singleCircle(250,-30, 230, 105, 90, false, false);
-        singleCircle circle2 = new singleCircle(250,10, 190, 70, 90, true, false);
-        Square square = new Square(175 , 380, 530, 20, true, 90);
-        horizontalBar bar = new horizontalBar(-270, WIDTH, -185, 200, 50, true);
-        Plus plus = new Plus(120, -710, -475, 15, 255, 90, true, true);
-        Plus plus1 = new Plus(390, -710, -475, 15, 255, 90, false, false);
 
-        MagicColourBox mcb = new MagicColourBox(250, 300);
-        MagicColourBox mcb1 = new MagicColourBox(250, -90);
-        MagicColourBox mcb2 = new MagicColourBox(250, -400);
-        MagicColourBox mcb3 = new MagicColourBox(250, -780);
-
-        ArrayList<Obstacles> obstacles = new ArrayList<>();
-        obstacles.add(circle1); obstacles.add(circle2); obstacles.add(square);
-        obstacles.add(plus); obstacles.add(plus1); obstacles.add(bar); obstacles.add(circle);
-        ArrayList<MagicColourBox> boxes = new ArrayList<>();
-        boxes.add(mcb); boxes.add(mcb1); boxes.add(mcb2); boxes.add(mcb3);
+        ArrayList<Obstacles> obstacles = game.getObstArray().getObstArray();
+        ArrayList<MagicColourBox> boxes = game.getBoxes();
 
         root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
 
-        for (Obstacles o: obstacles){
-            o.draw(root); }
-        for (MagicColourBox box : boxes){
-            box.draw(root); }
-        ArrayList<obj> objects = new ArrayList<>();
-        objects.addAll(obstacles); objects.addAll(boxes);
+        game.draw();
         root.getChildren().add(text);
         st.draw(root);
 
-        ball.draw(root);
-        final boolean[] paused = {false};
+        ArrayList<obj> objects = game.getObjects();
+
         AnimationTimer timer = new AnimationTimer() {
             private long lastTime = System.nanoTime();
             private long startTime = System.nanoTime();
@@ -281,7 +239,7 @@ public class Controller {
 
             @Override
             public void handle(long currentTime) {
-                double t = (currentTime - lastTime) / 1000000000.0;
+                double t = (currentTime - lastTime) / 1e9;
                 double timeSinceStart = (currentTime - startTime)/1e9;
                 ball.move(t, started[0]);
 
@@ -325,10 +283,7 @@ public class Controller {
                     started[0] = true; }
                 else if(event.getCode() == KeyCode.ESCAPE){
                     timer.stop();
-                    displayPauseMenu(scene, timer);
-//                    if (!paused[0]){ paused[0] =true; timer.stop(); }
-//                    else{paused[0] = false; timer.start();}
-                }
+                    displayPauseMenu(scene, timer); }
                 else if (event.getCode() == KeyCode.S){
                     saveGame();}
             }});
@@ -336,7 +291,7 @@ public class Controller {
 
     }
 
-    public void loadGame(ArrayList<Obstacles> obstacles, ArrayList<MagicColourBox> boxes, User user, int WIDTH, int HEIGHT, int jump){
+/*    public void loadGame(ArrayList<Obstacles> obstacles, ArrayList<MagicColourBox> boxes, User user, int WIDTH, int HEIGHT, int jump){
         Ball ball = user.getBall();
         ArrayList<obj> objects = new ArrayList<>();
         objects.addAll(obstacles); objects.addAll(boxes);
@@ -383,11 +338,7 @@ public class Controller {
                 lastTime = currentTime; }
         };
         timer.start();
-        primaryStage.setScene(scene);
-
-
-        //jvb udbc
-    }
+        primaryStage.setScene(scene); }*/
 
     
 }

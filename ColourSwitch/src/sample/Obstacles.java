@@ -56,6 +56,22 @@ public abstract class Obstacles extends element implements Serializable, Cloneab
 
     }
 
+    public double getyBottom() {
+        return yBottom;
+    }
+
+    public void setyBottom(double yBottom) {
+        this.yBottom = yBottom;
+    }
+
+    public double getyTop() {
+        return yTop;
+    }
+
+    public void setyTop(double yTop) {
+        this.yTop = yTop;
+    }
+
     public abstract void draw(Pane pane);
 
     public void starCollision(User user, Pane root){
