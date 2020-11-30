@@ -50,6 +50,7 @@ public class Plus extends Obstacles{
 
     @Override
     public void draw(Pane pane) {
+        g.setRotate(angle);
         pane.getChildren().add(g);
         if (hasStar) star.draw(pane); }
 
@@ -57,9 +58,11 @@ public class Plus extends Obstacles{
     @Override
     public void rotate(double t) {
         if (clockwiseRotation) {
-            g.setRotate(g.getRotate() + speed * t); }
+            angle = (angle+speed*t)%360;
+            g.setRotate(angle); }
         else {
-            g.setRotate(g.getRotate() - speed * t); } }
+            angle = (angle-speed*t)%360;
+            g.setRotate(angle); } }
 
     @Override
     public boolean collision(Ball ball, double t) {

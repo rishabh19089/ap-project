@@ -18,6 +18,7 @@ public abstract class Obstacles extends element implements Serializable, Cloneab
     protected boolean hasStar;
     protected boolean clockwiseRotation;
     protected Group g;
+    protected double angle = 0;
 
     public Obstacles() {
         this.elements = new ArrayList<>(); }

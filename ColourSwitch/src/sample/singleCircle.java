@@ -75,12 +75,15 @@ public class singleCircle extends Obstacles{
 
     @Override
     public void draw(Pane rootJeu)  {
+        for (int i=0; i<4; i++){
+            arcs[i].setStartAngle((angle+90*i)%360);}
         rootJeu.getChildren().addAll(arcs);
         rootJeu.getChildren().add(fs);
         if (hasStar) star.draw(rootJeu);}
 
 
     public void rotate(double timediff){
+        angle = (angle+speed*timediff)%360;
         for (int i=0; i<4; i++){
             if (clockwiseRotation) arcs[i].setStartAngle(arcs[i].getStartAngle()+speed*timediff);
             else arcs[i].setStartAngle(arcs[i].getStartAngle()-speed*timediff);

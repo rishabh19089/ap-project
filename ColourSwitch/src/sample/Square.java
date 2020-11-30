@@ -48,13 +48,15 @@ public class Square extends Obstacles{
 
     @Override
     public void draw(Pane pane) {
+        g.setRotate(angle);
         pane.getChildren().add(g);
         if (hasStar) star.draw(pane); }
 
 
     @Override
     public void rotate(double t) {
-        g.setRotate(g.getRotate()+speed*t);
+        angle = (angle+speed*t)%360;
+        g.setRotate(angle);
     }
 
     @Override
