@@ -44,8 +44,8 @@ public class Controller {
 
     private void load(String s){
         try {
-            Parent root1 = FXMLLoader.load(getClass().getResource(s+".fxml"));
-            primaryStage.setScene(new Scene(root1)); }
+            Pane root = FXMLLoader.load(getClass().getResource(s+".fxml"));
+            primaryStage.setScene(new Scene(root)); }
         catch (IOException e) {
             System.out.println("FXML not found!"); } }
 
@@ -92,7 +92,7 @@ public class Controller {
         for (int i=0; i<4; i++){
             buttons[i].setOpacity(0);
             int finalI = i;
-            if (i==0) buttons[i].setOnAction((event) -> newGameScreen());
+            if (i==0) buttons[i].setOnAction((event) -> enterGame(event));
             else if (i!=3) buttons[i].setOnAction((event) -> load(bt[finalI]));
             else buttons[i].setOnAction((event) -> primaryStage.close()) ;}
         button1.setLayoutX(190);button1.setLayoutY(360);
@@ -107,8 +107,19 @@ public class Controller {
         im.setX(x); im.setY(y); im.setFitWidth(width);im.setFitHeight(height);
         root.getChildren().add(im); }
 
-      public void mainmenu(){
-          Pane root = new Pane();
+    private Pane loadPane() {
+        Pane root = new Pane();
+        root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
+        return root; }
+
+    private void display(Pane root) {
+        Scene sc = new Scene(root, 500,700);
+        primaryStage.setScene(sc);
+        primaryStage.show(); }
+
+
+    public void mainmenu(){
+          Pane root = loadPane();
           primaryStage.setTitle("Colour Switch Game");
           getText(root);
           singleCircle c = new singleCircle(250, 255, 555, 130, 120, false, false);
@@ -134,13 +145,9 @@ public class Controller {
                   arr.forEach(el -> el.rotate(t));
                   lastTime = currentTime; }};
           timer.start();
+          display(root);}
 
-          root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
-          Scene sc = new Scene(root, 500,700);
-          primaryStage.setScene(sc);
-          primaryStage.show(); }
-
-    private void newGameScreen(){
+/*    private void newGameScreen(){
         Pane root = new Pane();
         root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
         Font font = loadFont(80);
@@ -159,15 +166,27 @@ public class Controller {
         root.getChildren().addAll(text, b, b1);
         Scene sc = new Scene(root, 500,700);
         primaryStage.setScene(sc);
-        primaryStage.show(); }
+        primaryStage.show(); }  */
 
-    public void displayExitMenu(ActionEvent event) {
-        load("Exit");}
+
+    public void displayExitMenu() {
+        Pane root = loadPane();
+        Font font = loadFont(60);
+        Text text = new Text(30, 70, "Do you want to \nsave the game?");
+        text.setFont(font); text.setFill(Color.WHITE);
+        addImage(root, "save1.png", 175, 255, 140, 140);
+        addImage(root,"cancel.png", 160, 485, 170, 170);
+        Button b = new Button(); b.setLayoutX(175); b.setLayoutY(255); b.setMinWidth(140); b.setMinHeight(140);
+        b.setOnAction(event -> saveGame()); b.setOpacity(0);
+        Button b1 = new Button(); b1.setLayoutX(160); b1.setLayoutY(485); b1.setMinWidth(170); b1.setMinHeight(170);
+        b1.setOnAction(event -> mainmenu()); b1.setOpacity(0);
+        root.getChildren().addAll(text, b, b1);
+        display(root); }
 
     public void displayResumeGame(ActionEvent event) {
         load("ResumeGame"); }
 
-    public void saveGame(ActionEvent event){
+    public void saveGame(){
         //save
         mainmenu();
     }
@@ -178,6 +197,21 @@ public class Controller {
 
     void displayHelpMenu(ActionEvent event) {
         load("help"); }
+
+    void displayPauseMenu(Scene scene, AnimationTimer timer){
+        try {
+            Pane root = FXMLLoader.load(getClass().getResource("pauseMenu.fxml"));
+            Button b = new Button(); b.setOpacity(0);
+            b.setLayoutX(166); b.setLayoutY(271); b.setMinWidth(167); b.setMinHeight(157);
+            b.setOnAction(event -> resumeGame(scene, timer));
+            root.getChildren().add(b);
+            primaryStage.setScene(new Scene(root)); }
+        catch (IOException e) {
+            System.out.println("FXML not found!"); } }
+
+    void resumeGame(Scene scene, AnimationTimer timer){
+        timer.start();
+        primaryStage.setScene(scene); }
 
     private double[] cord(double x, double y, double sr1, double sr2){
         double[] points = new double[20];
@@ -196,8 +230,7 @@ public class Controller {
     void enterGame(ActionEvent event1){
         int WIDTH =500, HEIGHT = 700, jump = 200;
         Game game = new Game("Rishabh", HEIGHT, WIDTH, jump);
-        Canvas canvas = new Canvas(WIDTH, HEIGHT);
-        Pane root = new Pane(canvas);
+        Pane root = new Pane();
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         final boolean[] started = {false};
         Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
@@ -236,10 +269,17 @@ public class Controller {
         st.draw(root);
 
         ball.draw(root);
+        final boolean[] paused = {false};
         AnimationTimer timer = new AnimationTimer() {
             private long lastTime = System.nanoTime();
             private long startTime = System.nanoTime();
             private double scroll = 0; private double totalScroll = 0;
+
+            @Override
+            public void start() {
+                lastTime = System.nanoTime();
+                super.start(); }
+
             @Override
             public void handle(long currentTime) {
                 double t = (currentTime - lastTime) / 1000000000.0;
@@ -285,19 +325,24 @@ public class Controller {
                     ball.jump();
                     started[0] = true; }
                 else if(event.getCode() == KeyCode.ESCAPE){
-                    load("pauseMenu");
-                    timer.stop(); }}});
+                    timer.stop();
+                    displayPauseMenu(scene, timer);
+//                    if (!paused[0]){ paused[0] =true; timer.stop(); }
+//                    else{paused[0] = false; timer.start();}
+                }
+                else if (event.getCode() == KeyCode.S){
+                    saveGame();}
+            }});
         primaryStage.setScene(scene);
 
     }
 
-    public void resumeGame(ArrayList<Obstacles> obstacles, ArrayList<MagicColourBox> boxes, User user, int WIDTH, int HEIGHT, int jump){
+    public void loadGame(ArrayList<Obstacles> obstacles, ArrayList<MagicColourBox> boxes, User user, int WIDTH, int HEIGHT, int jump){
         Ball ball = user.getBall();
         ArrayList<obj> objects = new ArrayList<>();
         objects.addAll(obstacles); objects.addAll(boxes);
         Game game = new Game("Rishabh", HEIGHT, WIDTH, jump);
-        Canvas canvas = new Canvas(WIDTH, HEIGHT);
-        Pane root = new Pane(canvas);
+        Pane root = new Pane();
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         AnimationTimer timer = new AnimationTimer() {
             private long lastTime = System.nanoTime();
