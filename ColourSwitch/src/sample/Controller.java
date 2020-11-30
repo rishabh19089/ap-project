@@ -201,7 +201,7 @@ public class Controller {
         return points; }
 
     void exit(){
-        mainmenu(); }
+        load("GameOver"); }
 
 
 
