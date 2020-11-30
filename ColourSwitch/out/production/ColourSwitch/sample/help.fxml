@@ -4,14 +4,52 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="page4" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="452.0" prefWidth="656.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<AnchorPane fx:id="page4" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="500.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
-      <ImageView fitHeight="452.0" fitWidth="656.0" pickOnBounds="true" preserveRatio="true">
+      <Text fill="RED" layoutX="183.0" layoutY="72.85200119018555" strokeType="OUTSIDE" strokeWidth="0.0" text="HELP" textAlignment="CENTER" wrappingWidth="121.595703125" AnchorPane.bottomAnchor="618.0" AnchorPane.leftAnchor="183.0" AnchorPane.rightAnchor="195.0" AnchorPane.topAnchor="39.0">
+         <font>
+            <Font name="Marker Felt Thin" size="39.0" />
+         </font>
+      </Text>
+      <Text fill="#00f7fc" strokeType="OUTSIDE" strokeWidth="0.0" text="Use SPACE_KEY to move upward." wrappingWidth="302.42578125" AnchorPane.bottomAnchor="559.0" AnchorPane.leftAnchor="67.0" AnchorPane.rightAnchor="131.0" AnchorPane.topAnchor="155.0">
+         <font>
+            <Font name="American Typewriter" size="18.0" />
+         </font>
+      </Text>
+      <Text fill="#00f7fc" layoutX="70.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ball will move downward due to gravity." wrappingWidth="353.21630859375" AnchorPane.bottomAnchor="489.0" AnchorPane.leftAnchor="67.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="190.0">
+         <font>
+            <Font name="American Typewriter" size="18.0" />
+         </font>
+      </Text>
+      <Text fill="#00f7fc" layoutX="80.0" layoutY="147.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Use ESCAPE_KEY to Pause the Game." wrappingWidth="345.42578125" AnchorPane.bottomAnchor="468.0" AnchorPane.leftAnchor="67.0" AnchorPane.rightAnchor="88.0" AnchorPane.topAnchor="225.0">
+         <font>
+            <Font name="American Typewriter" size="18.0" />
+         </font>
+      </Text>
+      <Text fill="#00f7fc" layoutX="77.0" layoutY="216.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Don't Collide with obstacles of different colour." wrappingWidth="345.42578125" AnchorPane.bottomAnchor="489.22800064086914" AnchorPane.leftAnchor="67.0" AnchorPane.rightAnchor="87.57421875" AnchorPane.topAnchor="260.0">
+         <font>
+            <Font name="American Typewriter" size="18.0" />
+         </font>
+      </Text>
+      <Text fill="#00f7fc" layoutX="77.0" layoutY="182.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Use SPACE_KEY to move upward." wrappingWidth="302.42578125" AnchorPane.bottomAnchor="396.0" AnchorPane.leftAnchor="67.0" AnchorPane.topAnchor="120.0">
+         <font>
+            <Font name="American Typewriter" size="18.0" />
+         </font>
+      </Text>
+      <Circle fill="#00f7fc" layoutX="52.0" layoutY="100.0" radius="5.0" stroke="#00f7fc" strokeType="INSIDE" AnchorPane.leftAnchor="42.0" AnchorPane.topAnchor="125.0" />
+      <Circle fill="#00f7fc" layoutX="57.0" layoutY="140.0" radius="5.0" stroke="#00f7fc" strokeType="INSIDE" AnchorPane.leftAnchor="42.0" AnchorPane.topAnchor="160.0" />
+      <Circle fill="#00f7fc" layoutX="67.0" layoutY="150.0" radius="5.0" stroke="#00f7fc" strokeType="INSIDE" AnchorPane.leftAnchor="42.0" AnchorPane.topAnchor="195.0" />
+      <Circle fill="#00f7fc" layoutX="77.0" layoutY="160.0" radius="5.0" stroke="#00f7fc" strokeType="INSIDE" AnchorPane.leftAnchor="42.0" AnchorPane.topAnchor="230.0" />
+      <ImageView fitHeight="71.0" fitWidth="77.0" layoutX="415.0" layoutY="607.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@help.png" />
+            <Image url="@back3.png" />
          </image>
       </ImageView>
-      <Button fx:id="back3" layoutX="577.0" layoutY="388.0" mnemonicParsing="false" onAction="#displayMainMenu" text="Back" textFill="RED" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="570.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="388.0" />
+      <Button layoutX="425.0" layoutY="622.0" mnemonicParsing="false" onAction="#displayMainMenu" opacity="0.0" prefHeight="42.0" prefWidth="51.0" text="Button" />
+      <Circle fill="#00f7fc" layoutX="57.0" layoutY="245.0" radius="5.0" stroke="#00f7fc" strokeType="INSIDE" AnchorPane.bottomAnchor="460.0" AnchorPane.leftAnchor="42.0" AnchorPane.rightAnchor="448.0" AnchorPane.topAnchor="265.0" />
    </children>
 </AnchorPane>

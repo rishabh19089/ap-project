@@ -229,15 +229,14 @@ public class Controller {
     @FXML
     void enterGame(ActionEvent event1){
         int WIDTH =500, HEIGHT = 700, jump = 200;
-        Game game = new Game("Rishabh", HEIGHT, WIDTH, jump);
+        game = new Game("Rishabh", HEIGHT, WIDTH, jump);
         Pane root = new Pane();
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         final boolean[] started = {false};
         Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
         Star st = new Star(cord(52, 28, 18, 9)); st.get().setFill(Color.WHITE);
-        User user = game.getUser();
-        Ball ball = user.getBall();
-
+        User user = game.getUser(); Ball ball = user.getBall();
+        
         singleCircle circle = new singleCircle(250, -1050, -890, 65, 90, true, true);
         singleCircle circle1 = new singleCircle(250,-30, 230, 105, 90, false, false);
         singleCircle circle2 = new singleCircle(250,10, 190, 70, 90, true, false);
@@ -380,9 +379,6 @@ public class Controller {
 
                 for (MagicColourBox box: boxes){
                     box.handleCollision(user, root); }
-
-//                if (user.getScore()>=10) st.get().setTranslateX(17);
-//                text.setText(""+ user.getScore());
 
                 lastTime = currentTime; }
         };
