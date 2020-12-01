@@ -2,6 +2,7 @@ package sample;
 
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -48,6 +49,7 @@ public class horizontalBar extends Obstacles{
 
     @Override
     public void draw(Pane pane) {
+        Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
         rects = new Rectangle[8];
         for (int i=0; i<8; i++){
             rects[i] = new Rectangle(-WIDTH+(WIDTH/4)*i, yTop + 20 + starDist, WIDTH/4, thick);

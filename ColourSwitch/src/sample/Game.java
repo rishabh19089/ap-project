@@ -16,13 +16,10 @@ public class Game implements Serializable {
     private obstacleArray obstArray;
     private boolean gameOver = false;
     private ArrayList<MagicColourBox> boxes = new ArrayList<>();
-    private transient Pane root;
-    private transient Scene scene;
 
-    public Game(String name, int HEIGHT, int WIDTH, int dist, Pane root, Scene scene){
+    public Game(String name, int HEIGHT, int WIDTH, int dist){
         this.HEIGHT = HEIGHT; this.WIDTH = WIDTH;
         user = new User(name, HEIGHT, dist);
-        this.root = root; this.scene = scene;
         obstArray = new obstacleArray();
         currentScroll = 0; totalScroll= 0;
         ball = user.getBall();
@@ -38,7 +35,7 @@ public class Game implements Serializable {
     public ArrayList<MagicColourBox> getBoxes(){
         return boxes; }
 
-    public void draw(){
+    public void draw(Pane root){
         obstArray.getObstArray().forEach(e -> e.draw(root));
         boxes.forEach(e -> e.draw(root));
         ball.draw(root);

@@ -3,6 +3,7 @@ package sample;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public abstract class Obstacles extends element implements Serializable, Cloneab
     public double bottomColour(){
         return 0;
     }
+
 
 
     public double getColour() {

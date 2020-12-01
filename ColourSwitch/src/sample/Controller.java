@@ -26,15 +26,11 @@ import javafx.scene.paint.Color;
 public class Controller {
     private Game game;
     public static Stage primaryStage;
-    private Pane root;
-    private Scene scene;
     private int WIDTH, HEIGHT, jump;
 
     public Controller() {
         WIDTH =500; HEIGHT = 700; jump = 200;
-        root = new Pane();
-        scene = new Scene(root, WIDTH, HEIGHT);
-        this.game = new Game("Rishabh", HEIGHT, WIDTH, jump, root, scene);; }
+        this.game = new Game("Rishabh", HEIGHT, WIDTH, jump);; }
 
     public void spaceTyped() {
 
@@ -54,6 +50,7 @@ public class Controller {
         FileInputStream fis= new FileInputStream("obj.txt");
         ObjectInputStream ois= new ObjectInputStream(fis);
         game= (Game) ois.readObject();
+        System.out.println(game.getUser().getBall().y+ " "+ game.getUser().getScore());
     }
 
     private void load(String s){
@@ -96,7 +93,7 @@ public class Controller {
         root.getChildren().add(svg); }
 
 
-    private void addButtons(Pane root){
+    private void addButtons(Pane root) {
         String[] bt = new String[]{"newGame", "ResumeGame", "help", "Exit"};
         Button button1= new Button(); button1.setMinSize(120,85);
         Button button2= new Button(); button2.setMinSize(120,65);
@@ -106,7 +103,8 @@ public class Controller {
         for (int i=0; i<4; i++){
             buttons[i].setOpacity(0);
             int finalI = i;
-            if (i==0) buttons[i].setOnAction((event) -> enterGame(event));
+            if (i==0) buttons[i].setOnAction((event) -> enterGame());
+            else if(i == 1) buttons[i].setOnAction((event) -> displayResumeGame());
             else if (i!=3) buttons[i].setOnAction((event) -> load(bt[finalI]));
             else buttons[i].setOnAction((event) -> primaryStage.close()) ;}
         button1.setLayoutX(190);button1.setLayoutY(360);
@@ -133,7 +131,7 @@ public class Controller {
         primaryStage.show(); }
 
 
-    public void mainmenu(){
+    public void mainmenu() {
           Pane root = loadPane();
           primaryStage.setTitle("Colour Switch Game");
           getText(root);
@@ -183,8 +181,18 @@ public class Controller {
         root.getChildren().addAll(text, b, b1);
         display(root); }
 
-    public void displayResumeGame(ActionEvent event) {
-        load("ResumeGame"); }
+    public void displayResumeGame() {
+        //load("ResumeGame");
+        try {
+            deserialize();
+            System.out.println("hgdfhfdf");
+            enterGame();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        }
 
     public void saveGame(boolean contin) throws IOException {
         //save
@@ -250,22 +258,19 @@ public class Controller {
 
 
     @FXML
-    void enterGame(ActionEvent event1){
-        int WIDTH =500, HEIGHT = 700, jump = 200;
+    void enterGame(){
+        final boolean[] started = {false};
         Pane root = new Pane();
         Scene scene = new Scene(root, WIDTH, HEIGHT);
-        game = new Game("Rishabh", HEIGHT, WIDTH, jump, root, scene);
-        final boolean[] started = {false};
         Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
         Star st = new Star(cord(52, 28, 18, 9));
         User user = game.getUser(); Ball ball = user.getBall();
-
         ArrayList<Obstacles> obstacles = game.getObstArray().getObstArray();
         ArrayList<MagicColourBox> boxes = game.getBoxes();
 
         root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
 
-        game.draw();
+        game.draw(root);
         root.getChildren().add(text);
         st.draw(root); st.get().setFill(Color.WHITE);
 

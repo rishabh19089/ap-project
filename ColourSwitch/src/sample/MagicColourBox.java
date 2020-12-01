@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 
@@ -19,6 +20,7 @@ public class MagicColourBox extends element{
 
     @Override
     public void draw(Pane rootJeu){
+        Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
         arcs = new Arc[4];
         for (int i=0; i<4; i++){
             arcs[i] = new Arc(x, y, radius, radius, 90*i, 90);

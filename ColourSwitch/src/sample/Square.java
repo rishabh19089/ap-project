@@ -2,6 +2,7 @@ package sample;
 
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
 public class Square extends Obstacles{
@@ -42,6 +43,7 @@ public class Square extends Obstacles{
 
     @Override
     public void draw(Pane pane) {
+        Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
         g = new Group();
         star = new Star(computeStar());
         rects = new Rectangle[4];

@@ -2,6 +2,7 @@ package sample;
 
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -43,6 +44,7 @@ public class Plus extends Obstacles{
 
     @Override
     public void draw(Pane pane) {
+        Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
         rects = new Rectangle[4];
         double[][] pos = new double[][] {{center-thick/2, y-length, thick, length}, {center, y, length, thick}, {center-thick/2, y+thick, thick, length}, {center-length, y, length, thick}};
         star = new Star(computeStar());

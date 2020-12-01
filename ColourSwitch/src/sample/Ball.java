@@ -19,7 +19,9 @@ public class Ball extends obj implements Serializable, Cloneable {
         this.acc = acc;
         this.speed = 0;
         this.HEIGHT = HEIGHT;
-        this.boost = boost; }
+        this.boost = boost;
+        color= new Random().nextInt(4);
+    }
 
     public Circle getCircle() {
         return c;
@@ -55,6 +57,7 @@ public class Ball extends obj implements Serializable, Cloneable {
     }
 
     public void setColor(int colour) {
+        Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
         this.color = colour;
         c.setFill(colors[color]); }
 
@@ -64,9 +67,10 @@ public class Ball extends obj implements Serializable, Cloneable {
 
     @Override
     public void draw(Pane rootJeu){
+        Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
         c = new Circle(10);
-        c.setCenterX(220);
-        color= new Random().nextInt(4);
+        c.setCenterX(250);
+
         c.setFill(colors[color]);
         rootJeu.getChildren().add(c); }
 

@@ -16,7 +16,6 @@ public class singleCircle extends Obstacles{
     private transient Arc[] arcs;
     private double r1, r2;
     private HashMap<Integer, Integer> hm;
-
     public singleCircle(double xCenter, double yTop, double yBottom, double radius2, double speed, boolean hasStar, boolean rotationClockwise){
         this.yTop = yTop; this.yBottom = yBottom; x = xCenter; y = (yTop+yBottom)/2;
         r1 = yBottom-y; r2 = radius2;
@@ -66,6 +65,7 @@ public class singleCircle extends Obstacles{
 
     @Override
     public void draw(Pane rootJeu)  {
+        Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
         arcs = new Arc[4];
         for (int i=0; i<4; i++){
             arcs[i] = new Arc(x, y, r1, r1, 90*i, 90);
