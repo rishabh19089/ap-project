@@ -115,12 +115,12 @@ public class Controller {
         button4.setLayoutX(400);button4.setLayoutY(615);
         root.getChildren().addAll(buttons); }
 
-    private Image addImage(Pane root, String name, int x, int y, int width, int height){
+    private ImageView addImage(Pane root, String name, int x, int y, int width, int height){
         Image image = new Image("file:resources/images/"+name);
         ImageView im = new ImageView(image);
         im.setX(x); im.setY(y); im.setFitWidth(width);im.setFitHeight(height);
         root.getChildren().add(im);
-        return image;}
+        return im;}
 
     private Pane loadPane() {
         Pane root = new Pane();
@@ -225,12 +225,36 @@ public class Controller {
         return points; }
 
     void exit(){
-        load("GameOver"); }
+        game.getUser().getScore();
+        try {
+            Pane root = FXMLLoader.load(getClass().getResource("GameOver.fxml"));
+            ArrayList<ImageView> ImArr= new ArrayList<ImageView>();
+            ImArr.add(addImage(root, "heart.png", 140,384,223,188 ));
+            ImArr.add(addImage(root, "star.png", 206,503,24,24 ));
+            ImArr.add(addImage(root, "star.png", 206,528,24,24 ));
+            ImArr.add(addImage(root, "star.png", 226,523,18,18 ));
+            ImArr.add(addImage(root, "star.png", 221,546,18,24 ));
+            ImArr.add(addImage(root, "star.png", 244,542,12,11 ));
+            ImArr.add(addImage(root, "star.png", 246,558,11,11 ));
+            ImArr.add(addImage(root, "star.png", 261,526,18,18 ));
+            ImArr.add(addImage(root, "star.png", 278,510,24,24 ));
+            ImArr.add(addImage(root, "star.png", 270,548,18,18 ));
+            ImArr.add(addImage(root, "star.png", 289,535,33,24 ));
+
+
+            primaryStage.setScene(new Scene(root)); }
+        catch (IOException e) {
+            System.out.println("FXML not found!"); }
+    }
 
 
 
     @FXML
     void enterGame(ActionEvent event1){
+        int WIDTH =500, HEIGHT = 700, jump = 200;
+        Pane root = new Pane();
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
+        game = new Game("Rishabh", HEIGHT, WIDTH, jump, root, scene);
         final boolean[] started = {false};
         Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
         Star st = new Star(cord(52, 28, 18, 9));
