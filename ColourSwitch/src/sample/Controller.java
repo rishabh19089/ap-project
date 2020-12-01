@@ -340,54 +340,7 @@ public class Controller {
 
     }
 
-/*    public void loadGame(ArrayList<Obstacles> obstacles, ArrayList<MagicColourBox> boxes, User user, int WIDTH, int HEIGHT, int jump){
-        Ball ball = user.getBall();
-        ArrayList<obj> objects = new ArrayList<>();
-        objects.addAll(obstacles); objects.addAll(boxes);
-        Game game = new Game("Rishabh", HEIGHT, WIDTH, jump);
-        Pane root = new Pane();
-        Scene scene = new Scene(root, WIDTH, HEIGHT);
-        AnimationTimer timer = new AnimationTimer() {
-            private long lastTime = System.nanoTime();
-            private long startTime = System.nanoTime();
-            private double scroll = 0; private double totalScroll = 0;
-            @Override
-            public void handle(long currentTime) {
-                double t = (currentTime - lastTime) / 1000000000.0;
-                double timeSinceStart = (currentTime - startTime)/1e9;
-                ball.move(t, true);
 
-                double ballY = ball.getY();
-
-                if (ballY<=HEIGHT/2){
-                    scroll = HEIGHT/2 - ballY; }
-                else if (ballY>=HEIGHT-10){
-                    scroll = HEIGHT-10-ballY; }
-
-                totalScroll += scroll;
-
-                if ((ballY>=HEIGHT) && (totalScroll<=0)){
-                    exit(); stop(); }
-
-
-                for (obj objs: objects){
-                    objs.move(scroll); }
-
-                scroll = 0;
-
-                for (Obstacles o: obstacles){
-                    if (o.collision(ball, timeSinceStart)){
-                        exit(); stop();}
-                    o.rotate(t);
-                    o.starCollision(user, root); }
-
-                for (MagicColourBox box: boxes){
-                    box.handleCollision(user, root); }
-
-                lastTime = currentTime; }
-        };
-        timer.start();
-        primaryStage.setScene(scene); }*/
 
     
 }
