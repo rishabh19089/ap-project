@@ -29,4 +29,8 @@ public class User implements Serializable {
     public Ball getBall() {
         return ball;
     }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 }

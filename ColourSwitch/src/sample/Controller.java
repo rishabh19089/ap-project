@@ -6,6 +6,7 @@ import java.util.List;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,16 +37,23 @@ public class Controller {
 
     }
 
-    public void serialize() throws IOException {
-        File f = new File("obj.txt");
+    public void serialize(String name) throws IOException {
+        File f = new File(name+".txt");
         FileOutputStream fos = new FileOutputStream(f);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(game); }
 
-    public void deserialize() throws IOException, ClassNotFoundException {
-        FileInputStream fis= new FileInputStream("obj.txt");
-        ObjectInputStream ois= new ObjectInputStream(fis);
-        game= (Game) ois.readObject(); }
+    public void deserialize(String name) {
+        try {
+            FileInputStream fis = new FileInputStream(name + ".txt");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            game = (Game) ois.readObject();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     private void load(String s){
         try {
@@ -171,14 +179,14 @@ public class Controller {
 
     public void displayResumeGame() {
         try {
-            deserialize();
+            deserialize(game.getUser().getName());
             enterGame(); }
         catch (Exception e){
             e.printStackTrace(); } }
 
     public void saveGame(boolean contin){
         try{
-        serialize();
+        serialize(game.getUser().getName());
         if(!contin) mainmenu();}
         catch (Exception e){
             System.out.println("Error in Serializing."); } }
@@ -218,16 +226,65 @@ public class Controller {
             points[i+3] = y - sr2*Math.sin(Math.toRadians(126+(72*t))); }
         return points; }
 
-    void exit(){
-        game.getUser().getScore();
+    private void revive(AnimationTimer timer, Scene scene, Pane pane, double pos)
+    {
+
+        if(game.getUser().getScore() >= 2){
+            deserialize("temp");
+            if(pos > 0) game.getUser().getBall().setY(pos+ 70);
+            else game.getUser().getBall().setY(680);
+            game.getUser().setScore(game.getUser().getScore() - 2);
+            enterGame();
+        }
+        else {
+            Text text1 = new Text(115, 470, "Min. 5 Stars Needed"); Font font1 = loadFont(30); text1.setFont(font1); text1.setFill(Color.WHITE);
+            pane.getChildren().add(text1);
+            new AnimationTimer() {
+                private long lastTime = System.nanoTime();
+                private long startTime = System.nanoTime();
+                @Override
+                public void handle(long currentTime) {
+                    double t = (currentTime - startTime) / 1000000000.0;
+                    if(t> 2) {pane.getChildren().remove(text1); stop();} }}.start();
+
+        }
+
+    }
+
+    void exit(AnimationTimer timer, Scene scene, double pos){
+
         try {
+            serialize("temp");
+            timer.stop();
             Pane root = FXMLLoader.load(getClass().getResource("GameOver.fxml"));
             ArrayList<ImageView> ImArr= new ArrayList<>();
+            Text text;
+            Text text1 = new Text(17, 90, "Game Over!!"); Font font1 = loadFont(80); text1.setFont(font1); text1.setFill(Color.RED);
             ImArr.addAll(List.of(addImage(root, "heart.png", 140,384,223,188 ), addImage(root, "star.png", 206,503,24,24 ), addImage(root, "star.png", 206,528,24,24 ), addImage(root, "star.png", 226,523,18,18 ), addImage(root, "star.png", 221,546,18,24 ),
                     addImage(root, "star.png", 244,542,12,11 ), addImage(root, "star.png", 246,558,11,11 ), addImage(root, "star.png", 261,526,18,18 ), addImage(root, "star.png", 278,510,24,24 ), addImage(root, "star.png", 289,535,33,24 )));
+            Star st = new Star(cord(250, 250, 90, 50));
+            st.draw(root);
+            Button btn = new Button();btn.setMinSize(223,180);btn.setLayoutY(390);btn.setLayoutX(140);btn.setOpacity(0);
+            btn.setOnAction((event) -> revive(timer, scene, root, pos));
+            st.get().setFill(Color.SILVER);
+            if(game.getUser().getScore() > 9) {text = new Text(215, 270, String.valueOf(game.getUser().getScore())); Font font = loadFont(65); text.setFont(font); text.setFill(Color.INDIGO);}
+            else {text = new Text(230, 270, String.valueOf(game.getUser().getScore())); Font font = loadFont(65); text.setFont(font); text.setFill(Color.INDIGO);}
+            root.getChildren().addAll(text1, text,btn);
+            AnimationTimer timer1 = new AnimationTimer() {
+                private long lastTime = System.nanoTime();
+                private long startTime = System.nanoTime();
+                @Override
+                public void handle(long currentTime) {
+                    double t = (currentTime - startTime) / 1000000000.0;
+                    ImArr.forEach(el -> el.setOpacity(1- (0.2 * t)));
+                    if(t> 5) {root.getChildren().remove(btn); stop();} }};
+            timer1.start();
             primaryStage.setScene(new Scene(root)); }
         catch (IOException e) {
-            System.out.println("FXML not found!"); } }
+            System.out.println("FXML not found!"); }
+
+    }
+
 
     @FXML
     void enterGame(){
@@ -274,7 +331,7 @@ public class Controller {
                 totalScroll += scroll;
 
                 if ((started[0]) && (ballY>=HEIGHT) && (totalScroll<=0)){
-                    exit(); stop(); }
+                    exit(this, scene, -1); }
 
                 for (obj objs: objects){
                     objs.move(scroll); }
@@ -283,7 +340,7 @@ public class Controller {
 
                 for (Obstacles o: obstacles){
                     if (o.collision(ball, timeSinceStart)){
-                        exit(); stop();}
+                        exit(this, scene, o.getyBottom());}
                     o.rotate(t);
                     o.starCollision(user, root); }
 
@@ -300,6 +357,7 @@ public class Controller {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.SPACE){
+                    //System.out.println("cghvhvhgjv");
                     ball.jump();
                     started[0] = true; }
                 else if(event.getCode() == KeyCode.ESCAPE){
@@ -307,6 +365,7 @@ public class Controller {
                     displayPauseMenu(scene, timer); }
                 else if (event.getCode() == KeyCode.S){
                         saveGame(true); } }});
+
         primaryStage.setScene(scene);
 
     }
