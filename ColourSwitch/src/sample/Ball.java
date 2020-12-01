@@ -15,15 +15,11 @@ public class Ball extends obj implements Serializable, Cloneable {
     private int color;
 
     public Ball(double acc, int HEIGHT, int boost) {
+        y = 510;
         this.acc = acc;
         this.speed = 0;
         this.HEIGHT = HEIGHT;
-        this.boost = boost;
-        c = new Circle(10);
-        c.setCenterX(250);
-        color= new Random().nextInt(4);
-        c.setFill(colors[color]);
-         }
+        this.boost = boost; }
 
     public Circle getCircle() {
         return c;
@@ -68,6 +64,10 @@ public class Ball extends obj implements Serializable, Cloneable {
 
     @Override
     public void draw(Pane rootJeu){
+        c = new Circle(10);
+        c.setCenterX(220);
+        color= new Random().nextInt(4);
+        c.setFill(colors[color]);
         rootJeu.getChildren().add(c); }
 
     public void jump(){

@@ -26,6 +26,15 @@ import javafx.scene.paint.Color;
 public class Controller {
     private Game game;
     public static Stage primaryStage;
+    private Pane root;
+    private Scene scene;
+    private int WIDTH, HEIGHT, jump;
+
+    public Controller() {
+        WIDTH =500; HEIGHT = 700; jump = 200;
+        root = new Pane();
+        scene = new Scene(root, WIDTH, HEIGHT);
+        this.game = new Game("Rishabh", HEIGHT, WIDTH, jump, root, scene);; }
 
     public void spaceTyped() {
 
@@ -106,12 +115,12 @@ public class Controller {
         button4.setLayoutX(400);button4.setLayoutY(615);
         root.getChildren().addAll(buttons); }
 
-    private ImageView addImage(Pane root, String name, int x, int y, int width, int height){
+    private Image addImage(Pane root, String name, int x, int y, int width, int height){
         Image image = new Image("file:resources/images/"+name);
         ImageView im = new ImageView(image);
         im.setX(x); im.setY(y); im.setFitWidth(width);im.setFitHeight(height);
         root.getChildren().add(im);
-        return im;}
+        return image;}
 
     private Pane loadPane() {
         Pane root = new Pane();
@@ -222,10 +231,6 @@ public class Controller {
 
     @FXML
     void enterGame(ActionEvent event1){
-        int WIDTH =500, HEIGHT = 700, jump = 200;
-        Pane root = new Pane();
-        Scene scene = new Scene(root, WIDTH, HEIGHT);
-        game = new Game("Rishabh", HEIGHT, WIDTH, jump, root, scene);
         final boolean[] started = {false};
         Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
         Star st = new Star(cord(52, 28, 18, 9));
