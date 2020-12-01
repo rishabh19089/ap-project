@@ -15,14 +15,12 @@ public class singleCircle extends Obstacles{
     private transient Circle fs;
     private transient Arc[] arcs;
     private double r1, r2;
-    private HashMap<Integer, Integer> hm;
     public singleCircle(double xCenter, double yTop, double yBottom, double radius2, double speed, boolean hasStar, boolean rotationClockwise){
         this.yTop = yTop; this.yBottom = yBottom; x = xCenter; y = (yTop+yBottom)/2;
         r1 = yBottom-y; r2 = radius2;
         this.speed = speed;
+        star = new Star(computeStar());
         clockwiseRotation = rotationClockwise;
-        hm = new HashMap<>();
-        hm.put(0,1); hm.put(1, 0); hm.put(2, 3); hm.put(3, 2);
         this.hasStar = hasStar; }
 
     public double getSpeed() {
@@ -68,15 +66,16 @@ public class singleCircle extends Obstacles{
         Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
         arcs = new Arc[4];
         for (int i=0; i<4; i++){
-            arcs[i] = new Arc(x, y, r1, r1, 90*i, 90);
+            arcs[i] = new Arc(x, y, r1, r1, 360-angle-90*i, 90);
             arcs[i].setStroke(colors[i]);
             arcs[i].setFill(colors[i]);
             arcs[i].setType(ArcType.ROUND); }
+        if (!clockwiseRotation){
+            for (int i=0; i<4; i++){
+                arcs[i].setStartAngle(angle+(90*((4-i)%4))); } }
         fs = new Circle(x, y, r2);
         fs.setFill(Color.BLACK);
-        star = new Star(computeStar());
-        for (int i=0; i<4; i++){
-            arcs[i].setStartAngle((angle+90*i)%360);}
+        star.setPoints(computeStar());
         rootJeu.getChildren().addAll(arcs);
         rootJeu.getChildren().add(fs);
         if (hasStar) star.draw(rootJeu);}
@@ -85,17 +84,19 @@ public class singleCircle extends Obstacles{
     public void rotate(double timediff){
         angle = (angle+speed*timediff)%360;
         for (int i=0; i<4; i++){
-            if (clockwiseRotation) arcs[i].setStartAngle(arcs[i].getStartAngle()+speed*timediff);
-            else arcs[i].setStartAngle(arcs[i].getStartAngle()-speed*timediff);
+            if (clockwiseRotation) arcs[i].setStartAngle(arcs[i].getStartAngle()-speed*timediff);
+            else arcs[i].setStartAngle(arcs[i].getStartAngle()+speed*timediff);
         } }
 
 
     public boolean collision(Ball ball, double timeSinceStart){
+        HashMap<Integer, Integer> hm = new HashMap<>();
+        hm.put(0,1); hm.put(1, 0); hm.put(2, 3); hm.put(3, 2);
         double yball = ball.getY();
         int rotated = (int)(angle%360);
-        int bottomColor = (6-(rotated/90))%4;
-        int topColor = (4-(rotated/90))%4;
-        if (!clockwiseRotation) {bottomColor = hm.get(bottomColor); topColor = hm.get(topColor);}
+        int bottomColor = hm.get(rotated/90);
+        int topColor = 3 - rotated/90;
+        if (!clockwiseRotation) {bottomColor = (rotated/90 + 2)%4; topColor = rotated/90;}
         if ((yball>=y+r2) && (yball<=y+r1)){
             return ball.getColor() != bottomColor; }
         else if ((yball<=y-r2) && (yball>=y-r1)){

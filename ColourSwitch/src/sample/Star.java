@@ -18,6 +18,9 @@ public class Star extends element{
         this.present = present;
     }
 
+    public void setPoints(double[] points) {
+        this.points = points; }
+
     public Polygon get() {
         return star;
     }
@@ -44,7 +47,7 @@ public class Star extends element{
     public void draw(Pane pane) {
         star = new Polygon(points);
         star.setFill(Color.GOLD);
-        pane.getChildren().addAll(star);
+        if (present) pane.getChildren().addAll(star);
     }
 
     public boolean present(){

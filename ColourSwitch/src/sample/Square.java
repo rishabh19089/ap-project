@@ -14,6 +14,7 @@ public class Square extends Obstacles{
         double side = yBottom-yTop;
         x = xpos + side/2; y = yTop + side/2;
         this.xpos = xpos; this.side = side; this.thick = thick;
+        star = new Star(computeStar());
         this.hasStar = hasStar;
         this.speed = speed; }
 
@@ -45,7 +46,6 @@ public class Square extends Obstacles{
     public void draw(Pane pane) {
         Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
         g = new Group();
-        star = new Star(computeStar());
         rects = new Rectangle[4];
         double[][] pos = new double[][] {{xpos, yTop, side-thick, thick}, {xpos+side-thick, yTop, thick, side - thick}, {xpos+thick, yTop+side-thick, side - thick, thick}, {xpos, yTop+thick, thick, side-thick}};
         for (int i=0; i<4; i++){
@@ -53,6 +53,7 @@ public class Square extends Obstacles{
             rects[i].setFill(colors[i]);
             g.getChildren().add(rects[i]);}
         g.setRotate(angle);
+        star.setPoints(computeStar());
         pane.getChildren().add(g);
         if (hasStar) star.draw(pane); }
 

@@ -16,6 +16,7 @@ public class horizontalBar extends Obstacles{
         double thick = yBottom - starDist - 20 - yTop;
         x = WIDTH/2; this.y = yTop + 20; this.WIDTH = WIDTH;
         hasStar = true;
+        star = new Star(computeStar());
         this.speed = speed; //Distance travelled in a second
         this.starDist = starDist; this.thick = thick;}
 
@@ -55,7 +56,7 @@ public class horizontalBar extends Obstacles{
             rects[i] = new Rectangle(-WIDTH+(WIDTH/4)*i, yTop + 20 + starDist, WIDTH/4, thick);
             rects[i].setFill(colors[i%4]); }
         g = new Group(rects);
-        star = new Star(computeStar());
+        star.setPoints(computeStar());
         pane.getChildren().add(g);
         if (hasStar) star.draw(pane);}
 

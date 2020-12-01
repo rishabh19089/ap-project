@@ -1,14 +1,9 @@
 package sample;
 
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-
-public abstract class Obstacles extends element implements Serializable, Cloneable{
+public abstract class Obstacles extends element{
     protected double  colour, dificulty;
     protected double yBottom, yTop, thick;
     protected Star star;
@@ -18,7 +13,7 @@ public abstract class Obstacles extends element implements Serializable, Cloneab
     protected boolean hasStar;
     protected boolean clockwiseRotation;
     protected transient Group g;
-    protected double angle = 180;
+    protected double angle = 0;
 
     public Obstacles() {
          }

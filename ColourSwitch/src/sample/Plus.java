@@ -16,6 +16,7 @@ public class Plus extends Obstacles{
         double side = (yBottom - yTop - thick)/2; double ypos = yBottom - thick - side;
         x = starCenter; y = ypos; this.length = side; center = xpos; this.speed = speed;
         clockwiseRotation = rotationClockwise;
+        star = new Star(computeStar());
         this.hasStar = hasStar; }
 
     @Override
@@ -47,7 +48,7 @@ public class Plus extends Obstacles{
         Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
         rects = new Rectangle[4];
         double[][] pos = new double[][] {{center-thick/2, y-length, thick, length}, {center, y, length, thick}, {center-thick/2, y+thick, thick, length}, {center-length, y, length, thick}};
-        star = new Star(computeStar());
+        star.setPoints(computeStar());
         for (int i = 0; i<4; i++){
             rects[i] = new Rectangle(pos[i][0], pos[i][1], pos[i][2], pos[i][3]);
             rects[i].setFill(colors[i]); }
