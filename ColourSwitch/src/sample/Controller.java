@@ -37,21 +37,15 @@ public class Controller {
     }
 
     public void serialize() throws IOException {
-        //object of Game
-        //after save call this method
         File f = new File("obj.txt");
         FileOutputStream fos = new FileOutputStream(f);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(game);
-
-    }
+        oos.writeObject(game); }
 
     public void deserialize() throws IOException, ClassNotFoundException {
         FileInputStream fis= new FileInputStream("obj.txt");
         ObjectInputStream ois= new ObjectInputStream(fis);
-        game= (Game) ois.readObject();
-        System.out.println(game.getUser().getBall().y+ " "+ game.getUser().getScore());
-    }
+        game= (Game) ois.readObject(); }
 
     private void load(String s){
         try {
@@ -169,36 +163,25 @@ public class Controller {
         addImage(root, "save1.png", 175, 255, 140, 140);
         addImage(root,"cancel.png", 160, 485, 170, 170);
         Button b = new Button(); b.setLayoutX(175); b.setLayoutY(255); b.setMinWidth(140); b.setMinHeight(140);
-        b.setOnAction(event -> {
-            try {
-                saveGame(false);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }); b.setOpacity(0);
+        b.setOnAction(event -> { saveGame(false); }); b.setOpacity(0);
         Button b1 = new Button(); b1.setLayoutX(160); b1.setLayoutY(485); b1.setMinWidth(170); b1.setMinHeight(170);
         b1.setOnAction(event -> mainmenu()); b1.setOpacity(0);
         root.getChildren().addAll(text, b, b1);
         display(root); }
 
     public void displayResumeGame() {
-        //load("ResumeGame");
         try {
             deserialize();
-            System.out.println("hgdfhfdf");
-            enterGame();
-        }
+            enterGame(); }
         catch (Exception e){
-            e.printStackTrace();
-        }
+            e.printStackTrace(); } }
 
-        }
-
-    public void saveGame(boolean contin) throws IOException {
-        //save
+    public void saveGame(boolean contin){
+        try{
         serialize();
-        if(!contin) mainmenu();
-    }
+        if(!contin) mainmenu();}
+        catch (Exception e){
+            System.out.println("Error in Serializing."); } }
 
 
     public void displayMainMenu(ActionEvent event) {
@@ -213,7 +196,10 @@ public class Controller {
             Button b = new Button(); b.setOpacity(0);
             b.setLayoutX(166); b.setLayoutY(271); b.setMinWidth(167); b.setMinHeight(157);
             b.setOnAction(event -> resumeGame(scene, timer));
-            root.getChildren().add(b);
+            Button b1 = new Button(); b1.setOpacity(0);
+            b1.setLayoutX(166); b1.setLayoutY(521); b1.setMinWidth(167); b1.setMinHeight(157);
+            b1.setOnAction(event -> displayExitMenu());
+            root.getChildren().addAll(b, b1);
             primaryStage.setScene(new Scene(root)); }
         catch (IOException e) {
             System.out.println("FXML not found!"); } }
@@ -236,26 +222,12 @@ public class Controller {
         game.getUser().getScore();
         try {
             Pane root = FXMLLoader.load(getClass().getResource("GameOver.fxml"));
-            ArrayList<ImageView> ImArr= new ArrayList<ImageView>();
-            ImArr.add(addImage(root, "heart.png", 140,384,223,188 ));
-            ImArr.add(addImage(root, "star.png", 206,503,24,24 ));
-            ImArr.add(addImage(root, "star.png", 206,528,24,24 ));
-            ImArr.add(addImage(root, "star.png", 226,523,18,18 ));
-            ImArr.add(addImage(root, "star.png", 221,546,18,24 ));
-            ImArr.add(addImage(root, "star.png", 244,542,12,11 ));
-            ImArr.add(addImage(root, "star.png", 246,558,11,11 ));
-            ImArr.add(addImage(root, "star.png", 261,526,18,18 ));
-            ImArr.add(addImage(root, "star.png", 278,510,24,24 ));
-            ImArr.add(addImage(root, "star.png", 270,548,18,18 ));
-            ImArr.add(addImage(root, "star.png", 289,535,33,24 ));
-
-
+            ArrayList<ImageView> ImArr= new ArrayList<>();
+            ImArr.addAll(List.of(addImage(root, "heart.png", 140,384,223,188 ), addImage(root, "star.png", 206,503,24,24 ), addImage(root, "star.png", 206,528,24,24 ), addImage(root, "star.png", 226,523,18,18 ), addImage(root, "star.png", 221,546,18,24 ),
+                    addImage(root, "star.png", 244,542,12,11 ), addImage(root, "star.png", 246,558,11,11 ), addImage(root, "star.png", 261,526,18,18 ), addImage(root, "star.png", 278,510,24,24 ), addImage(root, "star.png", 289,535,33,24 )));
             primaryStage.setScene(new Scene(root)); }
         catch (IOException e) {
-            System.out.println("FXML not found!"); }
-    }
-
-
+            System.out.println("FXML not found!"); } }
 
     @FXML
     void enterGame(){
@@ -334,13 +306,7 @@ public class Controller {
                     timer.stop();
                     displayPauseMenu(scene, timer); }
                 else if (event.getCode() == KeyCode.S){
-                    try {
-                        saveGame(true);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }});
+                        saveGame(true); } }});
         primaryStage.setScene(scene);
 
     }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
@@ -26,7 +25,5 @@
             <Font name="Stencil" size="81.0" />
          </font>
       </Text>
-      <Button layoutX="166.0" layoutY="271.0" mnemonicParsing="false" opacity="0.0" prefHeight="157.0" prefWidth="167.0" text="Button" />
-      <Button layoutX="166.0" layoutY="521.0" mnemonicParsing="false" onAction="#displayExitMenu" opacity="0.0" prefHeight="157.0" prefWidth="167.0" text="Button" />
    </children>
 </AnchorPane>

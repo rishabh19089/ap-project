@@ -27,7 +27,7 @@ public class MagicColourBox extends element{
             arcs[i].setStroke(colors[i]);
             arcs[i].setFill(colors[i]);
             arcs[i].setType(ArcType.ROUND); }
-        rootJeu.getChildren().addAll(arcs); }
+        if (present) rootJeu.getChildren().addAll(arcs); }
 
 
     private int randomColour(){
