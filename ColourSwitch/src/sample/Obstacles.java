@@ -9,22 +9,25 @@ import java.util.ArrayList;
 
 public abstract class Obstacles extends element implements Serializable, Cloneable{
     protected double  colour, dificulty;
-    protected double yBottom, yTop;
+    protected double yBottom, yTop, thick;
     protected Star star;
     protected double speed; //Angle rotated per second
     public abstract boolean rotation();
-    protected ArrayList<javafx.scene.Node> elements;
     protected double sr1 = 20, sr2 = 10;
     protected boolean hasStar;
     protected boolean clockwiseRotation;
-    protected Group g;
-    protected double angle = 0;
+    protected transient Group g;
+    protected double angle = 180;
 
     public Obstacles() {
-        this.elements = new ArrayList<>(); }
+         }
 
-    public ArrayList<Node> getElements() {
-        return elements;
+    public double getAngle() {
+        return angle;
+    }
+
+    public void setAngle(double angle) {
+        this.angle = angle;
     }
 
     public abstract double rotationSpeed();

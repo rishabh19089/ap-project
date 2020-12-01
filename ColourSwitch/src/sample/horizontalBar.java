@@ -7,8 +7,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 public class horizontalBar extends Obstacles{
-    private Rectangle[] rects;
-    private double dist, WIDTH;
+    private transient Rectangle[] rects;
+    private double dist, WIDTH, starDist;
 
     public horizontalBar(double yTop, double WIDTH, double yBottom, double speed, double starDist, boolean hasStar){
         this.yTop = yTop; this.yBottom = yBottom; this.hasStar = hasStar;
@@ -16,12 +16,7 @@ public class horizontalBar extends Obstacles{
         x = WIDTH/2; this.y = yTop + 20; this.WIDTH = WIDTH;
         hasStar = true;
         this.speed = speed; //Distance travelled in a second
-        rects = new Rectangle[8];
-        for (int i=0; i<8; i++){
-            rects[i] = new Rectangle(-WIDTH+(WIDTH/4)*i, yTop + 20 + starDist, WIDTH/4, thick);
-            rects[i].setFill(colors[i%4]); }
-        g = new Group(rects);
-        star = new Star(computeStar()); }
+        this.starDist = starDist; this.thick = thick;}
 
     @Override
     public boolean rotation() {
@@ -53,6 +48,12 @@ public class horizontalBar extends Obstacles{
 
     @Override
     public void draw(Pane pane) {
+        rects = new Rectangle[8];
+        for (int i=0; i<8; i++){
+            rects[i] = new Rectangle(-WIDTH+(WIDTH/4)*i, yTop + 20 + starDist, WIDTH/4, thick);
+            rects[i].setFill(colors[i%4]); }
+        g = new Group(rects);
+        star = new Star(computeStar());
         pane.getChildren().add(g);
         if (hasStar) star.draw(pane);}
 

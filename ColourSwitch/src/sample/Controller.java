@@ -106,11 +106,12 @@ public class Controller {
         button4.setLayoutX(400);button4.setLayoutY(615);
         root.getChildren().addAll(buttons); }
 
-    private void addImage(Pane root, String name, int x, int y, int width, int height){
+    private ImageView addImage(Pane root, String name, int x, int y, int width, int height){
         Image image = new Image("file:resources/images/"+name);
         ImageView im = new ImageView(image);
         im.setX(x); im.setY(y); im.setFitWidth(width);im.setFitHeight(height);
-        root.getChildren().add(im); }
+        root.getChildren().add(im);
+        return im;}
 
     private Pane loadPane() {
         Pane root = new Pane();
@@ -227,7 +228,7 @@ public class Controller {
         game = new Game("Rishabh", HEIGHT, WIDTH, jump, root, scene);
         final boolean[] started = {false};
         Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
-        Star st = new Star(cord(52, 28, 18, 9)); st.get().setFill(Color.WHITE);
+        Star st = new Star(cord(52, 28, 18, 9));
         User user = game.getUser(); Ball ball = user.getBall();
 
         ArrayList<Obstacles> obstacles = game.getObstArray().getObstArray();
@@ -237,7 +238,7 @@ public class Controller {
 
         game.draw();
         root.getChildren().add(text);
-        st.draw(root);
+        st.draw(root); st.get().setFill(Color.WHITE);
 
         ArrayList<obj> objects = game.getObjects();
 

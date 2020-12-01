@@ -8,21 +8,14 @@ import javafx.scene.shape.Shape;
 
 public class Plus extends Obstacles{
     private double length, center;
-    private Rectangle[] rects;
+    private transient Rectangle[] rects;
 
     public Plus(double xpos, double yTop, double yBottom, double thick, double starCenter, double speed, boolean hasStar, boolean rotationClockwise){
-        this.yTop = yTop; this.yBottom = yBottom;
+        this.yTop = yTop; this.yBottom = yBottom; this.thick = thick;
         double side = (yBottom - yTop - thick)/2; double ypos = yBottom - thick - side;
         x = starCenter; y = ypos; this.length = side; center = xpos; this.speed = speed;
         clockwiseRotation = rotationClockwise;
-        rects = new Rectangle[4];
-        this.hasStar = hasStar;
-        star = new Star(computeStar());
-        double[][] pos = new double[][] {{xpos-thick/2, ypos-side, thick, side}, {xpos, ypos, length, thick}, {xpos-thick/2, ypos+thick, thick, side}, {xpos-side, ypos, side, thick}};
-        for (int i = 0; i<4; i++){
-            rects[i] = new Rectangle(pos[i][0], pos[i][1], pos[i][2], pos[i][3]);
-            rects[i].setFill(colors[i]); }
-        g = new Group(rects); }
+        this.hasStar = hasStar; }
 
     @Override
     public boolean rotation() {
@@ -50,6 +43,13 @@ public class Plus extends Obstacles{
 
     @Override
     public void draw(Pane pane) {
+        rects = new Rectangle[4];
+        double[][] pos = new double[][] {{center-thick/2, y-length, thick, length}, {center, y, length, thick}, {center-thick/2, y+thick, thick, length}, {center-length, y, length, thick}};
+        star = new Star(computeStar());
+        for (int i = 0; i<4; i++){
+            rects[i] = new Rectangle(pos[i][0], pos[i][1], pos[i][2], pos[i][3]);
+            rects[i].setFill(colors[i]); }
+        g = new Group(rects);
         g.setRotate(angle);
         pane.getChildren().add(g);
         if (hasStar) star.draw(pane); }

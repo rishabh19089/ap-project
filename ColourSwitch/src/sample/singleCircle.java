@@ -19,20 +19,11 @@ public class singleCircle extends Obstacles{
 
     public singleCircle(double xCenter, double yTop, double yBottom, double radius2, double speed, boolean hasStar, boolean rotationClockwise){
         this.yTop = yTop; this.yBottom = yBottom; x = xCenter; y = (yTop+yBottom)/2;
-        arcs = new Arc[4];
         r1 = yBottom-y; r2 = radius2;
         this.speed = speed;
         clockwiseRotation = rotationClockwise;
         hm = new HashMap<>();
         hm.put(0,1); hm.put(1, 0); hm.put(2, 3); hm.put(3, 2);
-        for (int i=0; i<4; i++){
-            arcs[i] = new Arc(x, y, r1, r1, 90*i, 90);
-            arcs[i].setStroke(colors[i]);
-            arcs[i].setFill(colors[i]);
-            arcs[i].setType(ArcType.ROUND); }
-        fs = new Circle(x, y, radius2);
-        fs.setFill(Color.BLACK);
-        star = new Star(computeStar());
         this.hasStar = hasStar; }
 
     public double getSpeed() {
@@ -75,6 +66,15 @@ public class singleCircle extends Obstacles{
 
     @Override
     public void draw(Pane rootJeu)  {
+        arcs = new Arc[4];
+        for (int i=0; i<4; i++){
+            arcs[i] = new Arc(x, y, r1, r1, 90*i, 90);
+            arcs[i].setStroke(colors[i]);
+            arcs[i].setFill(colors[i]);
+            arcs[i].setType(ArcType.ROUND); }
+        fs = new Circle(x, y, r2);
+        fs.setFill(Color.BLACK);
+        star = new Star(computeStar());
         for (int i=0; i<4; i++){
             arcs[i].setStartAngle((angle+90*i)%360);}
         rootJeu.getChildren().addAll(arcs);
@@ -92,7 +92,7 @@ public class singleCircle extends Obstacles{
 
     public boolean collision(Ball ball, double timeSinceStart){
         double yball = ball.getY();
-        int rotated = (int)(timeSinceStart*speed)%360;
+        int rotated = (int)(angle%360);
         int bottomColor = (6-(rotated/90))%4;
         int topColor = (4-(rotated/90))%4;
         if (!clockwiseRotation) {bottomColor = hm.get(bottomColor); topColor = hm.get(topColor);}

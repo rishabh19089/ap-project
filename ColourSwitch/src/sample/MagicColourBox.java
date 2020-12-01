@@ -8,22 +8,23 @@ import java.util.Random;
 
 public class MagicColourBox extends element{
     private double radius;
-    private Arc[] arcs;
+    private transient Arc[] arcs;
     private boolean present = true;
 
     public MagicColourBox(double x1, double y1) {
-        x = x1; y = y1; radius = 20; arcs = new Arc[4];
-        for (int i=0; i<4; i++){
-            arcs[i] = new Arc(x, y, radius, radius, 90*i, 90);
-            arcs[i].setStroke(colors[i]);
-            arcs[i].setFill(colors[i]);
-            arcs[i].setType(ArcType.ROUND); } }
+        x = x1; y = y1; radius = 20; }
 
     public void eraseMagicColourBox(Pane pane){
         pane.getChildren().removeAll(arcs); }
 
     @Override
     public void draw(Pane rootJeu){
+        arcs = new Arc[4];
+        for (int i=0; i<4; i++){
+            arcs[i] = new Arc(x, y, radius, radius, 90*i, 90);
+            arcs[i].setStroke(colors[i]);
+            arcs[i].setFill(colors[i]);
+            arcs[i].setType(ArcType.ROUND); }
         rootJeu.getChildren().addAll(arcs); }
 
 
