@@ -34,8 +34,8 @@ public class Controller {
     public Controller() {
         WIDTH =500; HEIGHT = 700; jump = 200;
         this.game = new Game("Unknown", HEIGHT, WIDTH, jump);
-        File file = new File("saved/Unknown");if(!file.exists()) file.mkdirs();
-        //File file1 = new File("Un");file1.mkdir();
+        //File file = new File("saved/Unknown");if(!file.exists()) file.mkdirs();
+
     }
 
     public void spaceTyped() {
@@ -50,6 +50,7 @@ public class Controller {
 
     public void deserialize(String name) {
         try {
+            System.out.println("Des "+name);
             FileInputStream fis = new FileInputStream(name + ".txt");
             ObjectInputStream ois = new ObjectInputStream(fis);
             game = (Game) ois.readObject();
@@ -159,8 +160,10 @@ public class Controller {
         button2.setLayoutX(219);button2.setLayoutY(432);
         button2.setOnAction((event) -> {
             if(tf.getText().length() != 0){ game.getUser().setName(tf.getText());
-            File file = new File("saved/"+tf.getText());
-            if(!file.exists()) file.mkdirs(); mainmenu();}}); button2.setOpacity(0);
+            //File file = new File("saved/"+tf.getText());
+            //if(!file.exists()) file.mkdirs();
+            mainmenu();}});
+        button2.setOpacity(0);
         pane.getChildren().addAll(root, borderPane, button1, tf);
         addImage(pane, "submit.png", 219, 432, 63, 68);
         pane.getChildren().add(button2);
@@ -268,7 +271,7 @@ public class Controller {
             points[i+3] = y - sr2*Math.sin(Math.toRadians(126+(72*t))); }
         return points; }
 
-    private void revive(AnimationTimer timer, Scene scene, Pane pane, double pos) {
+    private void revive(Scene scene, Pane pane, double pos) {
         if(game.getUser().getScore() >= 2){
             deserialize("saved/temp");
             if(pos > 0) game.getUser().getBall().setY(pos+ 70);
@@ -286,10 +289,9 @@ public class Controller {
                     double t = (currentTime - startTime) / 1000000000.0;
                     if(t> 2) {pane.getChildren().remove(text1); stop();} }}.start(); } }
 
-    void exit(AnimationTimer timer, Scene scene, double pos){
+    void exit(Scene scene, double pos){
         try {
             serialize("saved/temp");
-            timer.stop();
             Pane root = FXMLLoader.load(getClass().getResource("GameOver.fxml"));
             ArrayList<ImageView> ImArr= new ArrayList<>();
             Text text;
@@ -299,7 +301,7 @@ public class Controller {
             Star st = new Star(cord(250, 250, 90, 50)); st.get().setFill(Color.LIGHTGOLDENRODYELLOW);
             st.draw(root);
             Button btn = new Button();btn.setMinSize(223,180);btn.setLayoutY(390);btn.setLayoutX(140);btn.setOpacity(0);
-            btn.setOnAction((event) -> revive(timer, scene, root, pos));
+            btn.setOnAction((event) -> revive(scene, root, pos));
             if(game.getUser().getScore() > 9) {
                 text = new Text(215, 270, String.valueOf(game.getUser().getScore())); Font font = loadFont(65); text.setFont(font); }
             else {
@@ -307,8 +309,8 @@ public class Controller {
             text.setFill(Color.INDIGO);
             Button btn1 = new Button();btn1.setMinSize(97,93);btn1.setLayoutY(576);btn1.setLayoutX(14);btn1.setOpacity(0);
             Button btn2 = new Button();btn2.setMinSize(86,86);btn2.setLayoutY(584);btn2.setLayoutX(395);btn2.setOpacity(0);
-            btn1.setOnAction((event) -> mainmenu());
-            btn2.setOnAction((event) -> enterGame());
+            btn1.setOnAction((event) -> { System.out.println("B1");mainmenu();});
+            btn2.setOnAction((event) -> {System.out.println("B2"); enterGame();});
             Arc arc = new Arc(250, 470, 125, 125, 90, 360); arc.setStroke(Color.LIGHTBLUE); arc.setFill(Color.TRANSPARENT); arc.setType(ArcType.OPEN);
             root.getChildren().addAll(text1, text,arc, btn,btn1,btn2);
             AnimationTimer timer1 = new AnimationTimer() {
@@ -374,7 +376,7 @@ public class Controller {
                 totalScroll += scroll;
 
                 if ((started[0]) && (ballY>=HEIGHT) && (totalScroll<=0)){
-                    exit(this, scene, -1); }
+                    exit(scene, -1); }
 
                 for (obj objs: objects){
                     objs.move(scroll); }
@@ -386,7 +388,7 @@ public class Controller {
 
                 for (Obstacles o: obstacles){
                     if (o.collision(ball, timeSinceStart)){
-                        exit(this, scene, o.getyBottom());}
+                        exit(scene, o.getyBottom());}
                     o.rotate(t);
                     o.starCollision(user, root); }
 
