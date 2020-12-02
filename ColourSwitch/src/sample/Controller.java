@@ -32,7 +32,7 @@ public class Controller {
 
     public Controller() {
         WIDTH =500; HEIGHT = 700; jump = 200;
-        this.game = new Game("Unknown", HEIGHT, WIDTH, jump);; }
+        this.game = new Game("Unknown", HEIGHT, WIDTH, jump); }
 
     public void spaceTyped() {
 

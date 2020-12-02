@@ -15,8 +15,10 @@ public class Star extends element{
         present = true; }
 
     public void setPresent(boolean present) {
-        this.present = present;
-    }
+        this.present = present; }
+
+    public void move(double x1, double y1){
+        star.setTranslateX(x1); star.setTranslateY(y); }
 
     public void setPoints(double[] points) {
         this.points = points; }

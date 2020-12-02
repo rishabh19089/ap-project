@@ -7,6 +7,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
+import java.util.HashMap;
+
 public class Plus extends Obstacles{
     private double length, center;
     private transient Rectangle[] rects;
@@ -46,6 +48,7 @@ public class Plus extends Obstacles{
     @Override
     public void draw(Pane pane) {
         Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
+        if (!clockwiseRotation) colors = new Color[]{Color.AQUAMARINE, Color.YELLOW, Color.INDIGO, Color.ORANGERED};
         rects = new Rectangle[4];
         double[][] pos = new double[][] {{center-thick/2, y-length, thick, length}, {center, y, length, thick}, {center-thick/2, y+thick, thick, length}, {center-length, y, length, thick}};
         star.setPoints(computeStar());
@@ -69,11 +72,13 @@ public class Plus extends Obstacles{
 
     @Override
     public boolean collision(Ball ball, double t) {
+        HashMap<Integer, Integer> colorMap = new HashMap<>();
+        colorMap.put(0,0); colorMap.put(1,3); colorMap.put(2,2); colorMap.put(3,1);
         Circle c = ball.getCircle();
         boolean collision = false;
         for (int i=0; i<4; i++){
             Shape intersect = Shape.intersect(rects[i], c);
-            if ((intersect.getBoundsInLocal().getWidth() != -1) && (i!=ball.getColor())){
+            if ((intersect.getBoundsInLocal().getWidth() != -1) && (((clockwiseRotation) && (i!=ball.getColor())) || ((!clockwiseRotation) && (colorMap.get(i)!= ball.getColor())))){
                 collision = true; } }
         return collision; }
 

@@ -36,7 +36,8 @@ public abstract class Obstacles extends element{
         return 0;
     }
 
-
+    public Star getStar() {
+        return star; }
 
     public double getColour() {
         return colour; }

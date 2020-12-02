@@ -15,8 +15,8 @@ public class obstacleArray implements Serializable {
         singleCircle circle2 = new singleCircle(250,10, 190, 70, 90, true, false);
         Square square = new Square(175 , 380, 530, 20, true, 90);
         horizontalBar bar = new horizontalBar(-270, 500, -185, 200, 50, true);
-        Plus plus = new Plus(120, -710, -475, 15, 255, 90, true, true);
-        Plus plus1 = new Plus(390, -710, -475, 15, 255, 90, false, false);
+        Plus plus = new Plus(145, -710, -475, 15, 255, 90, true, true);
+        Plus plus1 = new Plus(365, -710, -475, 15, 255, 90, false, false);
         obstArray.addAll(List.of(circle, circle1, circle2, square, bar, plus, plus1));
     }
 

@@ -64,6 +64,7 @@ public class singleCircle extends Obstacles{
     @Override
     public void draw(Pane rootJeu)  {
         Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
+        if (!clockwiseRotation) colors = new Color[]{Color.AQUAMARINE, Color.YELLOW, Color.INDIGO, Color.ORANGERED};
         arcs = new Arc[4];
         for (int i=0; i<4; i++){
             arcs[i] = new Arc(x, y, r1, r1, 360-angle-90*i, 90);
@@ -90,13 +91,15 @@ public class singleCircle extends Obstacles{
 
 
     public boolean collision(Ball ball, double timeSinceStart){
-        HashMap<Integer, Integer> hm = new HashMap<>();
-        hm.put(0,1); hm.put(1, 0); hm.put(2, 3); hm.put(3, 2);
+//        HashMap<Integer, Integer> hm = new HashMap<>();
+//        hm.put(0,1); hm.put(1, 0); hm.put(2, 3); hm.put(3, 2);
+        HashMap<Integer, Integer> bottomFromTop = new HashMap<>();
+        bottomFromTop.put(0,2); bottomFromTop.put(1,3); bottomFromTop.put(2,0); bottomFromTop.put(3,1);
         double yball = ball.getY();
         int rotated = (int)(angle%360);
-        int bottomColor = hm.get(rotated/90);
         int topColor = 3 - rotated/90;
-        if (!clockwiseRotation) {bottomColor = (rotated/90 + 2)%4; topColor = rotated/90;}
+        int bottomColor = bottomFromTop.get(topColor);
+        if (!clockwiseRotation) {topColor = (4-rotated/90)%4; bottomColor = bottomFromTop.get(topColor);}
         if ((yball>=y+r2) && (yball<=y+r1)){
             return ball.getColor() != bottomColor; }
         else if ((yball<=y-r2) && (yball>=y-r1)){
