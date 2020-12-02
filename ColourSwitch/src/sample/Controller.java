@@ -173,18 +173,16 @@ public class Controller {
             File file = new File("saved/"+tf.getText());
             if(!file.exists()) file.mkdirs();
             else {
+                File file1 = new File("saved/"+tf.getText()+"/info.txt");
+                if (file1.exists()){
                 int y= Integer.parseInt(readFile("saved/"+tf.getText()+"/info.txt").get(readFile("saved/"+tf.getText()+"/info.txt").size() - 1).split("\t\t")[0]);
-                game.getUser().setSavedGames(y);
-            }
+                game.getUser().setSavedGames(y); }}
             mainmenu();}});
         button2.setOpacity(0);
         pane.getChildren().addAll(root, borderPane, button1, tf);
         addImage(pane, "submit.png", 219, 432, 63, 68);
         pane.getChildren().add(button2);
-
-        display(pane);
-
-    }
+        display(pane); }
 
 
     public void mainmenu() {
@@ -255,7 +253,6 @@ public class Controller {
         button4.setOnAction((event)-> mainmenu());
         try {
             final String[] num = {""};
-
             ArrayList<String> arr= readFile("saved/"+game.getUser().getName()+"/info.txt");
             ListView<String> listView = new ListView<String>(FXCollections.observableArrayList(arr));
             listView.setPrefSize(400, 250);listView.setLayoutX(50);listView.setLayoutY(300);
@@ -264,15 +261,11 @@ public class Controller {
                     num[0] =listView.getSelectionModel().getSelectedItem().split("\t\t")[0];
                 deserialize("saved/"+game.getUser().getName()+"/"+ num[0]);
                 enterGame();}});
-
             pane.getChildren().addAll(listView,text1,text2,button4);
-            display(pane);
+            display(pane); }
 
-
-        }
         catch (Exception e){
-            System.out.println("Click at right Position\n"); }
-    }
+            System.out.println("Click at right Position\n"); } }
 
     public void saveGame(boolean contin){
         try{
