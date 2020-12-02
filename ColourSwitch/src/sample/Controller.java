@@ -12,7 +12,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -33,10 +32,7 @@ public class Controller {
 
     public Controller() {
         WIDTH =500; HEIGHT = 700; jump = 200;
-        this.game = new Game("Unknown", HEIGHT, WIDTH, jump);
-        //File file = new File("saved/Unknown");if(!file.exists()) file.mkdirs();
-
-    }
+        this.game = new Game("Unknown", HEIGHT, WIDTH, jump); }
 
     public void spaceTyped() {
 
@@ -50,7 +46,6 @@ public class Controller {
 
     public void deserialize(String name) {
         try {
-            System.out.println("Des "+name);
             FileInputStream fis = new FileInputStream(name + ".txt");
             ObjectInputStream ois = new ObjectInputStream(fis);
             game = (Game) ois.readObject();
@@ -103,25 +98,22 @@ public class Controller {
 
     private void addButtons(Pane root) {
         String[] bt = new String[]{"newGame", "ResumeGame", "help", "Exit"};
-        Button button1= new Button(); button1.setMinSize(110,85);
-        Button button2= new Button(); button2.setMinSize(80,75);
-        Button button3= new Button(); button3.setMinSize(80,85);
-        Button button4= new Button(); button4.setMinSize(80,80);
-        Button button5= new Button(); button5.setMinSize(80,80);
-        Button[] buttons = new Button[] {button1, button2, button3, button4, button5};
-        for (int i=0; i<5; i++){
+        Button button1= new Button(); button1.setMinSize(120,85);
+        Button button2= new Button(); button2.setMinSize(120,65);
+        Button button3= new Button(); button3.setMinSize(120,70);
+        Button button4= new Button(); button4.setMinSize(100,60);
+        Button[] buttons = new Button[] {button1, button2, button3, button4};
+        for (int i=0; i<4; i++){
             buttons[i].setOpacity(0);
             int finalI = i;
             if (i==0) buttons[i].setOnAction((event) -> enterGame());
             else if(i == 1) buttons[i].setOnAction((event) -> displayResumeGame());
-            else if(i == 4) buttons[i].setOnAction((event) -> loginPage(root));
             else if (i!=3) buttons[i].setOnAction((event) -> load(bt[finalI]));
             else buttons[i].setOnAction((event) -> primaryStage.close()) ;}
         button1.setLayoutX(190);button1.setLayoutY(360);
-        button2.setLayoutX(160);button2.setLayoutY(605);
-        button3.setLayoutX(280); button3.setLayoutY(595);
-        button4.setLayoutX(400);button4.setLayoutY(600);
-        button5.setLayoutX(25);button5.setLayoutY(605);
+        button2.setLayoutX(190);button2.setLayoutY(615);
+        button3.setLayoutX(20); button3.setLayoutY(615);
+        button4.setLayoutX(400);button4.setLayoutY(615);
         root.getChildren().addAll(buttons); }
 
     private ImageView addImage(Pane root, String name, int x, int y, int width, int height){
@@ -141,37 +133,6 @@ public class Controller {
         primaryStage.setScene(sc);
         primaryStage.show(); }
 
-    private void loginPage(Pane root){
-        Pane pane = loadPane();
-        root.setOpacity(0.3);
-        BorderPane borderPane = new BorderPane();
-        borderPane.setLayoutX(50);borderPane.setLayoutY(315);
-        borderPane.setMinSize(400,180);
-        borderPane.setStyle("-fx-background-color: black ");
-        Text text1 = new Text(80, 470, "Enter Username"); Font font1 = loadFont(30); text1.setFont(font1); text1.setFill(Color.WHITE);
-        addImage(pane, "cancel.png", 444, 281, 30, 28);
-        Button button1= new Button(); button1.setMinSize(30,28);
-        button1.setLayoutX(444);button1.setLayoutY(281);
-        button1.setOnAction((event) -> mainmenu()); button1.setOpacity(0);
-        TextField tf= new TextField();
-        tf.setPromptText("Username");
-        tf.setLayoutX(83); tf.setLayoutY(350);tf.setMinSize(335,48);
-        Button button2= new Button(); button2.setMinSize(63,68);
-        button2.setLayoutX(219);button2.setLayoutY(432);
-        button2.setOnAction((event) -> {
-            if(tf.getText().length() != 0){ game.getUser().setName(tf.getText());
-            //File file = new File("saved/"+tf.getText());
-            //if(!file.exists()) file.mkdirs();
-            mainmenu();}});
-        button2.setOpacity(0);
-        pane.getChildren().addAll(root, borderPane, button1, tf);
-        addImage(pane, "submit.png", 219, 432, 63, 68);
-        pane.getChildren().add(button2);
-
-        display(pane);
-
-    }
-
 
     public void mainmenu() {
           Pane root = loadPane();
@@ -187,10 +148,9 @@ public class Controller {
           ArrayList<Obstacles> arr = new ArrayList<>(List.of(c, c0, c1, c2, c3, plus, sq));
           arr.forEach(el -> el.draw(root));
           drawInfinity(root);
-          addImage(root, "qn.jpg", 250, 590, 140, 90);
-          addImage(root, "res1.png", 120, 560, 160, 170);
-          addImage(root,"back3.png", 370, 560, 140, 160);
-          addImage(root,"login.png", 10, 610, 110, 110);
+          addImage(root, "qn.jpg", 10, 595, 140, 90);
+          addImage(root, "res1.png", 190, 585, 130, 130);
+          addImage(root,"back3.png", 380, 590, 110, 110);
           addButtons(root);
           AnimationTimer timer = new AnimationTimer() {
               private long lastTime = System.nanoTime();
@@ -201,7 +161,6 @@ public class Controller {
                   arr.forEach(el -> el.rotate(t));
                   lastTime = currentTime; }};
           timer.start();
-          //root.setOpacity(0.3);
           display(root);}
 
 
@@ -224,7 +183,6 @@ public class Controller {
             deserialize("saved/"+game.getUser().getName()+"/"+game.getUser().getSavedGames());
             enterGame(); }
         catch (Exception e){
-            System.out.println("Rohit");
             e.printStackTrace(); } }
 
     public void saveGame(boolean contin){
@@ -271,7 +229,7 @@ public class Controller {
             points[i+3] = y - sr2*Math.sin(Math.toRadians(126+(72*t))); }
         return points; }
 
-    private void revive(Scene scene, Pane pane, double pos) {
+    private void revive(Pane pane, double pos) {
         if(game.getUser().getScore() >= 2){
             deserialize("saved/temp");
             if(pos > 0) game.getUser().getBall().setY(pos+ 70);
@@ -289,9 +247,10 @@ public class Controller {
                     double t = (currentTime - startTime) / 1000000000.0;
                     if(t> 2) {pane.getChildren().remove(text1); stop();} }}.start(); } }
 
-    void exit(Scene scene, double pos){
+    void exit(AnimationTimer timer, Scene scene, double pos){
         try {
             serialize("saved/temp");
+            timer.stop();
             Pane root = FXMLLoader.load(getClass().getResource("GameOver.fxml"));
             ArrayList<ImageView> ImArr= new ArrayList<>();
             Text text;
@@ -301,18 +260,14 @@ public class Controller {
             Star st = new Star(cord(250, 250, 90, 50)); st.get().setFill(Color.LIGHTGOLDENRODYELLOW);
             st.draw(root);
             Button btn = new Button();btn.setMinSize(223,180);btn.setLayoutY(390);btn.setLayoutX(140);btn.setOpacity(0);
-            btn.setOnAction((event) -> revive(scene, root, pos));
+            btn.setOnAction((event) -> revive(root, pos));
             if(game.getUser().getScore() > 9) {
                 text = new Text(215, 270, String.valueOf(game.getUser().getScore())); Font font = loadFont(65); text.setFont(font); }
             else {
                 text = new Text(230, 270, String.valueOf(game.getUser().getScore())); Font font = loadFont(65); text.setFont(font); }
             text.setFill(Color.INDIGO);
-            Button btn1 = new Button();btn1.setMinSize(97,93);btn1.setLayoutY(576);btn1.setLayoutX(14);btn1.setOpacity(0);
-            Button btn2 = new Button();btn2.setMinSize(86,86);btn2.setLayoutY(584);btn2.setLayoutX(395);btn2.setOpacity(0);
-            btn1.setOnAction((event) -> { System.out.println("B1");mainmenu();});
-            btn2.setOnAction((event) -> {System.out.println("B2"); enterGame();});
             Arc arc = new Arc(250, 470, 125, 125, 90, 360); arc.setStroke(Color.LIGHTBLUE); arc.setFill(Color.TRANSPARENT); arc.setType(ArcType.OPEN);
-            root.getChildren().addAll(text1, text,arc, btn,btn1,btn2);
+            root.getChildren().addAll(text1, text,arc, btn);
             AnimationTimer timer1 = new AnimationTimer() {
                 private long lastTime = System.nanoTime();
                 private long startTime = System.nanoTime();
@@ -376,7 +331,7 @@ public class Controller {
                 totalScroll += scroll;
 
                 if ((started[0]) && (ballY>=HEIGHT) && (totalScroll<=0)){
-                    exit(scene, -1); }
+                    exit(this, scene, -1); }
 
                 for (obj objs: objects){
                     objs.move(scroll); }
@@ -388,7 +343,7 @@ public class Controller {
 
                 for (Obstacles o: obstacles){
                     if (o.collision(ball, timeSinceStart)){
-                        exit(scene, o.getyBottom());}
+                        exit(this, scene, o.getyBottom());}
                     o.rotate(t);
                     o.starCollision(user, root); }
 
