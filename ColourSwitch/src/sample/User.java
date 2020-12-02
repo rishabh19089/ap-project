@@ -11,7 +11,7 @@ public class User implements Serializable {
         this.score = 0;
         Name = name;
         this.ball = new Ball(600, HEIGHT, dist);
-        ball.setY(HEIGHT-50);
+        ball.setY(HEIGHT-70);
     }
 
     public void incrementScore() {

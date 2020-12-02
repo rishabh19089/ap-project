@@ -18,6 +18,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -226,18 +228,15 @@ public class Controller {
             points[i+3] = y - sr2*Math.sin(Math.toRadians(126+(72*t))); }
         return points; }
 
-    private void revive(AnimationTimer timer, Scene scene, Pane pane, double pos)
-    {
-
+    private void revive(AnimationTimer timer, Scene scene, Pane pane, double pos) {
         if(game.getUser().getScore() >= 2){
             deserialize("temp");
             if(pos > 0) game.getUser().getBall().setY(pos+ 70);
-            else game.getUser().getBall().setY(680);
+            else game.getUser().getBall().setY(630);
             game.getUser().setScore(game.getUser().getScore() - 2);
-            enterGame();
-        }
+            enterGame(); }
         else {
-            Text text1 = new Text(115, 470, "Min. 5 Stars Needed"); Font font1 = loadFont(30); text1.setFont(font1); text1.setFill(Color.WHITE);
+            Text text1 = new Text(80, 470, "Minimum 5 Stars Needed"); Font font1 = loadFont(30); text1.setFont(font1); text1.setFill(Color.WHITE);
             pane.getChildren().add(text1);
             new AnimationTimer() {
                 private long lastTime = System.nanoTime();
@@ -245,14 +244,9 @@ public class Controller {
                 @Override
                 public void handle(long currentTime) {
                     double t = (currentTime - startTime) / 1000000000.0;
-                    if(t> 2) {pane.getChildren().remove(text1); stop();} }}.start();
-
-        }
-
-    }
+                    if(t> 2) {pane.getChildren().remove(text1); stop();} }}.start(); } }
 
     void exit(AnimationTimer timer, Scene scene, double pos){
-
         try {
             serialize("temp");
             timer.stop();
@@ -262,14 +256,17 @@ public class Controller {
             Text text1 = new Text(17, 90, "Game Over!!"); Font font1 = loadFont(80); text1.setFont(font1); text1.setFill(Color.RED);
             ImArr.addAll(List.of(addImage(root, "heart.png", 140,384,223,188 ), addImage(root, "star.png", 206,503,24,24 ), addImage(root, "star.png", 206,528,24,24 ), addImage(root, "star.png", 226,523,18,18 ), addImage(root, "star.png", 221,546,18,24 ),
                     addImage(root, "star.png", 244,542,12,11 ), addImage(root, "star.png", 246,558,11,11 ), addImage(root, "star.png", 261,526,18,18 ), addImage(root, "star.png", 278,510,24,24 ), addImage(root, "star.png", 289,535,33,24 )));
-            Star st = new Star(cord(250, 250, 90, 50));
+            Star st = new Star(cord(250, 250, 90, 50)); st.get().setFill(Color.LIGHTGOLDENRODYELLOW);
             st.draw(root);
             Button btn = new Button();btn.setMinSize(223,180);btn.setLayoutY(390);btn.setLayoutX(140);btn.setOpacity(0);
             btn.setOnAction((event) -> revive(timer, scene, root, pos));
-            st.get().setFill(Color.SILVER);
-            if(game.getUser().getScore() > 9) {text = new Text(215, 270, String.valueOf(game.getUser().getScore())); Font font = loadFont(65); text.setFont(font); text.setFill(Color.INDIGO);}
-            else {text = new Text(230, 270, String.valueOf(game.getUser().getScore())); Font font = loadFont(65); text.setFont(font); text.setFill(Color.INDIGO);}
-            root.getChildren().addAll(text1, text,btn);
+            if(game.getUser().getScore() > 9) {
+                text = new Text(215, 270, String.valueOf(game.getUser().getScore())); Font font = loadFont(65); text.setFont(font); }
+            else {
+                text = new Text(230, 270, String.valueOf(game.getUser().getScore())); Font font = loadFont(65); text.setFont(font); }
+            text.setFill(Color.INDIGO);
+            Arc arc = new Arc(250, 470, 125, 125, 90, 360); arc.setStroke(Color.LIGHTBLUE); arc.setFill(Color.TRANSPARENT); arc.setType(ArcType.OPEN);
+            root.getChildren().addAll(text1, text,arc, btn);
             AnimationTimer timer1 = new AnimationTimer() {
                 private long lastTime = System.nanoTime();
                 private long startTime = System.nanoTime();
@@ -277,7 +274,8 @@ public class Controller {
                 public void handle(long currentTime) {
                     double t = (currentTime - startTime) / 1000000000.0;
                     ImArr.forEach(el -> el.setOpacity(1- (0.2 * t)));
-                    if(t> 5) {root.getChildren().remove(btn); stop();} }};
+                    arc.setLength(360-72*t);
+                    if(t> 5) {root.getChildren().removeAll(btn, arc); stop();} }};
             timer1.start();
             primaryStage.setScene(new Scene(root)); }
         catch (IOException e) {
@@ -302,6 +300,7 @@ public class Controller {
         game.draw(root);
         root.getChildren().add(text);
         st.draw(root); st.get().setFill(Color.WHITE);
+        ImageView im = addImage(root, "select1.png", 233, 660, 40, 40);
 
         ArrayList<obj> objects = game.getObjects();
 
@@ -336,6 +335,8 @@ public class Controller {
                 for (obj objs: objects){
                     objs.move(scroll); }
 
+                im.setY(im.getY()+scroll);
+
                 scroll = 0;
 
                 for (Obstacles o: obstacles){
@@ -356,8 +357,7 @@ public class Controller {
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.SPACE){
-                    //System.out.println("cghvhvhgjv");
+                if (event.getCode() == KeyCode.UP){
                     ball.jump();
                     started[0] = true; }
                 else if(event.getCode() == KeyCode.ESCAPE){
