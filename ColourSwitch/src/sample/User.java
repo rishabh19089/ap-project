@@ -37,6 +37,10 @@ public class User implements Serializable {
         return ball;
     }
 
+    public void setName(String name) {
+        Name = name;
+    }
+
     public void setScore(int score) {
         this.score = score;
     }
