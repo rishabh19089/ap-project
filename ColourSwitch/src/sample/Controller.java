@@ -34,7 +34,7 @@ public class Controller {
     public Controller() {
         WIDTH =500; HEIGHT = 700; jump = 200;
         this.game = new Game("Unknown", HEIGHT, WIDTH, jump);
-        //File file = new File("saved/Unknown");if(!file.exists()) file.mkdirs();
+        File file = new File("saved/Unknown");if(!file.exists()) file.mkdirs();
 
     }
 
@@ -50,7 +50,6 @@ public class Controller {
 
     public void deserialize(String name) {
         try {
-            System.out.println("Des "+name);
             FileInputStream fis = new FileInputStream(name + ".txt");
             ObjectInputStream ois = new ObjectInputStream(fis);
             game = (Game) ois.readObject();
@@ -112,7 +111,7 @@ public class Controller {
         for (int i=0; i<5; i++){
             buttons[i].setOpacity(0);
             int finalI = i;
-            if (i==0) buttons[i].setOnAction((event) -> enterGame());
+            if (i==0) buttons[i].setOnAction((event) -> newGame());
             else if(i == 1) buttons[i].setOnAction((event) -> displayResumeGame());
             else if(i == 4) buttons[i].setOnAction((event) -> loginPage(root));
             else if (i!=3) buttons[i].setOnAction((event) -> load(bt[finalI]));
@@ -160,8 +159,8 @@ public class Controller {
         button2.setLayoutX(219);button2.setLayoutY(432);
         button2.setOnAction((event) -> {
             if(tf.getText().length() != 0){ game.getUser().setName(tf.getText());
-            //File file = new File("saved/"+tf.getText());
-            //if(!file.exists()) file.mkdirs();
+            File file = new File("saved/"+tf.getText());
+            if(!file.exists()) file.mkdirs();
             mainmenu();}});
         button2.setOpacity(0);
         pane.getChildren().addAll(root, borderPane, button1, tf);
@@ -201,7 +200,6 @@ public class Controller {
                   arr.forEach(el -> el.rotate(t));
                   lastTime = currentTime; }};
           timer.start();
-          //root.setOpacity(0.3);
           display(root);}
 
 
@@ -240,8 +238,6 @@ public class Controller {
     public void displayMainMenu(ActionEvent event) {
         mainmenu(); }
 
-    void displayHelpMenu(ActionEvent event) {
-        load("help"); }
 
     void displayPauseMenu(Scene scene, AnimationTimer timer){
         try {
@@ -309,10 +305,10 @@ public class Controller {
             text.setFill(Color.INDIGO);
             Button btn1 = new Button();btn1.setMinSize(97,93);btn1.setLayoutY(576);btn1.setLayoutX(14);btn1.setOpacity(0);
             Button btn2 = new Button();btn2.setMinSize(86,86);btn2.setLayoutY(584);btn2.setLayoutX(395);btn2.setOpacity(0);
-            btn1.setOnAction((event) -> { System.out.println("B1");mainmenu();});
-            btn2.setOnAction((event) -> {System.out.println("B2"); enterGame();});
+            btn1.setOnAction((event) -> { mainmenu();});
+            btn2.setOnAction((event) -> {newGame();});
             Arc arc = new Arc(250, 470, 125, 125, 90, 360); arc.setStroke(Color.LIGHTBLUE); arc.setFill(Color.TRANSPARENT); arc.setType(ArcType.OPEN);
-            root.getChildren().addAll(text1, text,arc, btn,btn1,btn2);
+            root.getChildren().addAll(text1, text,arc, btn, btn1, btn2);
             AnimationTimer timer1 = new AnimationTimer() {
                 private long lastTime = System.nanoTime();
                 private long startTime = System.nanoTime();
@@ -325,12 +321,8 @@ public class Controller {
             timer1.start();
             primaryStage.setScene(new Scene(root)); }
         catch (IOException e) {
-            System.out.println("FXML not found!"); }
+            System.out.println("FXML not found!"); } }
 
-    }
-
-
-    @FXML
     void enterGame(){
         final boolean[] started = {false};
         Pane root = new Pane();
@@ -376,7 +368,7 @@ public class Controller {
                 totalScroll += scroll;
 
                 if ((started[0]) && (ballY>=HEIGHT) && (totalScroll<=0)){
-                    exit(scene, -1); }
+                    stop();exit(scene, -1); }
 
                 for (obj objs: objects){
                     objs.move(scroll); }
@@ -388,7 +380,7 @@ public class Controller {
 
                 for (Obstacles o: obstacles){
                     if (o.collision(ball, timeSinceStart)){
-                        exit(scene, o.getyBottom());}
+                        stop();exit(scene, o.getyBottom());}
                     o.rotate(t);
                     o.starCollision(user, root); }
 
@@ -412,6 +404,92 @@ public class Controller {
                     displayPauseMenu(scene, timer); }
                 else if (event.getCode() == KeyCode.S){
                         saveGame(true); } }});
+
+        primaryStage.setScene(scene); }
+
+    void newGame(){
+        String s = game.getUser().getName(); int saved = game.getUser().getSavedGames();
+        game = new Game(s, 700, 500, 200); game.getUser().setSavedGames(saved);
+        final boolean[] started = {false};
+        Pane root = new Pane();
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
+        Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
+        Star st = new Star(cord(52, 28, 18, 9));
+        User user = game.getUser(); Ball ball = user.getBall();
+        ArrayList<Obstacles> obstacles = game.getObstArray().getObstArray();
+        ArrayList<MagicColourBox> boxes = game.getBoxes();
+
+        root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
+
+        game.draw(root);
+        root.getChildren().add(text);
+        st.draw(root); st.get().setFill(Color.WHITE);
+        ImageView im = addImage(root, "select1.png", 233, (int) game.getHandY(), 40, 40);
+
+        ArrayList<obj> objects = game.getObjects();
+
+        AnimationTimer timer = new AnimationTimer() {
+            private long lastTime = System.nanoTime();
+            private long startTime = System.nanoTime();
+            private double scroll = 0; private double totalScroll = 0;
+
+            @Override
+            public void start() {
+                lastTime = System.nanoTime();
+                super.start(); }
+
+            @Override
+            public void handle(long currentTime) {
+                double t = (currentTime - lastTime) / 1e9;
+                double timeSinceStart = (currentTime - startTime)/1e9;
+                ball.move(t, started[0]);
+
+                double ballY = ball.getY();
+
+                if (ballY<=HEIGHT/2){
+                    scroll = HEIGHT/2 - ballY; }
+                else if (ballY>=HEIGHT-10){
+                    scroll = HEIGHT-10-ballY; }
+
+                totalScroll += scroll;
+
+                if ((started[0]) && (ballY>=HEIGHT) && (totalScroll<=0)){
+                    stop();exit(scene, -1); }
+
+                for (obj objs: objects){
+                    objs.move(scroll); }
+
+                game.scrollHand(scroll);
+                im.setY(game.getHandY());
+
+                scroll = 0;
+
+                for (Obstacles o: obstacles){
+                    if (o.collision(ball, timeSinceStart)){
+                        stop();exit(scene, o.getyBottom());}
+                    o.rotate(t);
+                    o.starCollision(user, root); }
+
+                for (MagicColourBox box: boxes){
+                    box.handleCollision(user, root); }
+
+                if (user.getScore()>=10) st.get().setTranslateX(17);
+                text.setText(""+ user.getScore());
+
+                lastTime = currentTime; }};
+        timer.start();
+
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.UP){
+                    ball.jump();
+                    started[0] = true; }
+                else if(event.getCode() == KeyCode.ESCAPE){
+                    timer.stop();
+                    displayPauseMenu(scene, timer); }
+                else if (event.getCode() == KeyCode.S){
+                    saveGame(true); } }});
 
         primaryStage.setScene(scene);
 

@@ -18,6 +18,11 @@ public class User implements Serializable {
     public int getSavedGames() {
         return savedGames; }
 
+
+    public void setSavedGames(int savedGames) {
+        this.savedGames = savedGames;
+    }
+
     public void incrementSaved() {
         savedGames++; }
 
