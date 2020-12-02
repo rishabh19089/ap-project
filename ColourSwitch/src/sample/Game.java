@@ -16,6 +16,7 @@ public class Game implements Serializable {
     private obstacleArray obstArray;
     private boolean gameOver = false;
     private ArrayList<MagicColourBox> boxes = new ArrayList<>();
+    private double handY = 660;
 
     public Game(String name, int HEIGHT, int WIDTH, int dist){
         this.HEIGHT = HEIGHT; this.WIDTH = WIDTH;
@@ -40,6 +41,12 @@ public class Game implements Serializable {
         boxes.forEach(e -> e.draw(root));
         ball.draw(root);
     }
+
+    public void scrollHand(double scroll){
+        handY += scroll; }
+
+    public double getHandY() {
+        return handY; }
 
     public User getUser() {
         return user; }

@@ -6,7 +6,6 @@ import java.util.List;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,7 +32,7 @@ public class Controller {
 
     public Controller() {
         WIDTH =500; HEIGHT = 700; jump = 200;
-        this.game = new Game("Rishabh", HEIGHT, WIDTH, jump);; }
+        this.game = new Game("Unknown", HEIGHT, WIDTH, jump);; }
 
     public void spaceTyped() {
 
@@ -181,16 +180,18 @@ public class Controller {
 
     public void displayResumeGame() {
         try {
-            deserialize(game.getUser().getName());
+            deserialize("saved/"+game.getUser().getName()+"/"+game.getUser().getSavedGames());
             enterGame(); }
         catch (Exception e){
             e.printStackTrace(); } }
 
     public void saveGame(boolean contin){
         try{
-        serialize(game.getUser().getName());
+            game.getUser().incrementSaved();
+            serialize("saved/"+game.getUser().getName()+"/"+game.getUser().getSavedGames());
         if(!contin) mainmenu();}
         catch (Exception e){
+            e.printStackTrace();
             System.out.println("Error in Serializing."); } }
 
 
@@ -230,7 +231,7 @@ public class Controller {
 
     private void revive(AnimationTimer timer, Scene scene, Pane pane, double pos) {
         if(game.getUser().getScore() >= 2){
-            deserialize("temp");
+            deserialize("saved/temp");
             if(pos > 0) game.getUser().getBall().setY(pos+ 70);
             else game.getUser().getBall().setY(630);
             game.getUser().setScore(game.getUser().getScore() - 2);
@@ -248,7 +249,7 @@ public class Controller {
 
     void exit(AnimationTimer timer, Scene scene, double pos){
         try {
-            serialize("temp");
+            serialize("saved/temp");
             timer.stop();
             Pane root = FXMLLoader.load(getClass().getResource("GameOver.fxml"));
             ArrayList<ImageView> ImArr= new ArrayList<>();
@@ -300,7 +301,7 @@ public class Controller {
         game.draw(root);
         root.getChildren().add(text);
         st.draw(root); st.get().setFill(Color.WHITE);
-        ImageView im = addImage(root, "select1.png", 233, 660, 40, 40);
+        ImageView im = addImage(root, "select1.png", 233, (int) game.getHandY(), 40, 40);
 
         ArrayList<obj> objects = game.getObjects();
 
@@ -335,7 +336,8 @@ public class Controller {
                 for (obj objs: objects){
                     objs.move(scroll); }
 
-                im.setY(im.getY()+scroll);
+                game.scrollHand(scroll);
+                im.setY(game.getHandY());
 
                 scroll = 0;
 

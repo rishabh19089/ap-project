@@ -6,6 +6,7 @@ public class User implements Serializable {
     private int score;
     private String Name;
     private Ball ball;
+    private int savedGames;
 
     public User(String name, int HEIGHT, int dist) {
         this.score = 0;
@@ -13,6 +14,12 @@ public class User implements Serializable {
         this.ball = new Ball(600, HEIGHT, dist);
         ball.setY(HEIGHT-70);
     }
+
+    public int getSavedGames() {
+        return savedGames; }
+
+    public void incrementSaved() {
+        savedGames++; }
 
     public void incrementScore() {
         score++;
