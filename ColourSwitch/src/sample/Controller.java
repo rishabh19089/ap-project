@@ -1,10 +1,13 @@
 package sample;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javafx.animation.AnimationTimer;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,6 +15,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -32,10 +38,19 @@ public class Controller {
 
     public Controller() {
         WIDTH =500; HEIGHT = 700; jump = 200;
-        this.game = new Game("Unknown", HEIGHT, WIDTH, jump); }
+        this.game = new Game("Unknown", HEIGHT, WIDTH, jump);
+        try {
+            File file = new File("saved/Unknown");if(!file.exists()) file.mkdirs();
+            File file1= new File("saved/Unknown/info.txt");if(!file1.exists()) file1.createNewFile();
+        }
+            catch (Exception e){
+                System.out.println("Error in creating Unknown Folder");
+            }
+        }
+
 
     public void spaceTyped() {
-
+        //When we click space
     }
 
     public void serialize(String name) throws IOException {
@@ -98,22 +113,25 @@ public class Controller {
 
     private void addButtons(Pane root) {
         String[] bt = new String[]{"newGame", "ResumeGame", "help", "Exit"};
-        Button button1= new Button(); button1.setMinSize(120,85);
-        Button button2= new Button(); button2.setMinSize(120,65);
-        Button button3= new Button(); button3.setMinSize(120,70);
-        Button button4= new Button(); button4.setMinSize(100,60);
-        Button[] buttons = new Button[] {button1, button2, button3, button4};
-        for (int i=0; i<4; i++){
+        Button button1= new Button(); button1.setMinSize(110,85);
+        Button button2= new Button(); button2.setMinSize(80,75);
+        Button button3= new Button(); button3.setMinSize(80,85);
+        Button button4= new Button(); button4.setMinSize(80,80);
+        Button button5= new Button(); button5.setMinSize(80,80);
+        Button[] buttons = new Button[] {button1, button2, button3, button4, button5};
+        for (int i=0; i<5; i++){
             buttons[i].setOpacity(0);
             int finalI = i;
-            if (i==0) buttons[i].setOnAction((event) -> enterGame());
+            if (i==0) buttons[i].setOnAction((event) -> newGame());
             else if(i == 1) buttons[i].setOnAction((event) -> displayResumeGame());
+            else if(i == 4) buttons[i].setOnAction((event) -> loginPage(root));
             else if (i!=3) buttons[i].setOnAction((event) -> load(bt[finalI]));
             else buttons[i].setOnAction((event) -> primaryStage.close()) ;}
         button1.setLayoutX(190);button1.setLayoutY(360);
-        button2.setLayoutX(190);button2.setLayoutY(615);
-        button3.setLayoutX(20); button3.setLayoutY(615);
-        button4.setLayoutX(400);button4.setLayoutY(615);
+        button2.setLayoutX(160);button2.setLayoutY(605);
+        button3.setLayoutX(280); button3.setLayoutY(595);
+        button4.setLayoutX(400);button4.setLayoutY(600);
+        button5.setLayoutX(25);button5.setLayoutY(605);
         root.getChildren().addAll(buttons); }
 
     private ImageView addImage(Pane root, String name, int x, int y, int width, int height){
@@ -133,6 +151,41 @@ public class Controller {
         primaryStage.setScene(sc);
         primaryStage.show(); }
 
+    private void loginPage(Pane root){
+        Pane pane = loadPane();
+        root.setOpacity(0.3);
+        BorderPane borderPane = new BorderPane();
+        borderPane.setLayoutX(50);borderPane.setLayoutY(315);
+        borderPane.setMinSize(400,180);
+        borderPane.setStyle("-fx-background-color: black ");
+        Text text1 = new Text(80, 470, "Enter Username"); Font font1 = loadFont(30); text1.setFont(font1); text1.setFill(Color.WHITE);
+        addImage(pane, "cancel.png", 444, 281, 30, 28);
+        Button button1= new Button(); button1.setMinSize(30,28);
+        button1.setLayoutX(444);button1.setLayoutY(281);
+        button1.setOnAction((event) -> mainmenu()); button1.setOpacity(0);
+        TextField tf= new TextField();
+        tf.setPromptText("Username");
+        tf.setLayoutX(83); tf.setLayoutY(350);tf.setMinSize(335,48);
+        Button button2= new Button(); button2.setMinSize(63,68);
+        button2.setLayoutX(219);button2.setLayoutY(432);
+        button2.setOnAction((event) -> {
+            if(tf.getText().length() != 0){ game.getUser().setName(tf.getText());
+            File file = new File("saved/"+tf.getText());
+            if(!file.exists()) file.mkdirs();
+            else {
+                int y= Integer.parseInt(readFile("saved/"+tf.getText()+"/info.txt").get(readFile("saved/"+tf.getText()+"/info.txt").size() - 1).split("\t\t")[0]);
+                game.getUser().setSavedGames(y);
+            }
+            mainmenu();}});
+        button2.setOpacity(0);
+        pane.getChildren().addAll(root, borderPane, button1, tf);
+        addImage(pane, "submit.png", 219, 432, 63, 68);
+        pane.getChildren().add(button2);
+
+        display(pane);
+
+    }
+
 
     public void mainmenu() {
           Pane root = loadPane();
@@ -148,9 +201,10 @@ public class Controller {
           ArrayList<Obstacles> arr = new ArrayList<>(List.of(c, c0, c1, c2, c3, plus, sq));
           arr.forEach(el -> el.draw(root));
           drawInfinity(root);
-          addImage(root, "qn.jpg", 10, 595, 140, 90);
-          addImage(root, "res1.png", 190, 585, 130, 130);
-          addImage(root,"back3.png", 380, 590, 110, 110);
+          addImage(root, "qn.jpg", 250, 590, 140, 90);
+          addImage(root, "res1.png", 120, 560, 160, 170);
+          addImage(root,"back3.png", 370, 560, 140, 160);
+          addImage(root,"login.png", 10, 610, 110, 110);
           addButtons(root);
           AnimationTimer timer = new AnimationTimer() {
               private long lastTime = System.nanoTime();
@@ -178,16 +232,54 @@ public class Controller {
         root.getChildren().addAll(text, b, b1);
         display(root); }
 
-    public void displayResumeGame() {
-        try {
-            deserialize("saved/"+game.getUser().getName()+"/"+game.getUser().getSavedGames());
-            enterGame(); }
+    private ArrayList<String> readFile(String s){
+        ArrayList<String> arr = new ArrayList<>();
+        arr.add("Game No.\t\t\tTime\t\t\tScore");
+        try{
+            FileReader reader = new FileReader(s);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                arr.add(line); }
+            reader.close();}
         catch (Exception e){
-            e.printStackTrace(); } }
+            System.out.println("File "+ s+ " not found!"); }
+        return arr; }
+
+    public void displayResumeGame()  {
+        Pane pane= loadPane();
+        Text text1 = new Text(62, 70, "Resume Game"); Font font1 = loadFont(60); text1.setFont(font1); text1.setFill(Color.RED);
+        Text text2 = new Text(88, 150, "Welcome "+game.getUser().getName()); Font font2 = loadFont(36); text2.setFont(font2); text2.setFill(Color.WHEAT);
+        addImage(pane,"back3.png", 370, 560, 140, 160);
+        Button button4= new Button(); button4.setMinSize(80,80);button4.setLayoutX(400);button4.setLayoutY(600);button4.setOpacity(0);
+        button4.setOnAction((event)-> mainmenu());
+        try {
+            final String[] num = {""};
+
+            ArrayList<String> arr= readFile("saved/"+game.getUser().getName()+"/info.txt");
+            ListView<String> listView = new ListView<String>(FXCollections.observableArrayList(arr));
+            listView.setPrefSize(400, 250);listView.setLayoutX(50);listView.setLayoutY(300);
+            listView.setOnMouseClicked((eve)-> {
+                if((listView.getSelectionModel().getSelectedItem() != null) && (listView.getSelectionModel().getSelectedItem().charAt(0) != 'G')) {
+                    num[0] =listView.getSelectionModel().getSelectedItem().split("\t\t")[0];
+                deserialize("saved/"+game.getUser().getName()+"/"+ num[0]);
+                enterGame();}});
+
+            pane.getChildren().addAll(listView,text1,text2,button4);
+            display(pane);
+
+
+        }
+        catch (Exception e){
+            System.out.println("Click at right Position\n"); }
+    }
 
     public void saveGame(boolean contin){
         try{
             game.getUser().incrementSaved();
+            FileWriter writer = new FileWriter("saved/"+game.getUser().getName()+"/info.txt", true);
+            writer.write(game.getUser().getSavedGames()+"\t\t"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy HH:mm:ss"))+"\t\t"+ game.getUser().getScore()+"\n");
+            writer.close();
             serialize("saved/"+game.getUser().getName()+"/"+game.getUser().getSavedGames());
         if(!contin) mainmenu();}
         catch (Exception e){
@@ -198,8 +290,6 @@ public class Controller {
     public void displayMainMenu(ActionEvent event) {
         mainmenu(); }
 
-    void displayHelpMenu(ActionEvent event) {
-        load("help"); }
 
     void displayPauseMenu(Scene scene, AnimationTimer timer){
         try {
@@ -229,7 +319,7 @@ public class Controller {
             points[i+3] = y - sr2*Math.sin(Math.toRadians(126+(72*t))); }
         return points; }
 
-    private void revive(Pane pane, double pos) {
+    private void revive(Scene scene, Pane pane, double pos) {
         if(game.getUser().getScore() >= 2){
             deserialize("saved/temp");
             if(pos > 0) game.getUser().getBall().setY(pos+ 70);
@@ -247,10 +337,9 @@ public class Controller {
                     double t = (currentTime - startTime) / 1000000000.0;
                     if(t> 2) {pane.getChildren().remove(text1); stop();} }}.start(); } }
 
-    void exit(AnimationTimer timer, Scene scene, double pos){
+    void exit(Scene scene, double pos){
         try {
             serialize("saved/temp");
-            timer.stop();
             Pane root = FXMLLoader.load(getClass().getResource("GameOver.fxml"));
             ArrayList<ImageView> ImArr= new ArrayList<>();
             Text text;
@@ -260,14 +349,18 @@ public class Controller {
             Star st = new Star(cord(250, 250, 90, 50)); st.get().setFill(Color.LIGHTGOLDENRODYELLOW);
             st.draw(root);
             Button btn = new Button();btn.setMinSize(223,180);btn.setLayoutY(390);btn.setLayoutX(140);btn.setOpacity(0);
-            btn.setOnAction((event) -> revive(root, pos));
+            btn.setOnAction((event) -> revive(scene, root, pos));
             if(game.getUser().getScore() > 9) {
                 text = new Text(215, 270, String.valueOf(game.getUser().getScore())); Font font = loadFont(65); text.setFont(font); }
             else {
                 text = new Text(230, 270, String.valueOf(game.getUser().getScore())); Font font = loadFont(65); text.setFont(font); }
             text.setFill(Color.INDIGO);
+            Button btn1 = new Button();btn1.setMinSize(97,93);btn1.setLayoutY(576);btn1.setLayoutX(14);btn1.setOpacity(0);
+            Button btn2 = new Button();btn2.setMinSize(86,86);btn2.setLayoutY(584);btn2.setLayoutX(395);btn2.setOpacity(0);
+            btn1.setOnAction((event) -> { mainmenu();});
+            btn2.setOnAction((event) -> {newGame();});
             Arc arc = new Arc(250, 470, 125, 125, 90, 360); arc.setStroke(Color.LIGHTBLUE); arc.setFill(Color.TRANSPARENT); arc.setType(ArcType.OPEN);
-            root.getChildren().addAll(text1, text,arc, btn);
+            root.getChildren().addAll(text1, text,arc, btn, btn1, btn2);
             AnimationTimer timer1 = new AnimationTimer() {
                 private long lastTime = System.nanoTime();
                 private long startTime = System.nanoTime();
@@ -280,12 +373,8 @@ public class Controller {
             timer1.start();
             primaryStage.setScene(new Scene(root)); }
         catch (IOException e) {
-            System.out.println("FXML not found!"); }
+            System.out.println("FXML not found!"); } }
 
-    }
-
-
-    @FXML
     void enterGame(){
         final boolean[] started = {false};
         Pane root = new Pane();
@@ -331,7 +420,7 @@ public class Controller {
                 totalScroll += scroll;
 
                 if ((started[0]) && (ballY>=HEIGHT) && (totalScroll<=0)){
-                    exit(this, scene, -1); }
+                    stop();exit(scene, -1); }
 
                 for (obj objs: objects){
                     objs.move(scroll); }
@@ -343,7 +432,7 @@ public class Controller {
 
                 for (Obstacles o: obstacles){
                     if (o.collision(ball, timeSinceStart)){
-                        exit(this, scene, o.getyBottom());}
+                        stop();exit(scene, o.getyBottom());}
                     o.rotate(t);
                     o.starCollision(user, root); }
 
@@ -368,11 +457,93 @@ public class Controller {
                 else if (event.getCode() == KeyCode.S){
                         saveGame(true); } }});
 
+        primaryStage.setScene(scene); }
+
+    void newGame(){
+        String s = game.getUser().getName(); int saved = game.getUser().getSavedGames();
+        game = new Game(s, 700, 500, 200); game.getUser().setSavedGames(saved);
+        final boolean[] started = {false};
+        Pane root = new Pane();
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
+        Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
+        Star st = new Star(cord(52, 28, 18, 9));
+        User user = game.getUser(); Ball ball = user.getBall();
+        ArrayList<Obstacles> obstacles = game.getObstArray().getObstArray();
+        ArrayList<MagicColourBox> boxes = game.getBoxes();
+
+        root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
+
+        game.draw(root);
+        root.getChildren().add(text);
+        st.draw(root); st.get().setFill(Color.WHITE);
+        ImageView im = addImage(root, "select1.png", 233, (int) game.getHandY(), 40, 40);
+
+        ArrayList<obj> objects = game.getObjects();
+
+        AnimationTimer timer = new AnimationTimer() {
+            private long lastTime = System.nanoTime();
+            private long startTime = System.nanoTime();
+            private double scroll = 0; private double totalScroll = 0;
+
+            @Override
+            public void start() {
+                lastTime = System.nanoTime();
+                super.start(); }
+
+            @Override
+            public void handle(long currentTime) {
+                double t = (currentTime - lastTime) / 1e9;
+                double timeSinceStart = (currentTime - startTime)/1e9;
+                ball.move(t, started[0]);
+
+                double ballY = ball.getY();
+
+                if (ballY<=HEIGHT/2){
+                    scroll = HEIGHT/2 - ballY; }
+                else if (ballY>=HEIGHT-10){
+                    scroll = HEIGHT-10-ballY; }
+
+                totalScroll += scroll;
+
+                if ((started[0]) && (ballY>=HEIGHT) && (totalScroll<=0)){
+                    stop();exit(scene, -1); }
+
+                for (obj objs: objects){
+                    objs.move(scroll); }
+
+                game.scrollHand(scroll);
+                im.setY(game.getHandY());
+
+                scroll = 0;
+
+                for (Obstacles o: obstacles){
+                    if (o.collision(ball, timeSinceStart)){
+                        stop();exit(scene, o.getyBottom());}
+                    o.rotate(t);
+                    o.starCollision(user, root); }
+
+                for (MagicColourBox box: boxes){
+                    box.handleCollision(user, root); }
+
+                if (user.getScore()>=10) st.get().setTranslateX(17);
+                text.setText(""+ user.getScore());
+
+                lastTime = currentTime; }};
+        timer.start();
+
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.UP){
+                    ball.jump();
+                    started[0] = true; }
+                else if(event.getCode() == KeyCode.ESCAPE){
+                    timer.stop();
+                    displayPauseMenu(scene, timer); }
+                else if (event.getCode() == KeyCode.S){
+                    saveGame(true); } }});
+
         primaryStage.setScene(scene);
 
     }
-
-
-
-    
 }
