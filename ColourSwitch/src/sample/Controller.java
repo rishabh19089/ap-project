@@ -1,10 +1,13 @@
 package sample;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javafx.animation.AnimationTimer;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,6 +15,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,12 +39,18 @@ public class Controller {
     public Controller() {
         WIDTH =500; HEIGHT = 700; jump = 200;
         this.game = new Game("Unknown", HEIGHT, WIDTH, jump);
-        File file = new File("saved/Unknown");if(!file.exists()) file.mkdirs();
+        try {
+            File file = new File("saved/Unknown");if(!file.exists()) file.mkdirs();
+            File file1= new File("saved/Unknown/info.txt");if(!file1.exists()) file1.createNewFile();
+        }
+            catch (Exception e){
+                System.out.println("Error in creating Unknown Folder");
+            }
+        }
 
-    }
 
     public void spaceTyped() {
-
+        //When we click space
     }
 
     public void serialize(String name) throws IOException {
@@ -161,6 +172,10 @@ public class Controller {
             if(tf.getText().length() != 0){ game.getUser().setName(tf.getText());
             File file = new File("saved/"+tf.getText());
             if(!file.exists()) file.mkdirs();
+            else {
+                int y= Integer.parseInt(readFile("saved/"+tf.getText()+"/info.txt").get(readFile("saved/"+tf.getText()+"/info.txt").size() - 1).split("\t\t")[0]);
+                game.getUser().setSavedGames(y);
+            }
             mainmenu();}});
         button2.setOpacity(0);
         pane.getChildren().addAll(root, borderPane, button1, tf);
@@ -217,17 +232,54 @@ public class Controller {
         root.getChildren().addAll(text, b, b1);
         display(root); }
 
-    public void displayResumeGame() {
-        try {
-            deserialize("saved/"+game.getUser().getName()+"/"+game.getUser().getSavedGames());
-            enterGame(); }
+    private ArrayList<String> readFile(String s){
+        ArrayList<String> arr = new ArrayList<>();
+        arr.add("Game No.\t\t\tTime\t\t\tScore");
+        try{
+            FileReader reader = new FileReader(s);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                arr.add(line); }
+            reader.close();}
         catch (Exception e){
-            System.out.println("Rohit");
-            e.printStackTrace(); } }
+            System.out.println("File "+ s+ " not found!"); }
+        return arr; }
+
+    public void displayResumeGame()  {
+        Pane pane= loadPane();
+        Text text1 = new Text(62, 70, "Resume Game"); Font font1 = loadFont(60); text1.setFont(font1); text1.setFill(Color.RED);
+        Text text2 = new Text(88, 150, "Welcome "+game.getUser().getName()); Font font2 = loadFont(36); text2.setFont(font2); text2.setFill(Color.WHEAT);
+        addImage(pane,"back3.png", 370, 560, 140, 160);
+        Button button4= new Button(); button4.setMinSize(80,80);button4.setLayoutX(400);button4.setLayoutY(600);button4.setOpacity(0);
+        button4.setOnAction((event)-> mainmenu());
+        try {
+            final String[] num = {""};
+
+            ArrayList<String> arr= readFile("saved/"+game.getUser().getName()+"/info.txt");
+            ListView<String> listView = new ListView<String>(FXCollections.observableArrayList(arr));
+            listView.setPrefSize(400, 250);listView.setLayoutX(50);listView.setLayoutY(300);
+            listView.setOnMouseClicked((eve)-> {
+                if((listView.getSelectionModel().getSelectedItem() != null) && (listView.getSelectionModel().getSelectedItem().charAt(0) != 'G')) {
+                    num[0] =listView.getSelectionModel().getSelectedItem().split("\t\t")[0];
+                deserialize("saved/"+game.getUser().getName()+"/"+ num[0]);
+                enterGame();}});
+
+            pane.getChildren().addAll(listView,text1,text2,button4);
+            display(pane);
+
+
+        }
+        catch (Exception e){
+            System.out.println("Click at right Position\n"); }
+    }
 
     public void saveGame(boolean contin){
         try{
             game.getUser().incrementSaved();
+            FileWriter writer = new FileWriter("saved/"+game.getUser().getName()+"/info.txt", true);
+            writer.write(game.getUser().getSavedGames()+"\t\t"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy HH:mm:ss"))+"\t\t"+ game.getUser().getScore()+"\n");
+            writer.close();
             serialize("saved/"+game.getUser().getName()+"/"+game.getUser().getSavedGames());
         if(!contin) mainmenu();}
         catch (Exception e){
@@ -494,8 +546,4 @@ public class Controller {
         primaryStage.setScene(scene);
 
     }
-
-
-
-    
 }
