@@ -430,9 +430,7 @@ public class Controller {
                     o.starCollision(user, root); }
 
                 if (user.getLastColorBox()>boxes1){
-                    game.createObstacles(root);
-                    objects.add(game.getBoxes().get(game.getBoxes().size()-1));
-                    objects.add(game.getObstArray().getObstArray().get(game.getObstArray().getObstArray().size()-1));
+                    game.createObstacles(root,objects);
                     boxes1 = user.getLastColorBox(); }
 
                 for (MagicColourBox box: boxes){
@@ -526,9 +524,7 @@ public class Controller {
                     o.starCollision(user, root); }
 
                 if (user.getLastColorBox()>boxes1){
-                    game.createObstacles(root);
-                    objects.add(game.getBoxes().get(game.getBoxes().size()-1));
-                    objects.add(game.getObstArray().getObstArray().get(game.getObstArray().getObstArray().size()-1));
+                    game.createObstacles(root,objects);
                     boxes1 = user.getLastColorBox(); }
 
                 for (MagicColourBox box: boxes){

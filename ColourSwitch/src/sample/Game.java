@@ -43,8 +43,8 @@ public class Game implements Serializable {
         ball.draw(root);
     }
 
-    public void createObstacles(Pane root){
-        obstArray.addObstacle(this, true, root); }
+    public void createObstacles(Pane root, ArrayList<obj> objs){
+        obstArray.addObstacle(this, true, root, objs); }
 
     public void scrollHand(double scroll){
         handY += scroll; }
