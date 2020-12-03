@@ -41,7 +41,7 @@ public class obstacleArray implements Serializable {
 
     public int typeObstacle(double difficulty){
         //difficulty gives upper bound
-        int t = new Random().nextInt(6);
+        int t = new Random().nextInt(11);
         return t; }
 
     public MagicColourBox createColourBox(double y, double space){
@@ -53,9 +53,9 @@ public class obstacleArray implements Serializable {
             yTop = obbbb.yTop; }
         int score = game.getUser().getLastColorBox();
         double difficulty;
-        if (score < 3) difficulty =1;
-        else if (score < 7) difficulty = 1.2;
-        else if (score < 10) difficulty = 1.5;
+        if (score < 5) difficulty =1;
+        else if (score < 10) difficulty = 1.2;
+        else if (score < 15) difficulty = 1.5;
         else difficulty = 1.7;
         int type = typeObstacle(difficulty);
         double space = 300/difficulty;
@@ -67,37 +67,74 @@ public class obstacleArray implements Serializable {
         game.addMCB(MCB, root); }
 
     public ArrayList<Obstacles> createObstacle(int type, double y, double space, double difficulty){
+        //difficulty = 2;
         double yBottom = y - space;
         double speed = 100*difficulty;
         boolean rot = new Random().nextBoolean();
+        double radius = 170/difficulty;
+        double side = 250/difficulty;
+        double side1 = 280/difficulty;
+        double radius1 = 170/(difficulty- 0.1);
+        double side2 = 160/(difficulty-0.1);
+        double width = 15*difficulty;
         ArrayList<Obstacles> oArr= new ArrayList<>();
         switch (type){
             case 0:
-                double radius = 150/difficulty;
                 oArr.add(new singleCircle(250,yBottom-2*radius , yBottom, 20, speed, true, rot));
                 break;
             case 1:
-                double side = 250/difficulty;
                 oArr.add(new Square(250 - side/2,yBottom-side , yBottom, 20, true, speed, rot));
                 break;
             case 2:
-                double side1 = 280/difficulty;
                 oArr.add(new Plus(260-side1/2, yBottom-side1, yBottom, 20, 250, speed, true, rot));
                 break;
             case 3:
-                double width = 15*difficulty;
+
                 oArr.add(new horizontalBar(yBottom-width-70, 500, yBottom, 200*difficulty, 50, true));
                 break;
             case 4:
-                double side3 = 280/difficulty;
                 double side4= 220/difficulty;
-                oArr.add(new Rect(250 - side3/2,yBottom-side3 , yBottom, 20, side4,true, speed, rot));
+                oArr.add(new Rect(250 - side1/2,yBottom-side1 , yBottom, 20, side4,true, speed, rot));
                 break;
             case 5:
-                double radius1 = 170/(difficulty- 0.1);
-                double side5 = 160/(difficulty-0.1);
                 oArr.add(new singleCircle(250,yBottom-2*radius1 , yBottom, 20, speed, false, rot));
-                oArr.add(new Plus(260-side5/2, yBottom-side5/2-radius1, yBottom- radius1+ side5/2, 20, 250, speed, true, false));
+                oArr.add(new Plus(260-side2/2, yBottom-side2/2-radius1, yBottom- radius1+ side2/2, 20, 250, speed/(difficulty+0.2), true, false));
+                break;
+            case 6:
+                double side3= 140/(difficulty);
+                double side5= 300/difficulty;
+                oArr.add(new Square(250 - side5/2,yBottom-side5 , yBottom, 20, false, speed, rot));
+                oArr.add(new Plus(260-side3/2, yBottom-side3/2-(side5/2), yBottom- (side5/2)+ side3/2, 20, 250, speed, true, false));
+                break;
+            case 7:
+                double radius2 =(radius - 40);
+                oArr.add(new singleCircle(250,yBottom-2*radius , yBottom, 20, speed, false, rot));
+                oArr.add(new singleCircle(250,yBottom- 20 -(2*radius2) , yBottom, 20, speed, true, rot));
+                break;
+            case 8:
+                oArr.add(new singleCircle(250,yBottom-2*radius , yBottom, 20, speed, false, true));
+                oArr.add(new singleCircle(250,yBottom + 30 -(2*radius) , yBottom-30, 20, speed, true, true));
+                break;
+            case 9:
+                double side7=240/difficulty;
+                double side6 = 180/difficulty;
+                oArr.add(new Plus((260 - side7/2), yBottom-side7, yBottom, 20, 250, speed, true, true));
+                oArr.add(new Plus((250 + side6)-side6/2, yBottom-(side7/2)-(side6/2), yBottom-(side7/2)+(side6/2), 20, 250, speed, false, false));
+                break;
+            case 10:
+                double radius3 = 200/(difficulty- 0.1);
+                oArr.add(new singleCircle(250,yBottom-2*radius3 , yBottom, 20, speed, false, true));
+                oArr.add(new singleCircle(250,yBottom + 30 -(2*radius3) , yBottom-30, 20, speed, false, true));
+                oArr.add(new singleCircle(250,yBottom + 70 -(2*radius3) , yBottom-70, 20, speed, true, true));
+                break;
+            case 11:
+                oArr.add(new horizontalBar(yBottom- 300-width-70, 500, yBottom- 300, 200*difficulty, 50, true));
+                oArr.add(new horizontalBar(yBottom- 150-width-70, 500, yBottom- 150, 200*difficulty, 50, true));
+                oArr.add(new horizontalBar(yBottom -width-70, 500, yBottom, 200*difficulty, 50, true));
+                break;
+            case 12:
+                oArr.add(new horizontalBar(yBottom- 150-width-70, 500, yBottom- 150, 200*difficulty, 50, true));
+                oArr.add(new horizontalBar(yBottom -width-70, 500, yBottom, 200*difficulty, 50, true));
                 break;
             default:
                 System.out.println("Reached Default in createObstacle");
