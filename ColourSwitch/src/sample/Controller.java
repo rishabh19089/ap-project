@@ -1,44 +1,42 @@
 package sample;
 
-import java.io.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.animation.AnimationTimer;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.paint.Color;
+
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Controller {
     private Game game;
     public static Stage primaryStage;
-    private int WIDTH, HEIGHT, jump;
+    private final int WIDTH;
+    private final int HEIGHT;
     private boolean newUser;
 
     public Controller() {
-        WIDTH =500; HEIGHT = 700; jump = 200;
+        WIDTH =500; HEIGHT = 700;
+        int jump = 200;
         this.game = new Game("Unknown", HEIGHT, WIDTH, jump);
         try {
             File file = new File("saved/Unknown");
@@ -75,8 +73,7 @@ public class Controller {
             System.out.println("FXML not found!"); } }
 
     private Font loadFont(int size){
-        Font font = Font.loadFont("file:resources/fonts/stencil.ttf", size);
-        return font; }
+        return Font.loadFont("file:resources/fonts/stencil.ttf", size); }
 
     private void getText(Pane root){
         Color[] colour = new Color[]{Color.RED, Color.YELLOWGREEN, Color.LIGHTSKYBLUE};
@@ -158,7 +155,7 @@ public class Controller {
         addImage(pane, "cancel.png", 444, 281, 30, 28);
         Button button1= new Button(); button1.setMinSize(30,28);
         button1.setLayoutX(444);button1.setLayoutY(281);
-        button1.setOnAction((event) -> mainmenu()); button1.setOpacity(0);
+        button1.setOnAction((event) -> mainMenu()); button1.setOpacity(0);
         TextField tf= new TextField();
         tf.setPromptText("Username");
         tf.setLayoutX(83); tf.setLayoutY(350);tf.setMinSize(335,48);
@@ -175,11 +172,11 @@ public class Controller {
             else {
                 if (file1.exists()){
                     ArrayList<String> arr = readFile("saved/"+tf.getText()+"/info.txt");
-                    String s = arr.get(arr.size() - 1).split("\t\t")[0];
+                    String s = arr.get(arr.size() - 1).split("\t\t\t")[0];
                     if (!s.equals("Game No.")){
                         int y= Integer.parseInt(s);
                         game.getUser().setSavedGames(y); }}}
-            mainmenu();}});
+            mainMenu();}});
         button2.setOpacity(0);
         pane.getChildren().addAll(root, borderPane, button1, tf);
         addImage(pane, "submit.png", 219, 432, 63, 68);
@@ -187,7 +184,7 @@ public class Controller {
         display(pane);}
 
 
-    public void mainmenu() {
+    public void mainMenu() {
           Pane root = loadPane();
           primaryStage.setTitle("Colour Switch Game");
           getText(root);
@@ -208,7 +205,7 @@ public class Controller {
           addButtons(root);
           AnimationTimer timer = new AnimationTimer() {
               private long lastTime = System.nanoTime();
-              private long startTime = System.nanoTime();
+              private final long startTime = System.nanoTime();
               @Override
               public void handle(long currentTime) {
                   double t = (currentTime - lastTime) / 1000000000.0;
@@ -226,9 +223,9 @@ public class Controller {
         addImage(root, "save1.png", 175, 255, 140, 140);
         addImage(root,"cancel.png", 160, 485, 170, 170);
         Button b = new Button(); b.setLayoutX(175); b.setLayoutY(255); b.setMinWidth(140); b.setMinHeight(140);
-        b.setOnAction(event -> { saveGame(false); }); b.setOpacity(0);
+        b.setOnAction(event -> saveGame(false)); b.setOpacity(0);
         Button b1 = new Button(); b1.setLayoutX(160); b1.setLayoutY(485); b1.setMinWidth(170); b1.setMinHeight(170);
-        b1.setOnAction(event -> mainmenu()); b1.setOpacity(0);
+        b1.setOnAction(event -> mainMenu()); b1.setOpacity(0);
         root.getChildren().addAll(text, b, b1);
         display(root); }
 
@@ -252,16 +249,18 @@ public class Controller {
         Text text2 = new Text(88, 150, "Welcome "+game.getUser().getName()); Font font2 = loadFont(36); text2.setFont(font2); text2.setFill(Color.WHEAT);
         addImage(pane,"back3.png", 370, 560, 140, 160);
         Button button4= new Button(); button4.setMinSize(80,80);button4.setLayoutX(400);button4.setLayoutY(600);button4.setOpacity(0);
-        button4.setOnAction((event)-> mainmenu());
+        button4.setOnAction((event)-> mainMenu());
         try {
             final String[] num = {""};
             ArrayList<String> arr= readFile("saved/"+game.getUser().getName()+"/info.txt");
-            ListView<String> listView = new ListView<String>(FXCollections.observableArrayList(arr));
+            ListView<String> listView = new ListView<>(FXCollections.observableArrayList(arr));
             listView.setPrefSize(400, 250);listView.setLayoutX(50);listView.setLayoutY(300);
             listView.setOnMouseClicked((eve)-> {
                 if((listView.getSelectionModel().getSelectedItem() != null) && (listView.getSelectionModel().getSelectedItem().charAt(0) != 'G')) {
                     num[0] =listView.getSelectionModel().getSelectedItem().split("\t\t\t")[0];
                 deserialize("saved/"+game.getUser().getName()+"/"+ num[0]);
+                String s = arr.get(arr.size()-1).split("\t\t\t")[0];
+                game.getUser().setSavedGames(Integer.parseInt(s));
                 enterGame();}});
             pane.getChildren().addAll(listView,text1,text2,button4);
             Scene sc = new Scene(pane, 500,700);
@@ -272,22 +271,17 @@ public class Controller {
         catch (Exception e){
             System.out.println("Click at right Position\n"); } }
 
-    public void saveGame(boolean contin){
+    public void saveGame(boolean continued){
         try{
             game.getUser().incrementSaved();
             FileWriter writer = new FileWriter("saved/"+game.getUser().getName()+"/info.txt", true);
-            writer.write(game.getUser().getSavedGames()+"\t\t\t"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy HH:mm:ss"))+"\t\t"+ game.getUser().getScore()+"\n");
+            writer.write(game.getUser().getSavedGames()+"\t\t\t"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy HH:mm:ss"))+"\t\t\t"+ game.getUser().getScore()+"\n");
             writer.close();
             serialize("saved/"+game.getUser().getName()+"/"+game.getUser().getSavedGames());
-        if(!contin) mainmenu();}
+        if(!continued) mainMenu();}
         catch (Exception e){
             e.printStackTrace();
             System.out.println("Error in Serializing."); } }
-
-
-    public void displayMainMenu(ActionEvent event) {
-        mainmenu(); }
-
 
     void displayPauseMenu(Scene scene, AnimationTimer timer){
         try {
@@ -355,7 +349,7 @@ public class Controller {
             text.setFill(Color.INDIGO);
             Button btn1 = new Button();btn1.setMinSize(97,93);btn1.setLayoutY(576);btn1.setLayoutX(14);btn1.setOpacity(0);
             Button btn2 = new Button();btn2.setMinSize(86,86);btn2.setLayoutY(584);btn2.setLayoutX(395);btn2.setOpacity(0);
-            btn1.setOnAction((event) -> { mainmenu();});
+            btn1.setOnAction((event) -> { mainMenu();});
             btn2.setOnAction((event) -> {newGame();});
             Arc arc = new Arc(250, 470, 125, 125, 90, 360); arc.setStroke(Color.LIGHTBLUE); arc.setFill(Color.TRANSPARENT); arc.setType(ArcType.OPEN);
             root.getChildren().addAll(text1, text,arc, btn, btn1, btn2);
@@ -421,8 +415,8 @@ public class Controller {
                 if ((started[0]) && (ballY>=HEIGHT) && (totalScroll<=0)){
                     stop();exit(scene, -1); }
 
-                for (obj objs: objects){
-                    objs.move(scroll); }
+                for (obj object: objects){
+                    object.move(scroll); }
 
                 game.scrollHand(scroll);
                 im.setY(game.getHandY());
@@ -450,17 +444,16 @@ public class Controller {
                 lastTime = currentTime; }};
         timer.start();
 
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.UP){
-                    ball.jump();
-                    started[0] = true; }
-                else if(event.getCode() == KeyCode.ESCAPE){
-                    timer.stop();
-                    displayPauseMenu(scene, timer); }
-                else if (event.getCode() == KeyCode.S){
-                        saveGame(true); } }});
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.UP) {
+                ball.jump();
+                started[0] = true;
+            } else if (event.getCode() == KeyCode.ESCAPE) {
+                timer.stop();
+                displayPauseMenu(scene, timer);
+            } else if (event.getCode() == KeyCode.S) {
+                saveGame(true); }
+        });
 
         primaryStage.setScene(scene); }
 
@@ -491,9 +484,8 @@ public class Controller {
 
         AnimationTimer timer = new AnimationTimer() {
             private long lastTime = System.nanoTime();
-            private long startTime = System.nanoTime();
+            private final long startTime = System.nanoTime();
             private double scroll = 0; private double totalScroll = 0;
-            private int score = user.getScore();
             private int boxes1 = user.getLastColorBox();
 
             @Override
@@ -519,8 +511,8 @@ public class Controller {
                 if ((started[0]) && (ballY>=HEIGHT) && (totalScroll<=0)){
                     stop();exit(scene, -1); }
 
-                for (obj objs: objects){
-                    objs.move(scroll); }
+                for (obj object: objects){
+                    object.move(scroll); }
 
                 game.scrollHand(scroll);
                 im.setY(game.getHandY());
@@ -548,17 +540,17 @@ public class Controller {
                 lastTime = currentTime; }};
         timer.start();
 
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.UP){
-                    ball.jump();
-                    started[0] = true; }
-                else if(event.getCode() == KeyCode.ESCAPE){
-                    timer.stop();
-                    displayPauseMenu(scene, timer); }
-                else if (event.getCode() == KeyCode.S){
-                    saveGame(true); } }});
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.UP) {
+                ball.jump();
+                started[0] = true;
+            } else if (event.getCode() == KeyCode.ESCAPE) {
+                timer.stop();
+                displayPauseMenu(scene, timer);
+            } else if (event.getCode() == KeyCode.S) {
+                saveGame(true);
+            }
+        });
 
         primaryStage.setScene(scene);
 

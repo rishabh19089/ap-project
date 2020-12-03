@@ -47,7 +47,7 @@
             <Image url="@back3.png" />
          </image>
       </ImageView>
-      <Button layoutX="425.0" layoutY="622.0" mnemonicParsing="false" onAction="#displayMainMenu" opacity="0.0" prefHeight="42.0" prefWidth="51.0" text="Button" />
+      <Button layoutX="425.0" layoutY="622.0" mnemonicParsing="false" onAction="#mainMenu" opacity="0.0" prefHeight="42.0" prefWidth="51.0" text="Button" />
       <Circle fill="#00f7fc" layoutX="57.0" layoutY="245.0" radius="5.0" stroke="#00f7fc" strokeType="INSIDE" AnchorPane.bottomAnchor="460.0" AnchorPane.leftAnchor="42.0" AnchorPane.rightAnchor="448.0" AnchorPane.topAnchor="265.0" />
    </children>
 </AnchorPane>

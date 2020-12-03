@@ -12,6 +12,6 @@
          </image>
       </ImageView>
       <Button mnemonicParsing="false" onAction="#saveGame" text="SAVE" AnchorPane.bottomAnchor="250.0" AnchorPane.leftAnchor="260.0" AnchorPane.rightAnchor="280.0" AnchorPane.topAnchor="165.0" />
-      <Button layoutX="260.0" layoutY="160.0" mnemonicParsing="false" onAction="#mainmenu" text="NOT SAVE" AnchorPane.bottomAnchor="195.0" AnchorPane.leftAnchor="260.0" AnchorPane.rightAnchor="280.0" AnchorPane.topAnchor="220.0" />
+      <Button layoutX="260.0" layoutY="160.0" mnemonicParsing="false" onAction="#mainMenu" text="NOT SAVE" AnchorPane.bottomAnchor="195.0" AnchorPane.leftAnchor="260.0" AnchorPane.rightAnchor="280.0" AnchorPane.topAnchor="220.0" />
    </children>
 </AnchorPane>
