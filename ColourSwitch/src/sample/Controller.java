@@ -1,8 +1,9 @@
 package sample;
 
+import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
+import javafx.animation.Transition;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -16,16 +17,19 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
 
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Controller {
     private Game game;
@@ -89,6 +93,13 @@ public class Controller {
                 if (i%2!=0) texts[i].setFill(Color.WHITE);
                 else texts[i].setFill(colour[(i-4)/2]); } }
         root.getChildren().addAll(texts); }
+
+    private ArrayList<String> getSavedNames(){
+        File f = new File("saved");
+        ArrayList<String> arr = new ArrayList<>();
+        for (File e : Objects.requireNonNull(f.listFiles())){
+            if (e.isDirectory()) arr.add(e.getName()); }
+        return  arr; }
 
     private void drawInfinity(Pane root){
         SVGPath svg = new SVGPath();
@@ -159,6 +170,12 @@ public class Controller {
         TextField tf= new TextField();
         tf.setPromptText("Username");
         tf.setLayoutX(83); tf.setLayoutY(350);tf.setMinSize(335,48);
+        HashSet<String> hs = new HashSet<>(getSavedNames());
+        TextFields.bindAutoCompletion(tf, hs);
+        tf.setOnKeyPressed(event -> {
+            if ((event.getCode()==KeyCode.ENTER) || (event.getCode()==KeyCode.BACK_SPACE)) {
+                hs.add(tf.getText());
+                TextFields.bindAutoCompletion(tf, hs); } });
         Button button2= new Button(); button2.setMinSize(63,68);
         button2.setLayoutX(219);button2.setLayoutY(432);
         button2.setOnAction((event) -> {
@@ -367,6 +384,48 @@ public class Controller {
         catch (IOException e) {
             System.out.println("FXML not found!"); } }
 
+    private void ballBurst(Circle[] circles, int[] angle, double t, double[] speed){
+        double radius = circles[0].getRadius();
+        for (int i = 0; i<circles.length; i++){
+            double xCenter = circles[i].getCenterX(); double yCenter = circles[i].getCenterY();
+            if ((xCenter>= 500-radius) || (xCenter<=radius)){
+                angle[i] = 180 - angle[i]; }
+            if ((yCenter>=700-radius) || (yCenter<=radius)){
+                angle[i] = 360 - angle[i]; }
+            circles[i].setCenterX(circles[i].getCenterX() + speed[i]*t*Math.cos(Math.toRadians(angle[i])));
+            circles[i].setCenterY(circles[i].getCenterY() + speed[i]*t*Math.sin(Math.toRadians(angle[i]))); } }
+
+    private void gameOver(Pane root, Scene scene, double pos, Ball ball){
+        final String content = "Game Over";
+        double y = ball.getY();
+        root.getChildren().remove(ball.getCircle());
+        final Text texts = new Text(120, 200, "");
+        Font font = loadFont(45); texts.setFont(font);
+        texts.setFill(Color.WHITE);
+        Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
+        Circle[] circles = new Circle[50]; int[] angle = new int[50]; double[] speed = new double[50];
+        for (int i=0; i<circles.length; i++){
+            speed[i] = 500 + new Random().nextInt(300);
+            angle[i] = new Random().nextInt(360);
+            circles[i] = new Circle(7,  colors[new Random().nextInt(4)]);
+            circles[i].setCenterY(y); circles[i].setCenterX(250);}
+        root.getChildren().addAll(circles); root.getChildren().add(texts);
+        double time = 3;
+        final Animation animation = new Transition() {
+            private double lastFrac;
+            {setCycleDuration(Duration.millis(time*1000)); }
+            @Override
+            protected void interpolate(double frac) {
+                final int length = content.length();
+                final int n = Math.round(length * (float) frac);
+                double t = (frac - lastFrac)*time;
+                ballBurst(circles, angle, t, speed);
+                texts.setText(content.substring(0, n));
+                if (frac>0.999) {root.getChildren().removeAll(circles); root.getChildren().remove(texts);}
+                lastFrac = frac;}};
+        animation.setOnFinished(actionEvent -> {exit(scene, pos);});
+        animation.play(); }
+
     void enterGame(){
         final boolean[] started = {false};
         Pane root = new Pane();
@@ -413,7 +472,7 @@ public class Controller {
                 totalScroll += scroll;
 
                 if ((started[0]) && (ballY>=HEIGHT) && (totalScroll<=0)){
-                    stop();exit(scene, -1); }
+                    stop(); gameOver(root, scene, -1, ball);}
 
                 for (obj object: objects){
                     object.move(scroll); }
@@ -425,7 +484,7 @@ public class Controller {
 
                 for (Obstacles o: obstacles){
                     if (o.collision(ball, timeSinceStart)){
-                        stop();exit(scene, o.getyBottom());}
+                        stop(); gameOver(root, scene, o.getyBottom(), ball);}
                     o.rotate(t);
                     o.starCollision(user, root); }
 
@@ -509,7 +568,7 @@ public class Controller {
                 totalScroll += scroll;
 
                 if ((started[0]) && (ballY>=HEIGHT) && (totalScroll<=0)){
-                    stop();exit(scene, -1); }
+                    stop(); gameOver(root, scene, -1 ,ball);}
 
                 for (obj object: objects){
                     object.move(scroll); }
@@ -521,7 +580,8 @@ public class Controller {
 
                 for (Obstacles o: obstacles){
                     if (o.collision(ball, timeSinceStart)){
-                        stop();exit(scene, o.getyBottom());}
+                        stop();
+                        gameOver(root, scene, o.getyBottom(),ball); }
                     o.rotate(t);
                     o.starCollision(user, root); }
 
