@@ -35,18 +35,18 @@ public class Controller {
     private Game game;
     public static Stage primaryStage;
     private int WIDTH, HEIGHT, jump;
+    private boolean newUser;
 
     public Controller() {
         WIDTH =500; HEIGHT = 700; jump = 200;
         this.game = new Game("Unknown", HEIGHT, WIDTH, jump);
         try {
-            File file = new File("saved/Unknown");if(!file.exists()) file.mkdirs();
-            File file1= new File("saved/Unknown/info.txt");if(!file1.exists()) file1.createNewFile();
-        }
-            catch (Exception e){
-                System.out.println("Error in creating Unknown Folder");
-            }
-        }
+            File file = new File("saved/Unknown");
+            if(!file.exists()) file.mkdirs();
+            File file1= new File("saved/Unknown/info.txt");
+            if(!file1.exists()) file1.createNewFile(); }
+        catch (Exception e){
+            System.out.println("Error in creating Unknown Folder"); } }
 
 
     public void spaceTyped() {
@@ -63,13 +63,9 @@ public class Controller {
         try {
             FileInputStream fis = new FileInputStream(name + ".txt");
             ObjectInputStream ois = new ObjectInputStream(fis);
-            game = (Game) ois.readObject();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
+            game = (Game) ois.readObject(); }
+        catch (Exception e) {
+            e.printStackTrace(); } }
 
     private void load(String s){
         try {
@@ -169,20 +165,26 @@ public class Controller {
         Button button2= new Button(); button2.setMinSize(63,68);
         button2.setLayoutX(219);button2.setLayoutY(432);
         button2.setOnAction((event) -> {
-            if(tf.getText().length() != 0){ game.getUser().setName(tf.getText());
+            File file1 = new File("saved/"+tf.getText()+"/info.txt");
+            if (tf.getText().length() != 0){
+                if ((!tf.getText().equals(game.getUser().getName())) && (!file1.exists())){
+                    newUser=true;}
+                game.getUser().setName(tf.getText());
             File file = new File("saved/"+tf.getText());
             if(!file.exists()) file.mkdirs();
             else {
-                File file1 = new File("saved/"+tf.getText()+"/info.txt");
                 if (file1.exists()){
-                int y= Integer.parseInt(readFile("saved/"+tf.getText()+"/info.txt").get(readFile("saved/"+tf.getText()+"/info.txt").size() - 1).split("\t\t")[0]);
-                game.getUser().setSavedGames(y); }}
+                    ArrayList<String> arr = readFile("saved/"+tf.getText()+"/info.txt");
+                    String s = arr.get(arr.size() - 1).split("\t\t")[0];
+                    if (!s.equals("Game No.")){
+                        int y= Integer.parseInt(s);
+                        game.getUser().setSavedGames(y); }}}
             mainmenu();}});
         button2.setOpacity(0);
         pane.getChildren().addAll(root, borderPane, button1, tf);
         addImage(pane, "submit.png", 219, 432, 63, 68);
         pane.getChildren().add(button2);
-        display(pane); }
+        display(pane);}
 
 
     public void mainmenu() {
@@ -258,11 +260,14 @@ public class Controller {
             listView.setPrefSize(400, 250);listView.setLayoutX(50);listView.setLayoutY(300);
             listView.setOnMouseClicked((eve)-> {
                 if((listView.getSelectionModel().getSelectedItem() != null) && (listView.getSelectionModel().getSelectedItem().charAt(0) != 'G')) {
-                    num[0] =listView.getSelectionModel().getSelectedItem().split("\t\t")[0];
+                    num[0] =listView.getSelectionModel().getSelectedItem().split("\t\t\t")[0];
                 deserialize("saved/"+game.getUser().getName()+"/"+ num[0]);
                 enterGame();}});
             pane.getChildren().addAll(listView,text1,text2,button4);
-            display(pane); }
+            Scene sc = new Scene(pane, 500,700);
+            sc.getStylesheets().add("file:resources/styles/listStyle.css");
+            primaryStage.setScene(sc);
+            primaryStage.show(); }
 
         catch (Exception e){
             System.out.println("Click at right Position\n"); } }
@@ -271,7 +276,7 @@ public class Controller {
         try{
             game.getUser().incrementSaved();
             FileWriter writer = new FileWriter("saved/"+game.getUser().getName()+"/info.txt", true);
-            writer.write(game.getUser().getSavedGames()+"\t\t"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy HH:mm:ss"))+"\t\t"+ game.getUser().getScore()+"\n");
+            writer.write(game.getUser().getSavedGames()+"\t\t\t"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy HH:mm:ss"))+"\t\t"+ game.getUser().getScore()+"\n");
             writer.close();
             serialize("saved/"+game.getUser().getName()+"/"+game.getUser().getSavedGames());
         if(!contin) mainmenu();}
@@ -454,7 +459,11 @@ public class Controller {
 
     void newGame(){
         String s = game.getUser().getName(); int saved = game.getUser().getSavedGames();
-        game = new Game(s, 700, 500, 200); game.getUser().setSavedGames(saved);
+        game = new Game(s, 700, 500, 200);
+        if (!newUser){
+            game.getUser().setSavedGames(saved);}
+        if (newUser){
+            newUser=false; }
         final boolean[] started = {false};
         Pane root = new Pane();
         Scene scene = new Scene(root, WIDTH, HEIGHT);
