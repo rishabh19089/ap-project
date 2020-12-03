@@ -15,9 +15,10 @@ public class singleCircle extends Obstacles{
     private transient Circle fs;
     private transient Arc[] arcs;
     private double r1, r2;
-    public singleCircle(double xCenter, double yTop, double yBottom, double radius2, double speed, boolean hasStar, boolean rotationClockwise){
+
+    public singleCircle(double xCenter, double yTop, double yBottom, double stroke, double speed, boolean hasStar, boolean rotationClockwise){
         this.yTop = yTop; this.yBottom = yBottom; x = xCenter; y = (yTop+yBottom)/2;
-        r1 = yBottom-y; r2 = radius2;
+        r1 = yBottom-y; r2 = stroke;
         this.speed = speed;
         star = new Star(computeStar());
         clockwiseRotation = rotationClockwise;
@@ -57,8 +58,7 @@ public class singleCircle extends Obstacles{
         y+=scroll; yTop+=scroll; yBottom+=scroll;
         if (hasStar) star.move(scroll);
         for (Arc arc: arcs){
-            arc.setCenterY(arc.getCenterY()+scroll); }
-        fs.setCenterY(fs.getCenterY()+scroll);}
+            arc.setCenterY(arc.getCenterY()+scroll); } }
 
 
     @Override
@@ -69,16 +69,15 @@ public class singleCircle extends Obstacles{
         for (int i=0; i<4; i++){
             arcs[i] = new Arc(x, y, r1, r1, 360-angle-90*i, 90);
             arcs[i].setStroke(colors[i]);
-            arcs[i].setFill(colors[i]);
-            arcs[i].setType(ArcType.ROUND); }
+            arcs[i].setFill(Color.TRANSPARENT);
+            arcs[i].setStrokeWidth(r2);
+            arcs[i].setType(ArcType.OPEN); }
         if (!clockwiseRotation){
             for (int i=0; i<4; i++){
                 arcs[i].setStartAngle(angle+(90*((4-i)%4))); } }
-        fs = new Circle(x, y, r2);
-        fs.setFill(Color.BLACK);
         star.setPoints(computeStar());
         rootJeu.getChildren().addAll(arcs);
-        rootJeu.getChildren().add(fs);
+        //rootJeu.getChildren().add(fs);
         if (hasStar) star.draw(rootJeu);}
 
 
@@ -100,9 +99,9 @@ public class singleCircle extends Obstacles{
         int topColor = 3 - rotated/90;
         int bottomColor = bottomFromTop.get(topColor);
         if (!clockwiseRotation) {topColor = (4-rotated/90)%4; bottomColor = bottomFromTop.get(topColor);}
-        if ((yball>=y+r2) && (yball<=y+r1)){
+        if ((yball>=y+r1-r2) && (yball<=y+r1)){
             return ball.getColor() != bottomColor; }
-        else if ((yball<=y-r2) && (yball>=y-r1)){
+        else if ((yball<=y-r1+r2) && (yball>=y-r1)){
             return ball.getColor() != topColor; }
         return false;}
 

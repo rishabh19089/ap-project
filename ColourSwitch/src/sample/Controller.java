@@ -191,13 +191,13 @@ public class Controller {
           Pane root = loadPane();
           primaryStage.setTitle("Colour Switch Game");
           getText(root);
-          singleCircle c = new singleCircle(250, 255, 555, 130, 120, false, false);
-          singleCircle c0 = new singleCircle(250, 275,535, 110, 100, false, true);
-          singleCircle c1= new singleCircle(250, 295,515, 90, 80, false, false);
-          singleCircle c2= new singleCircle(103, 30,95, 20, 150, false, false);
-          singleCircle c3= new singleCircle(222, 30,95, 22, 150, false, true);
+          singleCircle c = new singleCircle(250, 255, 555, 16, 120, false, false);
+          singleCircle c0 = new singleCircle(250, 280,530, 16, 100, false, true);
+          singleCircle c1= new singleCircle(250, 305,505, 16, 80, false, false);
+          singleCircle c2= new singleCircle(103, 30,95, 7, 150, false, false);
+          singleCircle c3= new singleCircle(222, 30,95, 7, 150, false, true);
           Plus plus = new Plus(90, 120, 220, 10, 0, 120, false, true);
-          Square sq = new Square(380, 30, 100, 7, false, 120);
+          Square sq = new Square(380, 30, 100, 7, false, 120, true);
           ArrayList<Obstacles> arr = new ArrayList<>(List.of(c, c0, c1, c2, c3, plus, sq));
           arr.forEach(el -> el.draw(root));
           drawInfinity(root);
@@ -318,11 +318,11 @@ public class Controller {
         return points; }
 
     private void revive(Scene scene, Pane pane, double pos) {
-        if(game.getUser().getScore() >= 2){
+        if(game.getUser().getScore() >= 5){
             deserialize("saved/temp");
-            if(pos > 0) game.getUser().getBall().setY(pos+ 70);
+            if(pos > 0) game.getUser().getBall().setY(game.getBoxes().get(game.getUser().getLastColorBox()).getY());
             else game.getUser().getBall().setY(630);
-            game.getUser().setScore(game.getUser().getScore() - 2);
+            game.getUser().setScore(game.getUser().getScore() - 5);
             enterGame(); }
         else {
             Text text1 = new Text(80, 470, "Minimum 5 Stars Needed"); Font font1 = loadFont(30); text1.setFont(font1); text1.setFill(Color.WHITE);
@@ -396,7 +396,7 @@ public class Controller {
             private long lastTime = System.nanoTime();
             private long startTime = System.nanoTime();
             private double scroll = 0; private double totalScroll = 0;
-
+            private int boxes1 = user.getLastColorBox();
             @Override
             public void start() {
                 lastTime = System.nanoTime();
@@ -406,6 +406,7 @@ public class Controller {
             public void handle(long currentTime) {
                 double t = (currentTime - lastTime) / 1e9;
                 double timeSinceStart = (currentTime - startTime)/1e9;
+
                 ball.move(t, started[0]);
 
                 double ballY = ball.getY();
@@ -433,6 +434,12 @@ public class Controller {
                         stop();exit(scene, o.getyBottom());}
                     o.rotate(t);
                     o.starCollision(user, root); }
+
+                if (user.getLastColorBox()>boxes1){
+                    game.createObstacles(root);
+                    objects.add(game.getBoxes().get(game.getBoxes().size()-1));
+                    objects.add(game.getObstArray().getObstArray().get(game.getObstArray().getObstArray().size()-1));
+                    boxes1 = user.getLastColorBox(); }
 
                 for (MagicColourBox box: boxes){
                     box.handleCollision(user, root); }
@@ -486,6 +493,8 @@ public class Controller {
             private long lastTime = System.nanoTime();
             private long startTime = System.nanoTime();
             private double scroll = 0; private double totalScroll = 0;
+            private int score = user.getScore();
+            private int boxes1 = user.getLastColorBox();
 
             @Override
             public void start() {
@@ -523,6 +532,12 @@ public class Controller {
                         stop();exit(scene, o.getyBottom());}
                     o.rotate(t);
                     o.starCollision(user, root); }
+
+                if (user.getLastColorBox()>boxes1){
+                    game.createObstacles(root);
+                    objects.add(game.getBoxes().get(game.getBoxes().size()-1));
+                    objects.add(game.getObstArray().getObstArray().get(game.getObstArray().getObstArray().size()-1));
+                    boxes1 = user.getLastColorBox(); }
 
                 for (MagicColourBox box: boxes){
                     box.handleCollision(user, root); }

@@ -58,6 +58,7 @@ public class MagicColourBox extends element{
     public void handleCollision(User user, Pane pane) {
         boolean hit = intersects(user);
         if (hit){
+            user.hitColorBox();
             eraseMagicColourBox(pane);
             colourSwitch(user.getBall()); } }
 }

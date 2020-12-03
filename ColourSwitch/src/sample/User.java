@@ -7,12 +7,19 @@ public class User implements Serializable {
     private String Name;
     private Ball ball;
     private int savedGames;
+    private int lastColorBox = -1;
 
     public User(String name, int HEIGHT, int dist) {
         this.score = 0;
         Name = name;
         this.ball = new Ball(600, HEIGHT, dist);
-        ball.setY(HEIGHT-70);
+        ball.setY(HEIGHT-70); }
+
+    public void hitColorBox(){
+        lastColorBox++; }
+
+    public int getLastColorBox() {
+        return lastColorBox;
     }
 
     public int getSavedGames() {
