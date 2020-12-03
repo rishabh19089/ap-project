@@ -40,7 +40,7 @@ public class obstacleArray implements Serializable {
 
     public int typeObstacle(double difficulty){
         //difficulty gives upper bound
-        int t = new Random().nextInt(4);
+        int t = new Random().nextInt(5);
         return t; }
 
     public MagicColourBox createColourBox(double y, double space){
@@ -78,12 +78,17 @@ public class obstacleArray implements Serializable {
                 o = new Square(250 - side/2,yBottom-side , yBottom, 20, true, speed, rot);
                 break;
             case 2:
-                double side1 = 220/difficulty;
+                double side1 = 280/difficulty;
                 o = new Plus(260-side1/2, yBottom-side1, yBottom, 20, 250, speed, true, rot);
                 break;
             case 3:
                 double width = 15*difficulty;
                 o = new horizontalBar(yBottom-width-70, 500, yBottom, 200*difficulty, 50, true);
+                break;
+            case 4:
+                double side3 = 280/difficulty;
+                double side4= 220/difficulty;
+                o = new Rect(250 - side3/2,yBottom-side3 , yBottom, 20, side4,true, speed, rot);
                 break;
             default:
                 System.out.println("Reached Default in createObstacle");
