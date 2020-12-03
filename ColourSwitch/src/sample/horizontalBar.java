@@ -15,7 +15,7 @@ public class horizontalBar extends Obstacles{
         this.yTop = yTop; this.yBottom = yBottom; this.hasStar = hasStar;
         double thick = yBottom - starDist - 20 - yTop;
         x = WIDTH/2; this.y = yTop + 20; this.WIDTH = WIDTH;
-        hasStar = true;
+        this.hasStar = hasStar;
         star = new Star(computeStar());
         this.speed = speed; //Distance travelled in a second
         this.starDist = starDist; this.thick = thick;}
@@ -45,8 +45,7 @@ public class horizontalBar extends Obstacles{
     }
 
     public double getColour() {
-        return colour;
-    }
+        return colour; }
 
     @Override
     public void draw(Pane pane) {
