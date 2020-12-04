@@ -263,9 +263,9 @@ public class Controller {
             while ((line = bufferedReader.readLine()) != null) {
                 arr.add(line); }
             reader.close();}
-        catch (Exception e){
-            System.out.println("File "+ s+ " not found!"); }
+        catch (Exception ignored){ }
         return arr; }
+
 
     public void displayResumeGame()  {
         Pane pane= loadPane();
@@ -338,12 +338,14 @@ public class Controller {
 
     private void revive(Scene scene, Pane pane, double pos) {
         if(game.getUser().getScore() >= 5){
+            playSound("revive", 0.2, 0);
             deserialize("saved/temp");
             if(pos > 0) game.getUser().getBall().setY(game.getBoxes().get(game.getUser().getLastColorBox()).getY());
             else game.getUser().getBall().setY(630);
             game.getUser().setScore(game.getUser().getScore() - 5);
             enterGame(); }
         else {
+            playSound("error", 0.2, 0);
             Text text1 = new Text(80, 470, "Minimum 5 Stars Needed"); Font font1 = loadFont(30); text1.setFont(font1); text1.setFill(Color.WHITE);
             pane.getChildren().add(text1);
             new AnimationTimer() {
@@ -366,7 +368,7 @@ public class Controller {
                     addImage(root, "star.png", 244,542,12,11 ), addImage(root, "star.png", 246,558,11,11 ), addImage(root, "star.png", 261,526,18,18 ), addImage(root, "star.png", 278,510,24,24 ), addImage(root, "star.png", 289,535,33,24 )));
             Star st = new Star(cord(250, 250, 90, 50)); st.draw(root); st.get().setFill(Color.YELLOW);
             Button btn = new Button();btn.setMinSize(223,180);btn.setLayoutY(390);btn.setLayoutX(140);btn.setOpacity(0);
-            btn.setOnAction((event) -> {playSound("revive", 0.2, 0); revive(scene, root, pos);});
+            btn.setOnAction((event) -> {revive(scene, root, pos);});
             if(game.getUser().getScore() > 9) {
                 text = new Text(215, 270, String.valueOf(game.getUser().getScore())); Font font = loadFont(65); text.setFont(font); }
             else {
@@ -397,7 +399,7 @@ public class Controller {
         for (int i = 0; i<circles.length; i++){
             double xCenter = circles[i].getCenterX(); double yCenter = circles[i].getCenterY();
             if ((xCenter>= 500-radius) || (xCenter<=radius)){
-                speed[i] = 250 + new Random().nextInt(200);
+                speed[i] = 170 + new Random().nextInt(200);
                 angle[i] = 180 - angle[i]; }
             if ((yCenter>=700-radius) || (yCenter<=radius)){
                 angle[i] = 360 - angle[i]; }
@@ -524,7 +526,6 @@ public class Controller {
             } else if (event.getCode() == KeyCode.S) {
                 saveGame(true); }
         });
-
         primaryStage.setScene(scene); }
 
     void newGame(){

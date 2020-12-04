@@ -91,9 +91,9 @@ public abstract class Obstacles extends element{
 
     private void show1(Pane root){
         Text text = new Text(250, y, "+1");
-        text.setFill(Color.WHITE); text.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
+        text.setFill(Color.WHITE); text.setStyle("-fx-font-size: 25; -fx-font-weight: bold;");
         root.getChildren().add(text);
-        int up = 25;
+        int up = 30;
         final Animation animation = new Transition() {
             {setCycleDuration(Duration.seconds(0.4)); }
             @Override
