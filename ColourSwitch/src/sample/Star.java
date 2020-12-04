@@ -48,7 +48,7 @@ public class Star extends element{
     @Override
     public void draw(Pane pane) {
         star = new Polygon(points);
-        star.setFill(Color.GOLD);
+        star.setFill(Color.WHITE);
         if (present) pane.getChildren().addAll(star);
     }
 

@@ -1,10 +1,12 @@
 package sample;
 
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 
+import java.nio.file.Paths;
 import java.util.Random;
 
 public class MagicColourBox extends element{
@@ -54,10 +56,16 @@ public class MagicColourBox extends element{
             return true; }
         return false; }
 
+    private void playSound(String name, double volume, int priority){
+        AudioClip sound = new AudioClip(Paths.get("resources/sounds/"+name+".wav").toUri().toString());
+        sound.setVolume(volume); sound.setPriority(priority);
+        sound.play(); }
+
     @Override
     public void handleCollision(User user, Pane pane) {
         boolean hit = intersects(user);
         if (hit){
+            playSound("colorswitch", 0.25, 1);
             user.hitColorBox();
             eraseMagicColourBox(pane);
             colourSwitch(user.getBall()); } }

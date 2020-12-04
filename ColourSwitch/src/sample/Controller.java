@@ -1,5 +1,6 @@
 package sample;
 
+
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.Transition;
@@ -14,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
@@ -23,10 +25,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -50,10 +52,14 @@ public class Controller {
         catch (Exception e){
             System.out.println("Error in creating Unknown Folder"); } }
 
+    private void playSound(String name, double volume, int priority){
+        AudioClip sound = new AudioClip(Paths.get("resources/sounds/"+name+".wav").toUri().toString());
+        sound.setVolume(volume); sound.setPriority(priority);
+        sound.play(); }
+
 
     public void spaceTyped() {
-        //When we click space
-    }
+        playSound("jump", 0.15, 0); }
 
     public void serialize(String name) throws IOException {
         File f = new File(name+".txt");
@@ -126,10 +132,10 @@ public class Controller {
         for (int i=0; i<5; i++){
             buttons[i].setOpacity(0);
             int finalI = i;
-            if (i==0) buttons[i].setOnAction((event) -> newGame());
-            else if(i == 1) buttons[i].setOnAction((event) -> displayResumeGame());
-            else if(i == 4) buttons[i].setOnAction((event) -> loginPage(root));
-            else if (i!=3) buttons[i].setOnAction((event) -> load(bt[finalI]));
+            if (i==0) buttons[i].setOnAction((event) -> {playSound("button", 0.2, 0); newGame();});
+            else if(i == 1) buttons[i].setOnAction((event) -> {playSound("button", 0.2, 0); displayResumeGame();});
+            else if(i == 4) buttons[i].setOnAction((event) -> {playSound("button", 0.2, 0); loginPage(root);});
+            else if (i!=3) buttons[i].setOnAction((event) -> {playSound("button", 0.2, 0); load(bt[finalI]);});
             else buttons[i].setOnAction((event) -> primaryStage.close()) ;}
         button1.setLayoutX(190);button1.setLayoutY(360);
         button2.setLayoutX(160);button2.setLayoutY(605);
@@ -166,7 +172,7 @@ public class Controller {
         addImage(pane, "cancel.png", 444, 281, 30, 28);
         Button button1= new Button(); button1.setMinSize(30,28);
         button1.setLayoutX(444);button1.setLayoutY(281);
-        button1.setOnAction((event) -> mainMenu()); button1.setOpacity(0);
+        button1.setOnAction((event) -> {playSound("button", 0.2, 0); mainMenu();}); button1.setOpacity(0);
         TextField tf= new TextField();
         tf.setPromptText("Username");
         tf.setLayoutX(83); tf.setLayoutY(350);tf.setMinSize(335,48);
@@ -179,6 +185,7 @@ public class Controller {
         Button button2= new Button(); button2.setMinSize(63,68);
         button2.setLayoutX(219);button2.setLayoutY(432);
         button2.setOnAction((event) -> {
+            playSound("button", 0.2, 0);
             File file1 = new File("saved/"+tf.getText()+"/info.txt");
             if (tf.getText().length() != 0){
                 if ((!tf.getText().equals(game.getUser().getName())) && (!file1.exists())){
@@ -240,9 +247,9 @@ public class Controller {
         addImage(root, "save1.png", 175, 255, 140, 140);
         addImage(root,"cancel.png", 160, 485, 170, 170);
         Button b = new Button(); b.setLayoutX(175); b.setLayoutY(255); b.setMinWidth(140); b.setMinHeight(140);
-        b.setOnAction(event -> saveGame(false)); b.setOpacity(0);
+        b.setOnAction(event -> {playSound("button", 0.2, 0); saveGame(false);}); b.setOpacity(0);
         Button b1 = new Button(); b1.setLayoutX(160); b1.setLayoutY(485); b1.setMinWidth(170); b1.setMinHeight(170);
-        b1.setOnAction(event -> mainMenu()); b1.setOpacity(0);
+        b1.setOnAction(event -> {playSound("button", 0.2, 0); mainMenu();}); b1.setOpacity(0);
         root.getChildren().addAll(text, b, b1);
         display(root); }
 
@@ -268,6 +275,7 @@ public class Controller {
         Button button4= new Button(); button4.setMinSize(80,80);button4.setLayoutX(400);button4.setLayoutY(600);button4.setOpacity(0);
         button4.setOnAction((event)-> mainMenu());
         try {
+            playSound("button", 0.2, 0);
             final String[] num = {""};
             ArrayList<String> arr= readFile("saved/"+game.getUser().getName()+"/info.txt");
             ListView<String> listView = new ListView<>(FXCollections.observableArrayList(arr));
@@ -305,10 +313,10 @@ public class Controller {
             Pane root = FXMLLoader.load(getClass().getResource("pauseMenu.fxml"));
             Button b = new Button(); b.setOpacity(0);
             b.setLayoutX(166); b.setLayoutY(271); b.setMinWidth(167); b.setMinHeight(157);
-            b.setOnAction(event -> resumeGame(scene, timer));
+            b.setOnAction(event -> {playSound("button", 0.2, 0); resumeGame(scene, timer);});
             Button b1 = new Button(); b1.setOpacity(0);
             b1.setLayoutX(166); b1.setLayoutY(521); b1.setMinWidth(167); b1.setMinHeight(157);
-            b1.setOnAction(event -> displayExitMenu());
+            b1.setOnAction(event -> {playSound("button", 0.2, 0); displayExitMenu();});
             root.getChildren().addAll(b, b1);
             primaryStage.setScene(new Scene(root)); }
         catch (IOException e) {
@@ -348,6 +356,7 @@ public class Controller {
 
     void exit(Scene scene, double pos){
         try {
+            playSound("victory", 0.4, 0);
             serialize("saved/temp");
             Pane root = FXMLLoader.load(getClass().getResource("GameOver.fxml"));
             ArrayList<ImageView> ImArr= new ArrayList<>();
@@ -355,10 +364,9 @@ public class Controller {
             Text text1 = new Text(17, 90, "Game Over!!"); Font font1 = loadFont(80); text1.setFont(font1); text1.setFill(Color.RED);
             ImArr.addAll(List.of(addImage(root, "heart.png", 140,384,223,188 ), addImage(root, "star.png", 206,503,24,24 ), addImage(root, "star.png", 206,528,24,24 ), addImage(root, "star.png", 226,523,18,18 ), addImage(root, "star.png", 221,546,18,24 ),
                     addImage(root, "star.png", 244,542,12,11 ), addImage(root, "star.png", 246,558,11,11 ), addImage(root, "star.png", 261,526,18,18 ), addImage(root, "star.png", 278,510,24,24 ), addImage(root, "star.png", 289,535,33,24 )));
-            Star st = new Star(cord(250, 250, 90, 50)); st.get().setFill(Color.LIGHTGOLDENRODYELLOW);
-            st.draw(root);
+            Star st = new Star(cord(250, 250, 90, 50)); st.draw(root); st.get().setFill(Color.YELLOW);
             Button btn = new Button();btn.setMinSize(223,180);btn.setLayoutY(390);btn.setLayoutX(140);btn.setOpacity(0);
-            btn.setOnAction((event) -> revive(scene, root, pos));
+            btn.setOnAction((event) -> {playSound("revive", 0.2, 0); revive(scene, root, pos);});
             if(game.getUser().getScore() > 9) {
                 text = new Text(215, 270, String.valueOf(game.getUser().getScore())); Font font = loadFont(65); text.setFont(font); }
             else {
@@ -366,8 +374,8 @@ public class Controller {
             text.setFill(Color.INDIGO);
             Button btn1 = new Button();btn1.setMinSize(97,93);btn1.setLayoutY(576);btn1.setLayoutX(14);btn1.setOpacity(0);
             Button btn2 = new Button();btn2.setMinSize(86,86);btn2.setLayoutY(584);btn2.setLayoutX(395);btn2.setOpacity(0);
-            btn1.setOnAction((event) -> { mainMenu();});
-            btn2.setOnAction((event) -> {newGame();});
+            btn1.setOnAction((event) -> {playSound("button", 0.2, 0);  mainMenu();});
+            btn2.setOnAction((event) -> {playSound("button", 0.2, 0); newGame();});
             Arc arc = new Arc(250, 470, 125, 125, 90, 360); arc.setStroke(Color.LIGHTBLUE); arc.setFill(Color.TRANSPARENT); arc.setType(ArcType.OPEN);
             root.getChildren().addAll(text1, text,arc, btn, btn1, btn2);
             AnimationTimer timer1 = new AnimationTimer() {
@@ -389,6 +397,7 @@ public class Controller {
         for (int i = 0; i<circles.length; i++){
             double xCenter = circles[i].getCenterX(); double yCenter = circles[i].getCenterY();
             if ((xCenter>= 500-radius) || (xCenter<=radius)){
+                speed[i] = 250 + new Random().nextInt(200);
                 angle[i] = 180 - angle[i]; }
             if ((yCenter>=700-radius) || (yCenter<=radius)){
                 angle[i] = 360 - angle[i]; }
@@ -398,19 +407,22 @@ public class Controller {
     private void gameOver(Pane root, Scene scene, double pos, Ball ball){
         final String content = "Game Over";
         double y = ball.getY();
+        playSound("breakball", 0.25, 0);
         root.getChildren().remove(ball.getCircle());
         final Text texts = new Text(120, 200, "");
         Font font = loadFont(45); texts.setFont(font);
         texts.setFill(Color.WHITE);
         Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
-        Circle[] circles = new Circle[50]; int[] angle = new int[50]; double[] speed = new double[50];
+        int balls = 50;
+        Circle[] circles = new Circle[balls]; int[] angle = new int[balls]; double[] speed = new double[balls];
         for (int i=0; i<circles.length; i++){
-            speed[i] = 500 + new Random().nextInt(300);
+            speed[i] = 400 + new Random().nextInt(300);
             angle[i] = new Random().nextInt(360);
-            circles[i] = new Circle(7,  colors[new Random().nextInt(4)]);
+            circles[i] = new Circle(7, colors[new Random().nextInt(4)]);
+            circles[i].setRadius(3+new Random().nextInt(4));
             circles[i].setCenterY(y); circles[i].setCenterX(250);}
         root.getChildren().addAll(circles); root.getChildren().add(texts);
-        double time = 3;
+        double time = 2;
         final Animation animation = new Transition() {
             private double lastFrac;
             {setCycleDuration(Duration.millis(time*1000)); }
@@ -440,7 +452,7 @@ public class Controller {
 
         game.draw(root);
         root.getChildren().add(text);
-        st.draw(root); st.get().setFill(Color.WHITE);
+        st.draw(root); st.get().setFill(Color.YELLOW);
         ImageView im = addImage(root, "select1.png", 233, (int) game.getHandY(), 40, 40);
 
         ArrayList<obj> objects = game.getObjects();
@@ -503,6 +515,7 @@ public class Controller {
 
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.UP) {
+                spaceTyped();
                 ball.jump();
                 started[0] = true;
             } else if (event.getCode() == KeyCode.ESCAPE) {
@@ -534,7 +547,7 @@ public class Controller {
 
         game.draw(root);
         root.getChildren().add(text);
-        st.draw(root); st.get().setFill(Color.WHITE);
+        st.draw(root); st.get().setFill(Color.YELLOW);
         ImageView im = addImage(root, "select1.png", 233, (int) game.getHandY(), 40, 40);
 
         ArrayList<obj> objects = game.getObjects();
@@ -599,6 +612,7 @@ public class Controller {
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.UP) {
                 ball.jump();
+                spaceTyped();
                 started[0] = true;
             } else if (event.getCode() == KeyCode.ESCAPE) {
                 timer.stop();
