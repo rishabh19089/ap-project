@@ -1,7 +1,15 @@
 package sample;
 
+import javafx.animation.Animation;
+import javafx.animation.Transition;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
+
+import java.nio.file.Paths;
 
 public abstract class Obstacles extends element{
     protected double  colour, dificulty;
@@ -76,9 +84,29 @@ public abstract class Obstacles extends element{
 
     public abstract void draw(Pane pane);
 
+    private void playSound(String name, double volume, int priority){
+        AudioClip sound = new AudioClip(Paths.get("resources/sounds/"+name+".wav").toUri().toString());
+        sound.setVolume(volume); sound.setPriority(priority);
+        sound.play(); }
+
+    private void show1(Pane root){
+        Text text = new Text(250, y, "+1");
+        text.setFill(Color.WHITE); text.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
+        root.getChildren().add(text);
+        int up = 25;
+        final Animation animation = new Transition() {
+            {setCycleDuration(Duration.seconds(0.4)); }
+            @Override
+            protected void interpolate(double frac) {
+                text.setY(y-frac*up); }};
+        animation.setOnFinished(event -> root.getChildren().remove(text));
+        animation.play(); }
+
     public void starCollision(User user, Pane root){
         double pos = user.getBall().getY();
         if ((hasStar) && (star.present()) && (pos<=y+sr1+10) && (pos>=y-sr1)){
+            playSound("star", 0.25, 1);
+            show1(root);
             user.incrementScore();
             star.eraseStar(root);
             star.setPresent(false); } }
