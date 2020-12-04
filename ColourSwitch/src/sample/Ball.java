@@ -42,6 +42,8 @@ public class Ball extends obj implements Serializable, Cloneable {
         return 0;
     }
 
+    public void setAcc(double acc) {
+        this.acc = acc; }
 
     public double getSpeed() {
         return speed;

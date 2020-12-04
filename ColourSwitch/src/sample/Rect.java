@@ -14,10 +14,10 @@ public class Rect extends Obstacles{
 
     public Rect(double xpos, double yTop, double yBottom, double thick, double side2, boolean hasStar, double speed, boolean clockwise){
         this.yBottom = yBottom; this.yTop = yTop;
-        double side = yBottom-yTop;
-        this.side2= side2;
-        x = xpos + side/2; y = yTop + side2/2;
-        this.xpos = xpos; this.side = side; this.thick = thick;
+        this.side2 = yBottom-yTop;
+        this.side= side2;
+        x = xpos + side/2; y = yTop + this.side2/2;
+        this.xpos = xpos; this.thick = thick;
         star = new Star(computeStar());
         clockwiseRotation = clockwise;
         this.hasStar = hasStar;
