@@ -312,10 +312,10 @@ public class Controller {
         try {
             Pane root = FXMLLoader.load(getClass().getResource("pauseMenu.fxml"));
             Button b = new Button(); b.setOpacity(0);
-            b.setLayoutX(166); b.setLayoutY(271); b.setMinWidth(167); b.setMinHeight(157);
+            b.setLayoutX(180); b.setLayoutY(258); b.setMinWidth(145); b.setMinHeight(150);
             b.setOnAction(event -> {playSound("button", 0.2, 0); resumeGame(scene, timer);});
             Button b1 = new Button(); b1.setOpacity(0);
-            b1.setLayoutX(166); b1.setLayoutY(521); b1.setMinWidth(167); b1.setMinHeight(157);
+            b1.setLayoutX(180); b1.setLayoutY(500); b1.setMinWidth(140); b1.setMinHeight(130);
             b1.setOnAction(event -> {playSound("button", 0.2, 0); displayExitMenu();});
             root.getChildren().addAll(b, b1);
             primaryStage.setScene(new Scene(root)); }
@@ -444,6 +444,7 @@ public class Controller {
         final boolean[] started = {false};
         Pane root = new Pane();
         Scene scene = new Scene(root, WIDTH, HEIGHT);
+        ArrayList<KeyCode> characterArrayList= new ArrayList<>();
         Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
         Star st = new Star(cord(52, 28, 18, 9));
         User user = game.getUser(); Ball ball = user.getBall();
@@ -456,9 +457,7 @@ public class Controller {
         root.getChildren().add(text);
         st.draw(root); st.get().setFill(Color.YELLOW);
         ImageView im = addImage(root, "select1.png", 233, (int) game.getHandY(), 40, 40);
-
         ArrayList<obj> objects = game.getObjects();
-
         AnimationTimer timer = new AnimationTimer() {
             private long lastTime = System.nanoTime();
             private long startTime = System.nanoTime();
@@ -525,7 +524,11 @@ public class Controller {
                 displayPauseMenu(scene, timer);
             } else if (event.getCode() == KeyCode.S) {
                 saveGame(true); }
-        });
+            else {
+                characterArrayList.add(event.getCode());
+                if (characterArrayList.size() > 3){
+                    if(characterArrayList.get(characterArrayList.size()- 1) == KeyCode.T && characterArrayList.get(characterArrayList.size()- 2) == KeyCode.A && characterArrayList.get(characterArrayList.size()- 3) == KeyCode.O && characterArrayList.get(characterArrayList.size()- 4) == KeyCode.B){
+                        game.setCheat(true); } } } });
         primaryStage.setScene(scene); }
 
     void newGame(){
@@ -535,95 +538,6 @@ public class Controller {
             game.getUser().setSavedGames(saved);}
         if (newUser){
             newUser=false; }
-        final boolean[] started = {false};
-        Pane root = new Pane();
-        Scene scene = new Scene(root, WIDTH, HEIGHT);
-        Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
-        Star st = new Star(cord(52, 28, 18, 9));
-        User user = game.getUser(); Ball ball = user.getBall();
-        ArrayList<Obstacles> obstacles = game.getObstArray().getObstArray();
-        ArrayList<MagicColourBox> boxes = game.getBoxes();
-
-        root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
-
-        game.draw(root);
-        root.getChildren().add(text);
-        st.draw(root); st.get().setFill(Color.YELLOW);
-        ImageView im = addImage(root, "select1.png", 233, (int) game.getHandY(), 40, 40);
-
-        ArrayList<obj> objects = game.getObjects();
-
-        AnimationTimer timer = new AnimationTimer() {
-            private long lastTime = System.nanoTime();
-            private final long startTime = System.nanoTime();
-            private double scroll = 0; private double totalScroll = 0;
-            private int boxes1 = user.getLastColorBox();
-
-            @Override
-            public void start() {
-                lastTime = System.nanoTime();
-                super.start(); }
-
-            @Override
-            public void handle(long currentTime) {
-                double t = (currentTime - lastTime) / 1e9;
-                double timeSinceStart = (currentTime - startTime)/1e9;
-                ball.move(t, started[0]);
-
-                double ballY = ball.getY();
-
-                if (ballY<=HEIGHT/2){
-                    scroll = HEIGHT/2 - ballY; }
-                else if (ballY>=HEIGHT-10){
-                    scroll = HEIGHT-10-ballY; }
-
-                totalScroll += scroll;
-
-                if ((started[0]) && (ballY>=HEIGHT) && (totalScroll<=0)){
-                    stop(); gameOver(root, scene, -1 ,ball);}
-
-                for (obj object: objects){
-                    object.move(scroll); }
-
-                game.scrollHand(scroll);
-                im.setY(game.getHandY());
-
-                scroll = 0;
-
-                for (Obstacles o: obstacles){
-                    if (o.collision(ball, timeSinceStart)){
-                        stop();
-                        gameOver(root, scene, o.getyBottom(),ball); }
-                    o.rotate(t);
-                    o.starCollision(user, root); }
-
-                if (user.getLastColorBox()>boxes1){
-                    game.createObstacles(root,objects);
-                    boxes1 = user.getLastColorBox(); }
-
-                for (MagicColourBox box: boxes){
-                    box.handleCollision(user, root); }
-
-                if (user.getScore()>=10) st.get().setTranslateX(17);
-                text.setText(""+ user.getScore());
-
-                lastTime = currentTime; }};
-        timer.start();
-
-        scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.UP) {
-                ball.jump();
-                spaceTyped();
-                started[0] = true;
-            } else if (event.getCode() == KeyCode.ESCAPE) {
-                timer.stop();
-                displayPauseMenu(scene, timer);
-            } else if (event.getCode() == KeyCode.S) {
-                saveGame(true);
-            }
-        });
-
-        primaryStage.setScene(scene);
-
+        enterGame();
     }
 }

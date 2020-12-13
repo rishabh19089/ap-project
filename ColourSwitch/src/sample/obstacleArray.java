@@ -56,6 +56,7 @@ public class obstacleArray implements Serializable {
         else {
             difficulty = 1.7;
             ball.setAcc(750); }
+        if(game.isCheat()) difficulty = 1;
         int type = typeObstacle(difficulty);
         double space = 300/difficulty;
         ArrayList<Obstacles> o = createObstacle(type, yTop, space, difficulty);

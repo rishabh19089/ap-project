@@ -17,18 +17,14 @@ public class Game implements Serializable {
     private boolean gameOver = false;
     private ArrayList<MagicColourBox> boxes = new ArrayList<>();
     private double handY = 660;
-
+    private boolean cheat;
     public Game(String name, int HEIGHT, int WIDTH, int dist){
         this.HEIGHT = HEIGHT; this.WIDTH = WIDTH;
         user = new User(name, HEIGHT, dist);
         obstArray = new obstacleArray(this);
         currentScroll = 0; totalScroll= 0;
         ball = user.getBall();
-//        MagicColourBox mcb = new MagicColourBox(250, 300);
-//        MagicColourBox mcb1 = new MagicColourBox(250, -90);
-//        MagicColourBox mcb2 = new MagicColourBox(250, -400);
-//        MagicColourBox mcb3 = new MagicColourBox(250, -780);
-//        boxes.addAll(List.of(mcb, mcb1, mcb2, mcb3));
+        this.cheat = false;
         }
 
     public obstacleArray getObstArray(){
@@ -64,6 +60,14 @@ public class Game implements Serializable {
     }
     public void menuPause(){
 
+    }
+
+    public boolean isCheat() {
+        return cheat;
+    }
+
+    public void setCheat(boolean cheat) {
+        this.cheat = cheat;
     }
 
     public void addMCB(MagicColourBox box, Pane root){
