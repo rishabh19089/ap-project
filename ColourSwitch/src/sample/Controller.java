@@ -526,8 +526,8 @@ public class Controller {
                 saveGame(true); }
             else {
                 characterArrayList.add(event.getCode());
-                if (characterArrayList.size() > 3){
-                    if(characterArrayList.get(characterArrayList.size()- 1) == KeyCode.T && characterArrayList.get(characterArrayList.size()- 2) == KeyCode.A && characterArrayList.get(characterArrayList.size()- 3) == KeyCode.O && characterArrayList.get(characterArrayList.size()- 4) == KeyCode.B){
+                if (characterArrayList.size() > 2){
+                    if(characterArrayList.get(characterArrayList.size()- 1) == KeyCode.T && characterArrayList.get(characterArrayList.size()- 2) == KeyCode.O && characterArrayList.get(characterArrayList.size()- 3) == KeyCode.B){
                         game.setCheat(true); } } } });
         primaryStage.setScene(scene); }
 
