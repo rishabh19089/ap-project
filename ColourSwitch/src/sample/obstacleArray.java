@@ -4,19 +4,19 @@ import javafx.scene.layout.Pane;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class obstacleArray implements Serializable {
-    private ArrayList<Obstacles> obstArray = new ArrayList<>();
+    private ArrayList<Obstacles> obstArray;
     private int[] dificultyArr, Xarr;
     private double space;
-    private Obstacles obbbb;
+    private Obstacles ob;
 
     public obstacleArray(Game game) {
-        addObstacle(game, false, new Pane(),new ArrayList<obj>());
-        for (int i=0; i<2; i++){
-            addObstacle(game, true, new Pane(),new ArrayList<obj>() ); } }
+        obstArray = new ArrayList<>();
+        addObstacle(game, false, new Pane(), new ArrayList<>());
+        for (int i=0; i<1; i++){
+            addObstacle(game, true, new Pane(),new ArrayList<obj>() ); }}
 
     public ArrayList<Obstacles> getObstArray() {
         return obstArray;
@@ -30,6 +30,7 @@ public class obstacleArray implements Serializable {
 
     }
 
+
     public int typeObstacle(int level){
         if(level == 1) return new Random().nextInt(7);
         else if(level == 2) return 7+ (new Random().nextInt(10));
@@ -41,7 +42,7 @@ public class obstacleArray implements Serializable {
     public void addObstacle(Game game, boolean started, Pane root, ArrayList<obj> objs){
         double yTop = 630; int level;
         if (started) {
-            yTop = obbbb.yTop; }
+            yTop = ob.yTop; }
         int score = game.getUser().getLastColorBox();
         Ball ball = game.getUser().getBall();
         double difficulty;
@@ -73,7 +74,7 @@ public class obstacleArray implements Serializable {
         else {
             difficulty = 1.7; level = 3;
             ball.setAcc(750); }
-        if(game.isCheat()) difficulty = 1;
+        if(game.getCheat()) difficulty = 1;
         int type = typeObstacle(level);
         double space = 300/difficulty;
         ArrayList<Obstacles> o = createObstacle(type, yTop, space, difficulty);
@@ -181,6 +182,6 @@ public class obstacleArray implements Serializable {
             default:
                 System.out.println("Reached Default in createObstacle");
                 oArr.add(new singleCircle(250, -1050, -890, 65, 90, true, true));}
-        obbbb = oArr.get(0);
+        ob = oArr.get(0);
 
         return oArr; }}

@@ -62,7 +62,7 @@ public class Game implements Serializable {
 
     }
 
-    public boolean isCheat() {
+    public boolean getCheat() {
         return cheat;
     }
 
@@ -76,7 +76,6 @@ public class Game implements Serializable {
 
     public ArrayList<obj> getObjects() {
         ArrayList<obj> objs = new ArrayList<>();
-
         objs.addAll(obstArray.getObstArray());
         objs.addAll(boxes);
         return objs; }

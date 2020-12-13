@@ -46,7 +46,11 @@ public class Controller {
         this.game = new Game("Unknown", HEIGHT, WIDTH, jump);
         try {
             File file = new File("saved/Unknown");
-            if(!file.exists()) file.mkdirs();
+            if(file.exists()){
+                for (File f : file.listFiles()){
+                    f.delete(); }
+                file.delete(); }
+            file.mkdirs();
             File file1= new File("saved/Unknown/info.txt");
             if(!file1.exists()) file1.createNewFile(); }
         catch (Exception e){
@@ -286,7 +290,7 @@ public class Controller {
                 deserialize("saved/"+game.getUser().getName()+"/"+ num[0]);
                 String s = arr.get(arr.size()-1).split("\t\t\t")[0];
                 game.getUser().setSavedGames(Integer.parseInt(s));
-                enterGame();}});
+                enterGame(false, 0);}});
             pane.getChildren().addAll(listView,text1,text2,button4);
             Scene sc = new Scene(pane, 500,700);
             sc.getStylesheets().add("file:resources/styles/listStyle.css");
@@ -337,13 +341,12 @@ public class Controller {
         return points; }
 
     private void revive(Scene scene, Pane pane, double pos) {
-        if(game.getUser().getScore() >= 5){
+        if(game.getUser().getScore() >= 0){
             playSound("revive", 0.2, 0);
             deserialize("saved/temp");
-            if(pos > 0) game.getUser().getBall().setY(game.getBoxes().get(game.getUser().getLastColorBox()).getY());
-            else game.getUser().getBall().setY(630);
-            game.getUser().setScore(game.getUser().getScore() - 5);
-            enterGame(); }
+            //System.out.println(game.getUser().getLastColorBox()+" at "+ game.getBoxes().get(game.getUser().getLastColorBox()).getY());
+            game.getUser().setScore(game.getUser().getScore());
+            enterGame(true, pos); }
         else {
             playSound("error", 0.2, 0);
             Text text1 = new Text(80, 470, "Minimum 5 Stars Needed"); Font font1 = loadFont(30); text1.setFont(font1); text1.setFill(Color.WHITE);
@@ -440,11 +443,11 @@ public class Controller {
         animation.setOnFinished(actionEvent -> {exit(scene, pos);});
         animation.play(); }
 
-    void enterGame(){
+    void enterGame(boolean revived, double pos){
         final boolean[] started = {false};
         Pane root = new Pane();
         Scene scene = new Scene(root, WIDTH, HEIGHT);
-        ArrayList<KeyCode> characterArrayList= new ArrayList<>();
+        final String[] input = {""};
         Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
         Star st = new Star(cord(52, 28, 18, 9));
         User user = game.getUser(); Ball ball = user.getBall();
@@ -454,9 +457,20 @@ public class Controller {
         root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
 
         game.draw(root);
+
+        if (revived) {
+            int lastBox = game.getUser().getLastColorBox();
+            double lastY = game.getBoxes().get(lastBox).getY();
+            if (lastY > 650)  game.getObjects().forEach(obj -> obj.move(500-lastY));
+//            System.out.println(game.getUser().getLastColorBox()+" at "+ game.getBoxes().get(lastBox).getY());
+//            System.out.println(game.getBoxes().get(lastBox+1).getY());
+            if(pos > 0) game.getUser().getBall().setY(game.getBoxes().get(game.getUser().getLastColorBox()).getY());
+            else game.getUser().getBall().setY(630); }
+
         root.getChildren().add(text);
         st.draw(root); st.get().setFill(Color.YELLOW);
         ImageView im = addImage(root, "select1.png", 233, (int) game.getHandY(), 40, 40);
+
         ArrayList<obj> objects = game.getObjects();
         AnimationTimer timer = new AnimationTimer() {
             private long lastTime = System.nanoTime();
@@ -502,7 +516,7 @@ public class Controller {
                     o.starCollision(user, root); }
 
                 if (user.getLastColorBox()>boxes1){
-                    game.createObstacles(root,objects);
+                    game.createObstacles(root, objects);
                     boxes1 = user.getLastColorBox(); }
 
                 for (MagicColourBox box: boxes){
@@ -525,10 +539,10 @@ public class Controller {
             } else if (event.getCode() == KeyCode.S) {
                 saveGame(true); }
             else {
-                characterArrayList.add(event.getCode());
-                if (characterArrayList.size() > 2){
-                    if(characterArrayList.get(characterArrayList.size()- 1) == KeyCode.T && characterArrayList.get(characterArrayList.size()- 2) == KeyCode.O && characterArrayList.get(characterArrayList.size()- 3) == KeyCode.B){
-                        game.setCheat(true); } } } });
+                input[0] += event.getCode().getName();
+                if ((!game.getCheat()) && (input[0].contains("BOT"))){
+                    showCheat(root, ball.getY());
+                        game.setCheat(true);  } } });
         primaryStage.setScene(scene); }
 
     void newGame(){
@@ -538,6 +552,19 @@ public class Controller {
             game.getUser().setSavedGames(saved);}
         if (newUser){
             newUser=false; }
-        enterGame();
+        enterGame(false, 0);
     }
+
+    private void showCheat(Pane root, double y){
+        Text text = new Text(95, y, "CHEATCODE APPLIED!");
+        text.setFill(Color.DEEPPINK); Font font = loadFont(28); text.setFont(font);
+        root.getChildren().add(text);
+        int up = 10;
+        final Animation animation = new Transition() {
+            {setCycleDuration(Duration.seconds(1)); }
+            @Override
+            protected void interpolate(double frac) {
+                text.setY(y-40-frac*up); }};
+        animation.setOnFinished(event -> root.getChildren().remove(text));
+        animation.play(); }
 }
