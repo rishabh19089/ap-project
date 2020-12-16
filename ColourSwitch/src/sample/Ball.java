@@ -14,6 +14,8 @@ public class Ball extends obj implements Serializable, Cloneable {
     private int HEIGHT, boost, type;
     private transient Circle c;
     private transient Rectangle sq;
+    private transient Rectangle square;
+    private int shape;
     private int color;
 
     public Ball(double acc, int HEIGHT, int boost) {
@@ -42,7 +44,13 @@ public class Ball extends obj implements Serializable, Cloneable {
     public double lower_Ypos(){
         return 0;
     }
-    public void setAcc(double acc) { this.acc = acc; }
+
+    public void invincible(){
+        c.setFill(Color.WHITE); }
+
+    public void setAcc(double acc) {
+        this.acc = acc; }
+
     public double getSpeed() {
         return speed;
     }

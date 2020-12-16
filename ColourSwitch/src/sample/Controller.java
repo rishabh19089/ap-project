@@ -48,13 +48,11 @@ public class Controller {
             File file = new File("saved/Unknown");
             if(file.exists()){
                 for (File f : file.listFiles()){
-                    System.out.println(f.getName());
-                    f.delete(); }
-                System.out.println(file.getName());
-                file.delete(); }
-            file.mkdirs();
-            File file1= new File("saved/Unknown/info.txt");
-            if(!file1.exists()) file1.createNewFile(); }
+                    if (!f.getName().equals("info.txt")) f.delete();
+                    else {
+                        f.delete();
+                        f.createNewFile();} } }
+            else file.mkdirs(); }
         catch (Exception e){
             System.out.println("Error in creating Unknown Folder"); } }
 
@@ -346,7 +344,6 @@ public class Controller {
         if(game.getUser().getScore() >= 0){
             playSound("revive", 0.2, 0);
             deserialize("saved/temp");
-            //System.out.println(game.getUser().getLastColorBox()+" at "+ game.getBoxes().get(game.getUser().getLastColorBox()).getY());
             game.getUser().setScore(game.getUser().getScore());
             enterGame(true, pos); }
         else {
@@ -451,7 +448,9 @@ public class Controller {
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         final String[] input = {""};
         Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
+        Text texts = new Text(430, 40, "0"); texts.setFont(font); texts.setFill(Color.WHITE);
         Star st = new Star(cord(52, 28, 18, 9));
+        Diamond d = new Diamond(20, 0, 30, 0, 470); d.glow();
         User user = game.getUser(); Ball ball = user.getBall();
         ArrayList<Obstacles> obstacles = game.getObstArray().getObstArray();
         ArrayList<element> boxes = game.getBoxes();
@@ -464,13 +463,11 @@ public class Controller {
             int lastBox = game.getUser().getLastColorBox();
             double lastY = game.getBoxes().get(lastBox).getY();
             if (lastY > 650)  game.getObjects().forEach(obj -> obj.move(500-lastY));
-//            System.out.println(game.getUser().getLastColorBox()+" at "+ game.getBoxes().get(lastBox).getY());
-//            System.out.println(game.getBoxes().get(lastBox+1).getY());
             if(pos > 0) game.getUser().getBall().setY(game.getBoxes().get(game.getUser().getLastColorBox()).getY());
             else game.getUser().getBall().setY(630); }
 
-        root.getChildren().add(text);
-        st.draw(root); st.get().setFill(Color.YELLOW);
+        root.getChildren().addAll(text, texts);
+        st.draw(root); st.get().setFill(Color.YELLOW); d.draw(root);
         ImageView im = addImage(root, "select1.png", 233, (int) game.getHandY(), 40, 40);
 
         ArrayList<obj> objects = game.getObjects();
@@ -513,11 +510,16 @@ public class Controller {
 
                 for (Obstacles o: obstacles){
                     if (o.collision(ball, timeSinceStart)){
-                        stop(); gameOver(root, scene, o.getyBottom(), ball);}
+                        if (!user.isInvincible()){
+                            stop();
+                            gameOver(root, scene, o.getyBottom(), ball);}}
+                    if (o.getClass() == Diamond.class){
+                        o.handleCollision(user, root); }
                     o.rotate(t);
                     o.starCollision(user, root); }
 
                 if (user.getLastColorBox()>boxes1){
+                    user.loseInvincibility();
                     game.createObstacles(root, objects);
                     boxes1 = user.getLastColorBox(); }
 
@@ -526,6 +528,7 @@ public class Controller {
 
                 if (user.getScore()>=10) st.get().setTranslateX(17);
                 text.setText(""+ user.getScore());
+                texts.setText(""+ user.getDiamonds());
 
                 lastTime = currentTime; }};
         timer.start();
@@ -534,12 +537,16 @@ public class Controller {
             if (event.getCode() == KeyCode.UP) {
                 spaceTyped();
                 ball.jump();
-                started[0] = true;
-            } else if (event.getCode() == KeyCode.ESCAPE) {
+                started[0] = true; }
+            else if (event.getCode() == KeyCode.ESCAPE) {
                 timer.stop();
-                displayPauseMenu(scene, timer);
-            } else if (event.getCode() == KeyCode.S) {
+                displayPauseMenu(scene, timer); }
+            else if (event.getCode() == KeyCode.S) {
                 saveGame(true); }
+            else if (event.getCode() == KeyCode.TAB) {
+                if ((user.getDiamonds()>0) && (!user.isInvincible())){
+                    user.setInvincible(true);
+                    user.loseDiamond(); } }
             else {
                 input[0] += event.getCode().getName();
                 if ((!game.getCheat()) && (input[0].contains("BOT"))){

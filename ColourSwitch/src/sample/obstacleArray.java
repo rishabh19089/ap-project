@@ -32,10 +32,10 @@ public class obstacleArray implements Serializable {
 
 
     public int typeObstacle(int level){
+
         if(level == 1) return new Random().nextInt(8);
         else if(level == 2) return 8+ (new Random().nextInt(11));
         else return new Random().nextInt(18);}
-//        return 18; }
 
     public MagicColourBox createColourBox(double y, double space){
         return new MagicColourBox(250,y-space); }
@@ -186,11 +186,6 @@ public class obstacleArray implements Serializable {
                 oArr.add(new Rect(250 - side1/2,yBottom-side0, yBottom, 20, side1,false, speed, rot));
                 oArr.add(new Plus(260-s,yBottom-side0+20+spaced,yBottom-20-spaced,20, 250, speed, true, false));
                 break;
-            case 18:
-                side = 320/difficulty;
-                oArr.add(new Square(250 - side/2,yBottom-side , yBottom, 20, false, 100, false));
-                oArr.add(new singleCircle(250,yBottom-side+35, yBottom-35, 20, 100, true, true));
-                break;
             case 14:
                 oArr.add(new singleCircle(250,yBottom-4* radius5 -20 , yBottom-(2*radius5)- 20, 20, speed, true, false));
                 oArr.add(new singleCircle(250,yBottom -(2*radius5) , yBottom , 20, speed, true, true));
@@ -199,6 +194,13 @@ public class obstacleArray implements Serializable {
                 oArr.add(new singleCircle(250,yBottom-6*radius5 -40 , yBottom-(4*radius5)- 40, 20, speed, true, true));
                 oArr.add(new singleCircle(250,yBottom-4*radius5 -20 , yBottom-(2*radius5)- 20, 20, speed, true, false));
                 oArr.add(new singleCircle(250,yBottom -(2*radius5) , yBottom , 20, speed, true, true));
+            case 18:
+                difficulty = Math.min(difficulty, 1.1);
+                side = 320/difficulty;
+                oArr.add(new Square(250 - side/2,yBottom-side , yBottom, 20, false, 120, false));
+                oArr.add(new singleCircle(250,yBottom-side+35, yBottom-35, 20, 120, true, true));
+                Diamond d = new Diamond(25, 70, yBottom - side/2,240, 250);
+                oArr.add(d);
                 break;
             default:
                 System.out.println("Reached Default in createObstacle");

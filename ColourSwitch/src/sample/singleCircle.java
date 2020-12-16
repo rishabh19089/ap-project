@@ -12,7 +12,6 @@ import java.util.HashMap;
 
 public class singleCircle extends Obstacles{
 
-    private transient Circle fs;
     private transient Arc[] arcs;
     private double r1, r2;
 
@@ -90,8 +89,6 @@ public class singleCircle extends Obstacles{
 
 
     public boolean collision(Ball ball, double timeSinceStart){
-//        HashMap<Integer, Integer> hm = new HashMap<>();
-//        hm.put(0,1); hm.put(1, 0); hm.put(2, 3); hm.put(3, 2);
         HashMap<Integer, Integer> bottomFromTop = new HashMap<>();
         bottomFromTop.put(0,2); bottomFromTop.put(1,3); bottomFromTop.put(2,0); bottomFromTop.put(3,1);
         double yball = ball.getY();
@@ -99,9 +96,13 @@ public class singleCircle extends Obstacles{
         int topColor = 3 - rotated/90;
         int bottomColor = bottomFromTop.get(topColor);
         if (!clockwiseRotation) {topColor = ((4-rotated/90)%4+ 1) %4; bottomColor = bottomFromTop.get(topColor);}
-        if ((yball>=y+r1-r2) && (yball<=y+r1)){
+        if ((yball-10>=y+r1) && (yball-10<=y+r1+r2)){
             return ball.getColor() != bottomColor; }
-        else if ((yball<=y-r1+r2) && (yball>=y-r1)){
+        else if ((yball+10>=y+r1) && (yball+10<=y+r1+r2)){
+            return ball.getColor() != bottomColor; }
+        else if ((yball-10<=y-r1) && (yball-10>=y-r1-r2)){
+            return ball.getColor() != topColor; }
+        else if ((yball+10<=y-r1) && (yball+10>=y-r1-r2)){
             return ball.getColor() != topColor; }
         return false;}
 
