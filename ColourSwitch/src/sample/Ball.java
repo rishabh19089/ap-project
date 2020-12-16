@@ -1,9 +1,10 @@
 package sample;
 
-import javafx.scene.canvas.GraphicsContext;
+
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 
 import java.io.Serializable;
 import java.util.Random;
@@ -12,6 +13,8 @@ public class Ball extends obj implements Serializable, Cloneable {
     private double acc, speed;
     private int HEIGHT, boost;
     private transient Circle c;
+    private transient Rectangle square;
+    private int shape;
     private int color;
 
     public Ball(double acc, int HEIGHT, int boost) {
@@ -20,6 +23,7 @@ public class Ball extends obj implements Serializable, Cloneable {
         this.HEIGHT = HEIGHT;
         this.boost = boost;
         color= new Random().nextInt(4);
+        shape = new Random().nextInt(2);;
     }
 
     public Circle getCircle() {
@@ -41,6 +45,9 @@ public class Ball extends obj implements Serializable, Cloneable {
     public double lower_Ypos(){
         return 0;
     }
+
+    public void invincible(){
+        c.setFill(Color.WHITE); }
 
     public void setAcc(double acc) {
         this.acc = acc; }

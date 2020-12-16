@@ -32,9 +32,11 @@ public class obstacleArray implements Serializable {
 
 
     public int typeObstacle(int level){
-        if(level == 1) return new Random().nextInt(7);
-        else if(level == 2) return 7+ (new Random().nextInt(10));
-        else return new Random().nextInt(17); }
+        return 16;
+//        if(level == 1) return new Random().nextInt(7);
+//        else if(level == 2) return 7+ (new Random().nextInt(10));
+//        else return new Random().nextInt(17);
+    }
 
     public MagicColourBox createColourBox(double y, double space){
         return new MagicColourBox(250,y-space); }
@@ -175,9 +177,12 @@ public class obstacleArray implements Serializable {
                 oArr.add(new Plus(260-s,yBottom-side0+20+spaced,yBottom-20-spaced,20, 250, speed, true, false));
                 break;
             case 16:
+                difficulty = Math.min(difficulty, 1.1);
                 side = 320/difficulty;
-                oArr.add(new Square(250 - side/2,yBottom-side , yBottom, 20, false, 100, true));
-                oArr.add(new singleCircle(250,yBottom-side+35, yBottom-35, 20, 100, true, false));
+                oArr.add(new Square(250 - side/2,yBottom-side , yBottom, 20, false, 120, false));
+                //oArr.add(new singleCircle(250,yBottom-side+35, yBottom-35, 20, 120, true, true));
+                Diamond d = new Diamond(25, 70, yBottom - side/2,240, 250);
+                oArr.add(d);
                 break;
             default:
                 System.out.println("Reached Default in createObstacle");
