@@ -341,10 +341,10 @@ public class Controller {
         return points; }
 
     private void revive(Scene scene, Pane pane, double pos) {
-        if(game.getUser().getScore() >= 0){
+        if(game.getUser().getScore() >= 5){
             playSound("revive", 0.2, 0);
             deserialize("saved/temp");
-            game.getUser().setScore(game.getUser().getScore());
+            game.getUser().setScore(game.getUser().getScore()-5);
             enterGame(true, pos); }
         else {
             playSound("error", 0.2, 0);
@@ -448,9 +448,9 @@ public class Controller {
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         final String[] input = {""};
         Text text = new Text(5, 40, "0"); Font font = loadFont(40); text.setFont(font); text.setFill(Color.WHITE);
-        Text texts = new Text(430, 40, "0"); texts.setFont(font); texts.setFill(Color.WHITE);
+        Text texts = new Text(425, 40, "0"); texts.setFont(font); texts.setFill(Color.WHITE);
         Star st = new Star(cord(52, 28, 18, 9));
-        Diamond d = new Diamond(20, 0, 30, 0, 470); d.glow();
+        Diamond d = new Diamond(20, 0, 27, 0, 470); d.glow();
         User user = game.getUser(); Ball ball = user.getBall();
         ArrayList<Obstacles> obstacles = game.getObstArray().getObstArray();
         ArrayList<element> boxes = game.getBoxes();

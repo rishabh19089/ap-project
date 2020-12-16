@@ -5,12 +5,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-
 import java.nio.file.Paths;
 import java.util.Random;
+
 
 public class MagicShapeSwitchingBox extends element{
     private boolean present = true;
@@ -47,15 +44,20 @@ public class MagicShapeSwitchingBox extends element{
         sound.setVolume(volume); sound.setPriority(priority);
         sound.play(); }
 
+    private int getType(User user){
+        int type = new Random().nextInt(3);
+        while (user.getBall().getType()==type){
+            type = new Random().nextInt(3); }
+        return type; }
+
     @Override
     public void handleCollision(User user, Pane pane) {
         boolean hit = intersects(user);
-        //System.out.println("hgcgh");
         if (hit){
-            System.out.println("hit");
             playSound("colorswitch", 0.25, 1);
             user.hitColorBox();
             eraseMagicShapeSwitchingBox(pane);
-            user.getBall().setType(1 - user.getBall().getType());
+            int type = getType(user);
+            user.getBall().setType(type);
             user.getBall().draw(pane); } }
 }

@@ -3,10 +3,12 @@ package sample;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Ball extends obj implements Serializable, Cloneable {
@@ -14,7 +16,7 @@ public class Ball extends obj implements Serializable, Cloneable {
     private int HEIGHT, boost, type;
     private transient Circle c;
     private transient Rectangle sq;
-    private transient Rectangle square;
+    private transient Polygon triangle;
     private int shape;
     private int color;
 
@@ -24,17 +26,16 @@ public class Ball extends obj implements Serializable, Cloneable {
         this.HEIGHT = HEIGHT;
         this.boost = boost;
         color= new Random().nextInt(4);
-        type= new Random().nextInt(2);
+        //type= new Random().nextInt(3);
+        type =2;
     }
 
     public Shape getCircle() {
         if(type == 0) return c;
-        else return sq;
+        else if (type==1) return sq;
+        return triangle;
     }
-    public Rectangle getSqBall(){return sq;}
-    public void setBoost(int dist) {
-        this.boost = dist;
-    }
+
     public void setY(double y) {
         this.y = y;
     }
@@ -64,7 +65,8 @@ public class Ball extends obj implements Serializable, Cloneable {
         Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
         this.color = colour;
         if(type == 0) c.setFill(colors[color]);
-        else sq.setFill(colors[color]);
+        else if (type==1) sq.setFill(colors[color]);
+        else triangle.setFill(colors[color]);
     }
     public void setType(int type) {
         this.type = type;
@@ -79,15 +81,20 @@ public class Ball extends obj implements Serializable, Cloneable {
         Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
         if (type == 0){
             c = new Circle(10);
-            rootJeu.getChildren().remove(sq);
+            rootJeu.getChildren().removeAll(sq, triangle);
             c.setCenterX(250); c.setCenterY(y);c.setFill(colors[color]);
             rootJeu.getChildren().add(c);}
-        else {
-            rootJeu.getChildren().remove(c);
+        else if (type==1) {
+            rootJeu.getChildren().removeAll(c, triangle);
             sq= new Rectangle(240, y- 10, 20,20);
             sq.setFill(colors[color]);
-            rootJeu.getChildren().add(sq);
-         }
+            rootJeu.getChildren().add(sq);}
+        else{
+            rootJeu.getChildren().removeAll(c, sq);
+            double[] points = new double[]{250+20/Math.sqrt(3), y+10, 250-20/Math.sqrt(3), y+10, 250, y-10};
+            triangle = new Polygon(points);
+            triangle.setFill(colors[color]);
+            rootJeu.getChildren().addAll(triangle); }
     }
 
     public int getType() {
@@ -106,8 +113,8 @@ public class Ball extends obj implements Serializable, Cloneable {
         if (!started)y = r;
         speed = Math.min(350, speed); speed = Math.max(-350, speed);
         if(type == 0) c.setCenterY(y);
-        else sq.setY(y);
-    }
+        else if (type==1) sq.setY(y);
+        else triangle.getPoints().setAll(250+20/Math.sqrt(3), y+10, 250-20/Math.sqrt(3), y+10, (double) 250, y-10); }
 
 
 }

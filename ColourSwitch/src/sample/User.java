@@ -56,7 +56,7 @@ public class User implements Serializable {
         if (in) ball.invincible(); }
 
     public void hitDiamond(){
-        diamonds++; }
+        if (!invincible) diamonds++; }
 
     public int getDiamonds() {
         return diamonds; }

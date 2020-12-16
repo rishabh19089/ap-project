@@ -52,34 +52,36 @@ public class obstacleArray implements Serializable {
         Ball ball = game.getUser().getBall();
         double difficulty;
         if (score < 1){
-            difficulty =1; level = 1; }
+            difficulty =1; level = 1;
+            ball.setAcc(700);}
         else if (score < 4){
-            difficulty =1; level = 2; }
-        else if (score < 6) {
+            difficulty =1; level = 2;
+            ball.setAcc(730);}
+        else if (score < 5) {
             difficulty = 1.2; level = 1;
-            ball.setAcc(650); }
+            ball.setAcc(760); }
         else if (score < 10) {
             difficulty = 1.2; level = 2;
-            ball.setAcc(650); }
+            ball.setAcc(800); }
         else if (score < 12) {
             difficulty = 1.2; level = 3;
-            ball.setAcc(650); }
-        else if (score < 14) {
+            ball.setAcc(850); }
+        else if (score < 13) {
             difficulty = 1.4; level = 1;
-            ball.setAcc(700); }
+            ball.setAcc(900); }
         else if (score < 18) {
             difficulty = 1.4; level = 2;
-            ball.setAcc(700); }
+            ball.setAcc(900); }
         else if (score < 20) {
             difficulty = 1.4; level = 3;
-            ball.setAcc(700); }
-        else if (score < 23) {
+            ball.setAcc(1000); }
+        else if (score < 21) {
             difficulty = 1.7; level = 1;
-            ball.setAcc(700); }
+            ball.setAcc(1300); }
         else {
             difficulty = 1.7; level = 3;
-            ball.setAcc(750); }
-        if(game.getCheat()) difficulty = 1.7;
+            ball.setAcc(1500); }
+        if (game.getCheat()) difficulty = 1;
         int type = typeObstacle(level);
         double space = 300/difficulty;
         ArrayList<Obstacles> o = createObstacle(type, yTop, space, difficulty);
@@ -88,12 +90,10 @@ public class obstacleArray implements Serializable {
         objs.addAll(o);
         if(score % 3 == 0){
             MagicShapeSwitchingBox MCB1= createMagicShapeBox(yTop,space/2);
-            objs.add(MCB1);game.addMSSB(MCB1, root);
-        }
+            objs.add(MCB1);game.addMSSB(MCB1, root); }
         else {
-        MagicColourBox MCB= createColourBox(yTop, space/2);
-        objs.add(MCB);
-        game.addMCB(MCB, root);} }
+            MagicColourBox MCB= createColourBox(yTop, space/2);
+            objs.add(MCB); game.addMCB(MCB, root);} }
 
     public ArrayList<Obstacles> createObstacle(int type, double y, double space, double difficulty){
         double yBottom = y - space;
@@ -194,6 +194,7 @@ public class obstacleArray implements Serializable {
                 oArr.add(new singleCircle(250,yBottom-6*radius5 -40 , yBottom-(4*radius5)- 40, 20, speed, true, true));
                 oArr.add(new singleCircle(250,yBottom-4*radius5 -20 , yBottom-(2*radius5)- 20, 20, speed, true, false));
                 oArr.add(new singleCircle(250,yBottom -(2*radius5) , yBottom , 20, speed, true, true));
+                break;
             case 18:
                 difficulty = Math.min(difficulty, 1.1);
                 side = 320/difficulty;
