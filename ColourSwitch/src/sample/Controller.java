@@ -48,7 +48,9 @@ public class Controller {
             File file = new File("saved/Unknown");
             if(file.exists()){
                 for (File f : file.listFiles()){
+                    System.out.println(f.getName());
                     f.delete(); }
+                System.out.println(file.getName());
                 file.delete(); }
             file.mkdirs();
             File file1= new File("saved/Unknown/info.txt");
@@ -452,7 +454,7 @@ public class Controller {
         Star st = new Star(cord(52, 28, 18, 9));
         User user = game.getUser(); Ball ball = user.getBall();
         ArrayList<Obstacles> obstacles = game.getObstArray().getObstArray();
-        ArrayList<MagicColourBox> boxes = game.getBoxes();
+        ArrayList<element> boxes = game.getBoxes();
 
         root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
 
@@ -519,7 +521,7 @@ public class Controller {
                     game.createObstacles(root, objects);
                     boxes1 = user.getLastColorBox(); }
 
-                for (MagicColourBox box: boxes){
+                for (element box: boxes){
                     box.handleCollision(user, root); }
 
                 if (user.getScore()>=10) st.get().setTranslateX(17);

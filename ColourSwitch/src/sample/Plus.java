@@ -74,7 +74,7 @@ public class Plus extends Obstacles{
     public boolean collision(Ball ball, double t) {
         HashMap<Integer, Integer> colorMap = new HashMap<>();
         colorMap.put(0,0); colorMap.put(1,3); colorMap.put(2,2); colorMap.put(3,1);
-        Circle c = ball.getCircle();
+        Shape c = ball.getCircle();
         boolean collision = false;
         for (int i=0; i<4; i++){
             Shape intersect = Shape.intersect(rects[i], c);
