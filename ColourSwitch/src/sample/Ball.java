@@ -1,18 +1,19 @@
 package sample;
 
-
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 import java.io.Serializable;
 import java.util.Random;
 
 public class Ball extends obj implements Serializable, Cloneable {
     private double acc, speed;
-    private int HEIGHT, boost;
+    private int HEIGHT, boost, type;
     private transient Circle c;
+    private transient Rectangle sq;
     private transient Rectangle square;
     private int shape;
     private int color;
@@ -23,22 +24,20 @@ public class Ball extends obj implements Serializable, Cloneable {
         this.HEIGHT = HEIGHT;
         this.boost = boost;
         color= new Random().nextInt(4);
-        shape = new Random().nextInt(2);;
+        type= new Random().nextInt(2);
     }
 
-    public Circle getCircle() {
-        return c;
+    public Shape getCircle() {
+        if(type == 0) return c;
+        else return sq;
     }
-
-
+    public Rectangle getSqBall(){return sq;}
     public void setBoost(int dist) {
         this.boost = dist;
     }
-
     public void setY(double y) {
         this.y = y;
     }
-
     public double upper_Ypos(){
         return 0;
     }
@@ -55,19 +54,21 @@ public class Ball extends obj implements Serializable, Cloneable {
     public double getSpeed() {
         return speed;
     }
-
     public void setSpeed(double speed) {
         this.speed = speed;
     }
-
     public int getColor() {
         return color;
     }
-
     public void setColor(int colour) {
         Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
         this.color = colour;
-        c.setFill(colors[color]); }
+        if(type == 0) c.setFill(colors[color]);
+        else sq.setFill(colors[color]);
+    }
+    public void setType(int type) {
+        this.type = type;
+    }
 
     @Override
     public void move(double t) {
@@ -76,11 +77,22 @@ public class Ball extends obj implements Serializable, Cloneable {
     @Override
     public void draw(Pane rootJeu){
         Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
-        c = new Circle(10);
-        c.setCenterX(250); c.setCenterY(y);
+        if (type == 0){
+            c = new Circle(10);
+            rootJeu.getChildren().remove(sq);
+            c.setCenterX(250); c.setCenterY(y);c.setFill(colors[color]);
+            rootJeu.getChildren().add(c);}
+        else {
+            rootJeu.getChildren().remove(c);
+            sq= new Rectangle(240, y- 10, 20,20);
+            sq.setFill(colors[color]);
+            rootJeu.getChildren().add(sq);
+         }
+    }
 
-        c.setFill(colors[color]);
-        rootJeu.getChildren().add(c); }
+    public int getType() {
+        return type;
+    }
 
     public void jump(){
         speed = Math.min(speed, 0);
@@ -93,7 +105,9 @@ public class Ball extends obj implements Serializable, Cloneable {
         y = y + speed*timediff;
         if (!started)y = r;
         speed = Math.min(350, speed); speed = Math.max(-350, speed);
-        c.setCenterY(y); }
+        if(type == 0) c.setCenterY(y);
+        else sq.setY(y);
+    }
 
 
 }

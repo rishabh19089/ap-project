@@ -63,7 +63,7 @@ public class singleCircle extends Obstacles{
     @Override
     public void draw(Pane rootJeu)  {
         Color[] colors = new Color[]{Color.AQUAMARINE, Color.ORANGERED, Color.INDIGO, Color.YELLOW};
-        if (!clockwiseRotation) colors = new Color[]{Color.AQUAMARINE, Color.YELLOW, Color.INDIGO, Color.ORANGERED};
+        if (!clockwiseRotation) colors = new Color[]{ Color.ORANGERED, Color.AQUAMARINE, Color.YELLOW,Color.INDIGO};
         arcs = new Arc[4];
         for (int i=0; i<4; i++){
             arcs[i] = new Arc(x, y, r1, r1, 360-angle-90*i, 90);
@@ -95,7 +95,7 @@ public class singleCircle extends Obstacles{
         int rotated = (int)(angle%360);
         int topColor = 3 - rotated/90;
         int bottomColor = bottomFromTop.get(topColor);
-        if (!clockwiseRotation) {topColor = (4-rotated/90)%4; bottomColor = bottomFromTop.get(topColor);}
+        if (!clockwiseRotation) {topColor = ((4-rotated/90)%4+ 1) %4; bottomColor = bottomFromTop.get(topColor);}
         if ((yball-10>=y+r1) && (yball-10<=y+r1+r2)){
             return ball.getColor() != bottomColor; }
         else if ((yball+10>=y+r1) && (yball+10<=y+r1+r2)){

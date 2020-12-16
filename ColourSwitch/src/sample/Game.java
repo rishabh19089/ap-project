@@ -15,7 +15,7 @@ public class Game implements Serializable {
     private double currentScroll, totalScroll;
     private obstacleArray obstArray;
     private boolean gameOver = false;
-    private ArrayList<MagicColourBox> boxes = new ArrayList<>();
+    private ArrayList<element> boxes = new ArrayList<>();
     private double handY = 660;
     private boolean cheat;
     public Game(String name, int HEIGHT, int WIDTH, int dist){
@@ -30,7 +30,7 @@ public class Game implements Serializable {
     public obstacleArray getObstArray(){
         return obstArray; }
 
-    public ArrayList<MagicColourBox> getBoxes(){
+    public ArrayList<element> getBoxes(){
         return boxes; }
 
     public void draw(Pane root){
@@ -71,6 +71,9 @@ public class Game implements Serializable {
     }
 
     public void addMCB(MagicColourBox box, Pane root){
+        boxes.add(box);
+        box.draw(root); }
+    public void addMSSB(MagicShapeSwitchingBox box, Pane root){
         boxes.add(box);
         box.draw(root); }
 

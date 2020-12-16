@@ -70,7 +70,7 @@ public class horizontalBar extends Obstacles{
 
     @Override
     public boolean collision(Ball ball, double t) {
-        Circle c = ball.getCircle();
+        Shape c = ball.getCircle();
         boolean collision = false;
         for (int i=0; i<8; i++){
             Shape intersect = Shape.intersect(rects[i], c);

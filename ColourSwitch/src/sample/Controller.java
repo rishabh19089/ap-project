@@ -453,7 +453,7 @@ public class Controller {
         Diamond d = new Diamond(20, 0, 30, 0, 470); d.glow();
         User user = game.getUser(); Ball ball = user.getBall();
         ArrayList<Obstacles> obstacles = game.getObstArray().getObstArray();
-        ArrayList<MagicColourBox> boxes = game.getBoxes();
+        ArrayList<element> boxes = game.getBoxes();
 
         root.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY, Insets.EMPTY)));
 
@@ -523,7 +523,7 @@ public class Controller {
                     game.createObstacles(root, objects);
                     boxes1 = user.getLastColorBox(); }
 
-                for (MagicColourBox box: boxes){
+                for (element box: boxes){
                     box.handleCollision(user, root); }
 
                 if (user.getScore()>=10) st.get().setTranslateX(17);
