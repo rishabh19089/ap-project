@@ -22,21 +22,12 @@ public class obstacleArray implements Serializable {
         return obstArray;
     }
 
-    public double getSpace() {
-        return space;
-    }
-
-    public void nextLevel(double spaceReduced, double level){
-
-    }
-
+    public double getSpace() { return space; }
 
     public int typeObstacle(int level){
-        return 18;
-//        if(level == 1) return new Random().nextInt(8);
-//        else if(level == 2) return 8+ (new Random().nextInt(11));
-//        else return new Random().nextInt(18);
-        }
+        if(level == 1) return new Random().nextInt(8);
+        else if(level == 2) return 8+ (new Random().nextInt(11));
+        else return new Random().nextInt(18);}
 
     public MagicColourBox createColourBox(double y, double space){
         return new MagicColourBox(250,y-space); }
@@ -89,7 +80,7 @@ public class obstacleArray implements Serializable {
         o.forEach(ob-> ob.draw(root));
         obstArray.addAll(o);
         objs.addAll(o);
-        if(score % 1 == 0){
+        if(score % 3 == 0){
             MagicShapeSwitchingBox MCB1= createMagicShapeBox(yTop,space/2);
             objs.add(MCB1);game.addMSSB(MCB1, root); }
         else {
@@ -199,8 +190,8 @@ public class obstacleArray implements Serializable {
             case 18:
                 difficulty = Math.min(difficulty, 1.1);
                 side = 320/difficulty;
-                oArr.add(new Square(250 - side/2,yBottom-side , yBottom, 20, false, 60, false));
-                oArr.add(new singleCircle(250,yBottom-side+35, yBottom-35, 20, 60, true, true));
+                oArr.add(new Square(250 - side/2,yBottom-side , yBottom, 20, false, 100, false));
+                oArr.add(new singleCircle(250,yBottom-side+35, yBottom-35, 20, 100, true, true));
                 Diamond d = new Diamond(25, 70, yBottom - side/2,240, 250);
                 oArr.add(d);
                 break;
