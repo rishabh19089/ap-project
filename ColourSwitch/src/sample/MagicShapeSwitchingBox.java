@@ -1,10 +1,13 @@
 package sample;
 
+import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+
 import java.nio.file.Paths;
 import java.util.Random;
 
@@ -25,6 +28,13 @@ public class MagicShapeSwitchingBox extends element{
         im = new ImageView(image);
         im.setX(x-40); im.setY(y); im.setFitWidth(80);im.setFitHeight(75);
         im.setEffect(new Glow(0.6));
+        DropShadow borderGlow= new DropShadow();
+        borderGlow.setOffsetY(0f);
+        borderGlow.setOffsetX(0f);
+        borderGlow.setColor(Color.GHOSTWHITE);
+        borderGlow.setWidth(30);
+        borderGlow.setHeight(30);
+        im.setEffect(borderGlow);
         if (present) root.getChildren().add(im); }
 
     @Override
