@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -19,8 +20,8 @@ public class Diamond extends Obstacles {
         length = side; this.speed = speed; this.radius = radius; this.Y = Y; this.X=X;
         this.x = X-length/2; this.y = Y-radius-side/2;
         d= new Rectangle(x,y, side, side);
-        d.setFill(Color.LIGHTBLUE);
-        d.setEffect(new Glow(0.6));
+        d.setFill(Color.DEEPPINK);
+        d.setEffect(new Glow(1));
         d.setRotate(45);
         present = true; }
 
@@ -72,9 +73,16 @@ public class Diamond extends Obstacles {
 
     @Override
     public void draw(Pane pane) {
+        DropShadow borderGlow= new DropShadow();
+        borderGlow.setOffsetY(0f);
+        borderGlow.setOffsetX(0f);
+        borderGlow.setColor(Color.CYAN);
+        borderGlow.setWidth(70);
+        borderGlow.setHeight(70);
         d = new Rectangle(x,y,length,length);
         d.setFill(Color.LIGHTBLUE);
-        d.setEffect(new Glow(0.6));
+        d.setEffect(new Glow(1));
+        d.setEffect(borderGlow);
         d.setRotate(45);
         if (present) pane.getChildren().add(d); }
 

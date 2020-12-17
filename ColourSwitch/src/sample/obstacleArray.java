@@ -32,10 +32,11 @@ public class obstacleArray implements Serializable {
 
 
     public int typeObstacle(int level){
-
-        if(level == 1) return new Random().nextInt(8);
-        else if(level == 2) return 8+ (new Random().nextInt(11));
-        else return new Random().nextInt(18);}
+        return 0;
+//        if(level == 1) return new Random().nextInt(8);
+//        else if(level == 2) return 8+ (new Random().nextInt(11));
+//        else return new Random().nextInt(18);
+        }
 
     public MagicColourBox createColourBox(double y, double space){
         return new MagicColourBox(250,y-space); }
