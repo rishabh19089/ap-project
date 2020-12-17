@@ -237,7 +237,7 @@ public class Controller {
               @Override
               public void handle(long currentTime) {
                   double t = (currentTime - lastTime) / 1000000000.0;
-                  arr.forEach(el -> el.rotate(t));
+                  arr.forEach(el -> el.rotation(t));
                   lastTime = currentTime; }};
           timer.start();
           display(root);}
@@ -509,13 +509,13 @@ public class Controller {
                 scroll = 0;
 
                 for (Obstacles o: obstacles){
-                    if (o.collision(ball, timeSinceStart)){
+                    if (o.hitObstacle(ball, timeSinceStart)){
                         if (!user.isInvincible()){
                             stop();
                             gameOver(root, scene, o.getyBottom(), ball);}}
                     if (o.getClass() == Diamond.class){
                         o.handleCollision(user, root); }
-                    o.rotate(t);
+                    o.rotation(t);
                     o.starCollision(user, root); }
 
                 if (user.getLastColorBox()>boxes1){

@@ -21,20 +21,12 @@ public class Plus extends Obstacles{
         star = new Star(computeStar());
         this.hasStar = hasStar; }
 
-    @Override
-    public boolean rotation() {
-        return false;
-    }
 
     @Override
     public double rotationSpeed() {
         return 0;
     }
 
-    @Override
-    public void hitObstacle() {
-
-    }
     @Override
     public double time() {
         return 0;
@@ -62,7 +54,7 @@ public class Plus extends Obstacles{
 
 
     @Override
-    public void rotate(double t) {
+    public void rotation(double t) {
         if (clockwiseRotation) {
             angle = (angle+speed*t)%360;
             g.setRotate(angle); }
@@ -71,7 +63,7 @@ public class Plus extends Obstacles{
             g.setRotate(angle); } }
 
     @Override
-    public boolean collision(Ball ball, double t) {
+    public boolean hitObstacle(Ball ball, double t) {
         HashMap<Integer, Integer> colorMap = new HashMap<>();
         colorMap.put(0,0); colorMap.put(1,3); colorMap.put(2,2); colorMap.put(3,1);
         Shape c = ball.getCircle();

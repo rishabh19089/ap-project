@@ -16,7 +16,6 @@ public abstract class Obstacles extends element{
     protected double yBottom, yTop, thick;
     protected Star star;
     protected double speed; //Angle rotated per second
-    public abstract boolean rotation();
     protected double sr1 = 20, sr2 = 10;
     protected boolean hasStar;
     protected boolean clockwiseRotation;
@@ -36,7 +35,6 @@ public abstract class Obstacles extends element{
 
     public abstract double rotationSpeed();
 
-    public abstract void hitObstacle();
     public abstract double time();
     public abstract double place();
 
@@ -111,9 +109,9 @@ public abstract class Obstacles extends element{
             star.eraseStar(root);
             star.setPresent(false); } }
 
-    public abstract void rotate(double t);
+    public abstract void rotation(double t);
 
-    public abstract boolean collision(Ball ball, double t);
+    public abstract boolean hitObstacle(Ball ball, double t);
 
     public double[] computeStar() {
         double[] points = new double[20];

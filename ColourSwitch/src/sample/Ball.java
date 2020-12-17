@@ -17,7 +17,6 @@ public class Ball extends obj implements Serializable, Cloneable {
     private transient Circle c;
     private transient Rectangle sq;
     private transient Polygon triangle;
-    private int shape;
     private int color;
 
     public Ball(double acc, int HEIGHT, int boost) {
@@ -26,9 +25,7 @@ public class Ball extends obj implements Serializable, Cloneable {
         this.HEIGHT = HEIGHT;
         this.boost = boost;
         color= new Random().nextInt(4);
-        //type= new Random().nextInt(3);
-        type =2;
-    }
+        type= new Random().nextInt(3);}
 
     public Shape getCircle() {
         if(type == 0) return c;
@@ -47,7 +44,9 @@ public class Ball extends obj implements Serializable, Cloneable {
     }
 
     public void invincible(){
-        c.setFill(Color.WHITE); }
+        if (type==0) c.setFill(Color.WHITE);
+        else if (type==1) sq.setFill(Color.WHITE);
+        else triangle.setFill(Color.WHITE); }
 
     public void setAcc(double acc) {
         this.acc = acc; }

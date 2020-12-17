@@ -32,17 +32,12 @@ public class singleCircle extends Obstacles{
     public Star getStar() {
         return star; }
 
-    @Override
-    public boolean rotation() {
-        return false; }
+
 
     @Override
     public double rotationSpeed() {
         return 0; }
 
-    @Override
-    public void hitObstacle() {
-    }
 
     @Override
     public double time() {
@@ -76,19 +71,18 @@ public class singleCircle extends Obstacles{
                 arcs[i].setStartAngle(angle+(90*((4-i)%4))); } }
         star.setPoints(computeStar());
         rootJeu.getChildren().addAll(arcs);
-        //rootJeu.getChildren().add(fs);
         if (hasStar) star.draw(rootJeu);}
 
 
-    public void rotate(double timediff){
+    public void rotation(double timediff){
         angle = (angle+speed*timediff)%360;
         for (int i=0; i<4; i++){
             if (clockwiseRotation) arcs[i].setStartAngle(arcs[i].getStartAngle()-speed*timediff);
             else arcs[i].setStartAngle(arcs[i].getStartAngle()+speed*timediff);
         } }
 
-
-    public boolean collision(Ball ball, double timeSinceStart){
+    @Override
+    public boolean hitObstacle(Ball ball, double t) {
         HashMap<Integer, Integer> bottomFromTop = new HashMap<>();
         bottomFromTop.put(0,2); bottomFromTop.put(1,3); bottomFromTop.put(2,0); bottomFromTop.put(3,1);
         double yball = ball.getY();
@@ -104,7 +98,6 @@ public class singleCircle extends Obstacles{
             return ball.getColor() != topColor; }
         else if ((yball+10<=y-r1) && (yball+10>=y-r1-r2)){
             return ball.getColor() != topColor; }
-        return false;}
-
-
+        return false;
+    }
 }

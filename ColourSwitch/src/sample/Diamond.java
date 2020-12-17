@@ -55,7 +55,7 @@ public class Diamond extends Obstacles {
         sound.play(); }
 
     @Override
-    public void rotate(double t) {
+    public void rotation(double t) {
         timeSinceChange += t;
         angle = (angle+speed*t)%360;
         if (timeSinceChange > 0.3){
@@ -79,12 +79,7 @@ public class Diamond extends Obstacles {
         if (present) pane.getChildren().add(d); }
 
     @Override
-    public boolean collision(Ball ball, double t) {
-        return false;
-    }
-
-    @Override
-    public boolean rotation() {
+    public boolean hitObstacle(Ball ball, double t) {
         return false;
     }
 
@@ -93,10 +88,7 @@ public class Diamond extends Obstacles {
         return 0;
     }
 
-    @Override
-    public void hitObstacle() {
 
-    }
 
     @Override
     public double time() {

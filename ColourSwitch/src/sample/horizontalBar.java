@@ -20,20 +20,12 @@ public class horizontalBar extends Obstacles{
         this.speed = speed; //Distance travelled in a second
         this.starDist = starDist; this.thick = thick;}
 
-    @Override
-    public boolean rotation() {
-        return false;
-    }
 
     @Override
     public double rotationSpeed() {
         return 0;
     }
 
-    @Override
-    public void hitObstacle() {
-
-    }
     @Override
     public double time() {
         return 0;
@@ -61,7 +53,7 @@ public class horizontalBar extends Obstacles{
 
 
     @Override
-    public void rotate(double t) {
+    public void rotation(double t) {
         for (int i=0; i<8; i++){
             rects[i].setX(rects[i].getX()+speed*t);}
         if (rects[0].getX()>=0){
@@ -69,7 +61,7 @@ public class horizontalBar extends Obstacles{
                 rects[i].setX(-WIDTH+(WIDTH/4)*i);} }}
 
     @Override
-    public boolean collision(Ball ball, double t) {
+    public boolean hitObstacle(Ball ball, double t) {
         Shape c = ball.getCircle();
         boolean collision = false;
         for (int i=0; i<8; i++){
